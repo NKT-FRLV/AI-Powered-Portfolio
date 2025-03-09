@@ -2,8 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  output: 'standalone',
-  swcMinify: true,
   transpilePackages: ["@emailjs/nodejs"],
   // Игнорируем ошибки сборки, связанные с ESM/CJS
   webpack: (config) => {
@@ -78,6 +76,7 @@ const nextConfig: NextConfig = {
   // Настройки для оптимизации производительности
   poweredByHeader: false, // Отключаем заголовок X-Powered-By
   compress: true, // Включаем сжатие
+  output: 'standalone',
 };
 
 export default nextConfig;
