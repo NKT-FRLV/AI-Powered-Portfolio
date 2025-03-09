@@ -1,0 +1,56 @@
+[
+  {
+    "timestamp": "2025-03-07T21:02:52.488Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 960,
+    "completionTokens": 69,
+    "totalTokens": 1029,
+    "cost": 0.001578,
+    "query": "чТО РАССКАЖЕШЬ?"
+  },
+  {
+    "timestamp": "2025-03-08T09:52:54.173Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 944,
+    "completionTokens": 33,
+    "totalTokens": 977,
+    "cost": 0.001482,
+    "query": "hi"
+  },
+  {
+    "timestamp": "2025-03-08T10:06:22.494Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 946,
+    "completionTokens": 89,
+    "totalTokens": 1035,
+    "cost": 0.0015970000000000001,
+    "query": "Who are you"
+  },
+  {
+    "timestamp": "2025-03-08T10:11:35.712Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 931,
+    "completionTokens": 49,
+    "totalTokens": 980,
+    "cost": 0.0014945,
+    "query": "Здорова"
+  },
+  {
+    "timestamp": "2025-03-08T10:11:53.415Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 937,
+    "completionTokens": 89,
+    "totalTokens": 1026,
+    "cost": 0.0015835,
+    "query": "Ну коненчо, как дела?"
+  },
+  {
+    "timestamp": "2025-03-08T10:12:19.033Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 809,
+    "completionTokens": 58,
+    "totalTokens": 867,
+    "cost": 0.0013295,
+    "query": "Porque no me quieres hablat?"
+  }
+]
