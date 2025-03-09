@@ -1,10 +1,10 @@
 import { StaticImageData } from 'next/image';
-import mestoImage from '../public/mesto.png'
-import stellarBurgersImage from '../public/stellar-burgers.png'
-import closingTagImage from '../public/closing-tag-screen.png'
-import blogCustomizerImage from '../public/blog-customizer.png'
-import ticTacToeImage from '../public/gameAI.png'
-import GHUserAnalyzerImage from '../public/GH-User-Analyzer.png'
+import mestoImage from '../public/mesto.webp'
+import stellarBurgersImage from '../public/stellar-burgers.webp'
+import closingTagImage from '../public/closing-tag-screen.webp'
+import blogCustomizerImage from '../public/blog-customizer.webp'
+import ticTacToeImage from '../public/gameAI.webp'
+import GHUserAnalyzerImage from '../public/GH-User-Analyzer.webp'
 
 const gitHubRepoUrl = 'https://github.com/NKT-FRLV';
 

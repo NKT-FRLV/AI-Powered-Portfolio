@@ -69,8 +69,8 @@ function calculateCost(model: string, promptTokens: number, completionTokens: nu
 // Функция для получения данных о Никите
 function getNikitaData() {
   return {
-    name: "Никита Фролов",
-    role: "Фронтенд-разработчик",
+    name: "Nikita Frolov",
+    role: "Frontend Developer",
     skills: skills.map((skill) => `${skill.name} (${skill.percent}%)`),
     projects: projects.map((project) => ({
       title: project.title,
@@ -87,29 +87,10 @@ function getNikitaData() {
   };
 }
 
-// Функция для определения языка сообщения
-function detectLanguage(text: string): string {
-  // Простая эвристика для определения языка
-  const cyrillicPattern = /[а-яА-ЯёЁ]/;
-  const latinPattern = /[a-zA-Z]/;
-  
-  const cyrillicChars = text.match(cyrillicPattern)?.length || 0;
-  const latinChars = text.match(latinPattern)?.length || 0;
-  
-  if (cyrillicChars > latinChars) {
-    return 'ru';
-  } else {
-    return 'en';
-  }
-}
-
 export async function POST(request: Request) {
   try {
     // Получаем сообщение пользователя из запроса
     const { message } = await request.json();
-
-    // Определяем язык сообщения
-    const messageLanguage = detectLanguage(message);
 
     // Проверяем кеш для быстрого ответа
     const cacheKey = message.toLowerCase().trim();
@@ -124,39 +105,20 @@ export async function POST(request: Request) {
     const nikitaData = getNikitaData();
 
     // Формируем системное сообщение для ChatGPT в зависимости от языка
-    let systemMessage = '';
-    
-    if (messageLanguage === 'ru') {
-      systemMessage = `
-        Ты AI-ассистент Никиты Фролова, фронтенд-разработчика. Твоя задача - помогать посетителям его портфолио, отвечая на их вопросы о Никите, его навыках, опыте и проектах.
-        
-        Вот информация о Никите:
-        - Имя: ${nikitaData.name}
-        - Роль: ${nikitaData.role}
-        - Навыки: ${nikitaData.skills.join(", ")}
-        - Проекты: ${JSON.stringify(nikitaData.projects)}
-        - Образование: ${JSON.stringify(nikitaData.education)}
-        - Языки: ${nikitaData.languages.join(", ")}
-        
-        Отвечай кратко, дружелюбно и информативно. Если тебя спрашивают о чем-то, что не связано с Никитой или его работой, вежливо перенаправь разговор на тему портфолио Никиты.
-        Отвечай на русском языке.
-      `;
-    } else {
-      systemMessage = `
-        You are the AI assistant of Nikita Frolov, a frontend developer. Your task is to help visitors of his portfolio by answering their questions about Nikita, his skills, experience, and projects.
+    const systemMessage = `
+        You are the AI assistant of ${nikitaData.name}, a ${nikitaData.role}. Your task is to help visitors of his portfolio by answering their questions about Nikita, his skills, experience, and projects.
         
         Here is information about Nikita:
-        - Name: Nikita Frolov
-        - Role: Frontend Developer
+        - Name: ${nikitaData.name}
+        - Role: ${nikitaData.role}
         - Skills: ${nikitaData.skills.join(", ")}
         - Projects: ${JSON.stringify(nikitaData.projects)}
         - Education: ${JSON.stringify(nikitaData.education)}
         - Languages: ${nikitaData.languages.join(", ")}
         
         Answer concisely, friendly, and informatively. If you are asked about something not related to Nikita or his work, politely redirect the conversation to the topic of Nikita's portfolio.
-        Answer in English.
-      `;
-    }
+        Answer in language of the user.
+      `
 
     // Модель, которую будем использовать
     const model = "gpt-3.5-turbo";

@@ -27,7 +27,7 @@ export default function ContactForm() {
 
   // Initialize EmailJS
   useEffect(() => {
-    emailjs.init("jn2OjAJVVCDp5m0XJ"); // Using public key from .env
+    emailjs.init(process.env.EMAILJS_PUBLIC_KEY || ""); // Using public key from .env
   }, []);
 
   const {
@@ -61,8 +61,8 @@ export default function ContactForm() {
 
       // Send email via EmailJS directly from the client
       await emailjs.send(
-        "service_5hz413j", // EMAILJS_SERVICE_ID
-        "template_lvw7vlq", // EMAILJS_TEMPLATE_ID
+        process.env.EMAILJS_SERVICE_ID || "", // EMAILJS_SERVICE_ID
+        process.env.EMAILJS_TEMPLATE_ID || "", // EMAILJS_TEMPLATE_ID
         templateParams
       );
 

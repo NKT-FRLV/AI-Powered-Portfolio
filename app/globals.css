@@ -138,46 +138,49 @@ a {
   display: inline-block;
   position: relative;
   font-family: var(--font-rubik), sans-serif;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: color 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform-origin: center;
 }
 
-.text-animate-hover:hover {
-  color: #ff4500 !important;
-  transform: scale(1.1);
-  animation: rubberBand 0.8s ease;
+/* Анимация для светлой темы */
+:root .text-animate-hover:hover {
+  color: #e64a19 !important; /* Более темный оранжевый для светлой темы */
 }
 
-.text-animate-hover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  transform: scale(0);
-  transition: transform 0s;
+/* Анимация для темной темы */
+.dark .text-animate-hover:hover {
+  color: #ff4500 !important; /* Яркий оранжевый для темной темы */
 }
 
-.text-animate-hover:hover::after {
-  transform: scale(1);
-  transition: transform 0s;
-}
-
-.text-animate-hover:not(:hover)::after {
-  animation: rubberBand 1s;
+.text-animate-hover.animate-rubber {
+  animation: rubberBand 0.8s ease forwards;
 }
 
 /* Стили для скобок и имени */
 .bracket-class {
   font-weight: bold;
-  color: #ff7f50 !important; /* Коралловый цвет для скобок */
+}
+
+/* Разные цвета скобок для светлой и темной темы */
+:root .bracket-class {
+  color: #e67e22 !important; /* Более спокойный оранжевый для светлой темы */
+}
+
+.dark .bracket-class {
+  color: #ff7f50 !important; /* Яркий коралловый для темной темы */
 }
 
 .name-class {
   font-weight: bold;
-  color: #00ff7f !important; /* Зеленый цвет для имени */
+}
+
+/* Разные цвета имени для светлой и темной темы */
+:root .name-class {
+  color: #2e7d32 !important; /* Более спокойный зеленый для светлой темы */
+}
+
+.dark .name-class {
+  color: #00ff7f !important; /* Яркий зеленый для темной темы */
 }
 
 @keyframes fadeInUp {
@@ -273,7 +276,7 @@ a {
 }
 
 .chat-message-user {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark, #0056b3) 100%);
+  background-color: var(--primary);
   border-radius: 18px 18px 4px 18px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -288,7 +291,7 @@ a {
 .chat-input {
   background: rgba(var(--background-rgb), 0.8);
   border: 1px solid rgba(var(--foreground-rgb), 0.1);
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .chat-input:focus {
@@ -297,17 +300,110 @@ a {
 }
 
 .chat-button {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark, #0056b3) 100%);
+  background-color: var(--primary);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: fixed;
+  /* overflow: hidden; */
 }
 
 .chat-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2), 0 6px 8px -2px rgba(0, 0, 0, 0.1);
 }
 
 .chat-button:active {
   transform: translateY(1px);
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
 }
+
+.chat-button::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: inherit;
+  filter: blur(12px);
+  opacity: 0.4;
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  z-index: -1;
+}
+
+.chat-button:hover::after {
+  opacity: 0.7;
+  filter: blur(16px);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Добавляем новые анимации для чата */
+@keyframes chat-open {
+  0% {
+    clip-path: circle(50% at bottom right);
+  }
+  100% {
+    clip-path: inset(0% 0% 0% 0% round 0.5rem);
+  }
+}
+
+@keyframes chat-close {
+  0% {
+    clip-path: inset(0% 0% 0% 0% round 0.5rem);
+  }
+  100% {
+    clip-path: circle(50% at bottom right);
+  }
+}
+
+.chat-open-animation {
+  animation: chat-open 0.5s ease-out forwards;
+}
+
+.chat-close-animation {
+  animation: chat-close 0.4s ease-in forwards;
+}
+
+/* Обновляем эффект свечения для кнопки чата */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px 2px rgba(var(--foreground-rgb), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(var(--foreground-rgb), 0.6);
+  }
+}
+
+.chat-button-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+/* Добавляем эффект появления для сообщений */
+@keyframes message-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-slide-in {
+  animation: message-slide-in 0.3s ease-out forwards;
+}
+

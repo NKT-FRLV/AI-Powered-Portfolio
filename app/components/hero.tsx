@@ -87,7 +87,7 @@ export default function Hero() {
           >
             <div className="relative h-[300px] w-[300px] md:h-[400px] md:w-[400px] overflow-hidden rounded-full border-2 border-border">
               <Image
-                src="/nikita_color.jpg"
+                src="/nikita_color.webp"
                 alt="Hero image"
                 fill
                 sizes="(max-width: 768px) 300px, 400px"

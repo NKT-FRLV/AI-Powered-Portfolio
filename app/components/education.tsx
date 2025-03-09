@@ -39,9 +39,13 @@ export default function Education() {
                 key={edu.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md transition-all hover:shadow-lg"
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ 
+                  duration: 0.8,
+                  delay: index * 0.15,
+                  ease: [0.21, 0.45, 0.32, 0.9]
+                }}
+                className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg"
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
                   <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--muted))]">

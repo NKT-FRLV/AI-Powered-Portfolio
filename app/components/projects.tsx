@@ -10,7 +10,7 @@ export default function Projects() {
     <section id="projects" className="py-16 md:py-24 bg-muted/50">
       <div className="container px-4 md:px-6">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
@@ -27,11 +27,11 @@ export default function Projects() {
           {projects.map((project, index) => (
             <motion.div 
               key={project.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-lg border bg-background shadow-md transition-all hover:shadow-lg"
+              className="group relative overflow-hidden rounded-lg border bg-background shadow-md hover:shadow-lg"
             >
               <div className="relative h-60 w-full overflow-hidden">
                 <Image
@@ -39,7 +39,7 @@ export default function Projects() {
                   alt={project.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover duration-300 group-hover:scale-105"
                 />
               </div>
               <div className="p-6 flex flex-col h-[calc(100%-15rem)]">

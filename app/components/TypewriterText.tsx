@@ -40,17 +40,10 @@ export const TypewriterText: React.FC<TypewriterTextProps> = ({
         ]}
         wrapper="span"
         speed={{ type: 'keyStrokeDelayInMs', value: speed }}
-        cursor={!isComplete}
+        cursor={false}
         className={`${className} message-appear`}
         style={{ display: 'inline-block', whiteSpace: 'pre-line' }}
       />
-      {!isComplete && (
-        <motion.span 
-          className="inline-block w-1.5 h-4 ml-0.5 bg-current"
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ repeat: Infinity, duration: 0.8 }}
-        />
-      )}
     </motion.div>
   );
 };

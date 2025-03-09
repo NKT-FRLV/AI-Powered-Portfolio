@@ -52,5 +52,95 @@
     "totalTokens": 867,
     "cost": 0.0013295,
     "query": "Porque no me quieres hablat?"
+  },
+  {
+    "timestamp": "2025-03-09T13:05:39.600Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 808,
+    "completionTokens": 54,
+    "totalTokens": 862,
+    "cost": 0.00132,
+    "query": "dsfsdffsdfsddsf"
+  },
+  {
+    "timestamp": "2025-03-09T13:19:40.979Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 936,
+    "completionTokens": 83,
+    "totalTokens": 1019,
+    "cost": 0.00157,
+    "query": "Никита взрывает?"
+  },
+  {
+    "timestamp": "2025-03-09T13:37:08.781Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 816,
+    "completionTokens": 216,
+    "totalTokens": 1032,
+    "cost": 0.001656,
+    "query": "расскажи про Никиту "
+  },
+  {
+    "timestamp": "2025-03-09T13:37:38.980Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 822,
+    "completionTokens": 146,
+    "totalTokens": 968,
+    "cost": 0.0015249999999999999,
+    "query": "есть ли у него опыт в этом нправлении ?"
+  },
+  {
+    "timestamp": "2025-03-09T13:37:55.364Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 816,
+    "completionTokens": 120,
+    "totalTokens": 936,
+    "cost": 0.001464,
+    "query": "сколько лет у него опыта ?"
+  },
+  {
+    "timestamp": "2025-03-09T13:38:17.033Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 820,
+    "completionTokens": 500,
+    "totalTokens": 1320,
+    "cost": 0.00223,
+    "query": "в каких проектах он учавствовал ?"
+  },
+  {
+    "timestamp": "2025-03-09T15:55:23.465Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 807,
+    "completionTokens": 17,
+    "totalTokens": 824,
+    "cost": 0.0012445,
+    "query": "So what"
+  },
+  {
+    "timestamp": "2025-03-09T15:56:40.198Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 806,
+    "completionTokens": 22,
+    "totalTokens": 828,
+    "cost": 0.001253,
+    "query": "e"
+  },
+  {
+    "timestamp": "2025-03-09T16:01:06.880Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 807,
+    "completionTokens": 32,
+    "totalTokens": 839,
+    "cost": 0.0012745,
+    "query": "ghj"
+  },
+  {
+    "timestamp": "2025-03-09T16:55:37.698Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 806,
+    "completionTokens": 22,
+    "totalTokens": 828,
+    "cost": 0.001253,
+    "query": "asd"
   }
 ]

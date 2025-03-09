@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, memo } from "react";
 import NextLink from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { motion } from "framer-motion";
@@ -18,9 +18,62 @@ const iconMap: Record<string, React.ElementType> = {
   'linkedin': FaLinkedin,
 };
 
-export default function Header() {
+// Мемоизированный компонент SocialButton для предотвращения ненужных ререндеров
+const SocialButton = memo(({ social }: { social: { id: string, icon: string, link: string } }) => {
+  const IconComponent = iconMap[social.icon] || FaGithub;
+  
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <Button 
+      key={social.id} 
+      asChild
+      variant="ghost"
+      size="icon"
+      className="text-muted-foreground hover:text-foreground"
+    >
+      <a 
+        href={social.link} 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
+        <IconComponent size={25} />
+      </a>
+    </Button>
+  );
+});
+
+SocialButton.displayName = 'SocialButton';
+
+// Мемоизированный компонент Header для предотвращения ненужных ререндеров
+function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  // Добавляем обработчик прокрутки для отслеживания положения страницы
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    // Добавляем слушатель события прокрутки с опцией passive для улучшения производительности
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Вызываем обработчик сразу для установки начального состояния
+    handleScroll();
+
+    // Очищаем слушатель при размонтировании компонента
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
+
+  return (
+    <header 
+      className={`fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200 ${
+        scrolled ? 'shadow-md' : ''
+      }`}
+    >
       <div className="container flex h-16 items-center justify-between">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
@@ -35,6 +88,7 @@ export default function Header() {
               width={40} 
               height={40} 
               className="rounded-full"
+              priority // Добавляем приоритет для загрузки логотипа
             />
           </NextLink>
         </motion.div>
@@ -72,31 +126,16 @@ export default function Header() {
           className="flex items-center gap-4"
         >
           <div className="hidden md:flex items-center gap-4">
-            {socialsLinks.map((social) => {
-              const IconComponent = iconMap[social.icon] || FaGithub;
-              
-              return (
-                <Button 
-                  key={social.id} 
-                  asChild
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <a 
-                    href={social.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                  >
-                    <IconComponent size={25} />
-                  </a>
-                </Button>
-              );
-            })}
+            {socialsLinks.map((social) => (
+              <SocialButton key={social.id} social={social} />
+            ))}
           </div>
           <ThemeToggle />
         </motion.div>
       </div>
     </header>
   );
-} 
+}
+
+// Экспортируем мемоизированный компонент
+export default memo(Header); 

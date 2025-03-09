@@ -32,14 +32,14 @@ export default function Skills() {
     <section id="skills" className="py-16 md:py-24">
       <div className="container px-4 md:px-6">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center justify-center space-y-4 text-center"
         >
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Навыки</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Skills</h2>
             <p className="mx-auto max-w-[700px] text-[hsl(var(--muted-foreground))] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               My technical skills and competencies
             </p>
@@ -52,11 +52,11 @@ export default function Skills() {
             return (
               <motion.div 
                 key={skill.name}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md transition-all hover:shadow-lg"
+                className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg"
               >
                 <div className="flex flex-col items-center space-y-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[hsl(var(--muted))]">
