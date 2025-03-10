@@ -142,5 +142,23 @@
     "totalTokens": 828,
     "cost": 0.001253,
     "query": "asd"
+  },
+  {
+    "timestamp": "2025-03-09T21:23:42.261Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 814,
+    "completionTokens": 53,
+    "totalTokens": 867,
+    "cost": 0.001327,
+    "query": "здорова никита"
+  },
+  {
+    "timestamp": "2025-03-09T21:23:53.589Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 816,
+    "completionTokens": 101,
+    "totalTokens": 917,
+    "cost": 0.001426,
+    "query": "ывфафываываыався"
   }
 ]

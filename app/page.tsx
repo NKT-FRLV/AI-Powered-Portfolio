@@ -96,10 +96,15 @@ export default function Home() {
       setIsLoaded(true);
     };
 
+    // Делаем функцию preloadComponents доступной глобально для использования в header.tsx
+    if (typeof window !== 'undefined') {
+      (window as any).preloadAllComponents = preloadComponents;
+    }
+
     // Запускаем предварительную загрузку с задержкой, чтобы не блокировать основной рендеринг
     const timer = setTimeout(() => {
       preloadComponents();
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -124,25 +129,25 @@ export default function Home() {
       
       <section id="projects">
         <Suspense fallback={<ComponentSkeleton height={600} />}>
-          {visibleSections.education && <Projects />}
+          {(visibleSections.education || isLoaded) && <Projects />}
         </Suspense>
       </section>
       
       <section id="languages">
         <Suspense fallback={<ComponentSkeleton height={300} />}>
-          {visibleSections.skills && <Languages />}
+          {(visibleSections.skills || isLoaded) && <Languages />}
         </Suspense>
       </section>
       
       <section id="contact">
         <Suspense fallback={<ComponentSkeleton height={450} />}>
-          {visibleSections.projects && <ContactForm />}
+          {(visibleSections.projects || isLoaded) && <ContactForm />}
         </Suspense>
       </section>
       
       <section id="footer">
         <Suspense fallback={<ComponentSkeleton height={200} />}>
-          {visibleSections.languages && <Footer />}
+          {(visibleSections.languages || isLoaded) && <Footer />}
         </Suspense>
       </section>
       

@@ -61,6 +61,40 @@ export const metadata: Metadata = {
     siteName: "Nikita Frolov Portfolio",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/nf-logo.svg",
+        width: 40,
+        height: 40,
+        alt: "Nikita Frolov Logo",
+      },
+    ],
+  },
+  icons: {
+    icon: [
+      {
+        url: "/nf-logo.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    apple: [
+      {
+        url: "/nf-logo.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    shortcut: [
+      {
+        url: "/nf-logo.svg",
+        type: "image/svg+xml",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Nikita Frolov — Frontend Developer",
+    description: "Portfolio of Nikita Frolov — frontend developer specializing in React, UI, UX and AI integration",
+    images: ["/nf-logo.svg"],
   },
 };
 
@@ -77,6 +111,19 @@ export default function RootLayout({
         <link rel="preload" href="/nf-logo.svg" as="image" />
         <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        
+        <link
+          rel="icon"
+          href="/nf-logo.svg"
+          type="image/svg+xml"
+          media="(prefers-color-scheme: light)"
+        />
+        <link
+          rel="icon"
+          href="/nf-logo-dark.svg"
+          type="image/svg+xml"
+          media="(prefers-color-scheme: dark)"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${exo2.variable} ${orbitron.variable} ${rubikMonoOne.variable}`}
