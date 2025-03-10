@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import SocialButton, { SocialLinkProps } from "./social-button";
+import SocialButton from "./social-button";
 import { socialsLinks } from "@/app/data";
 
 const Socials: React.FC = () => {
