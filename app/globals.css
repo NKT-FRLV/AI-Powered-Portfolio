@@ -317,19 +317,23 @@ a {
 /* Добавляем новые анимации для чата */
 @keyframes chat-open {
   0% {
-    clip-path: circle(50% at bottom right);
+    opacity: 0;
+    transform: translateY(100%);
   }
   100% {
-    clip-path: inset(0% 0% 0% 0% round 0.5rem);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @keyframes chat-close {
   0% {
-    clip-path: inset(0% 0% 0% 0% round 0.5rem);
+    opacity: 1;
+    transform: translateY(0);
   }
   100% {
-    clip-path: circle(50% at bottom right);
+    opacity: 0;
+    transform: translateY(100%);
   }
 }
 
@@ -369,4 +373,18 @@ a {
 
 .message-slide-in {
   animation: message-slide-in 0.3s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    border-radius: 0;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .chat-button {
+    bottom: 1rem;
+    right: 1rem;
+  }
 }

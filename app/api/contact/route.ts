@@ -16,22 +16,22 @@ export async function POST(request: Request) {
     // Проверяем наличие обязательных полей
     if (!data.name || !data.email || !data.message) {
       return NextResponse.json(
-        { error: "Пожалуйста, заполните все обязательные поля" },
+        { error: "Please fill in all required fields" },
         { status: 400 }
       );
     }
 
     // Возвращаем успешный ответ, но сообщаем клиенту, что нужно использовать клиентскую отправку
     return NextResponse.json(
-      { message: "Используйте клиентскую отправку EmailJS" },
+      { message: "Use client-side EmailJS" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Ошибка при отправке сообщения:", error);
+    console.error("Error sending message:", error);
     
     // Возвращаем ошибку
     return NextResponse.json(
-      { error: "Произошла ошибка при отправке сообщения" },
+      { error: "An error occurred while sending the message" },
       { status: 500 }
     );
   }

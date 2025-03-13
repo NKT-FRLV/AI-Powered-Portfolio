@@ -137,8 +137,8 @@ export default function AiAssistant() {
   const chatContainerVariants = {
     initial: { 
       opacity: 0,
-      y: 20,
-      scale: 0.9
+      y: "100%",
+      scale: 1
     },
     animate: { 
       opacity: 1,
@@ -153,8 +153,8 @@ export default function AiAssistant() {
     },
     exit: { 
       opacity: 0,
-      y: 20,
-      scale: 0.9,
+      y: "100%",
+      scale: 1,
       transition: { 
         duration: 0.3,
         ease: "easeInOut"
@@ -177,7 +177,7 @@ export default function AiAssistant() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="fixed bottom-6 right-6 z-50 flex h-[500px] w-[350px] flex-col rounded-lg border bg-background/80 backdrop-blur-sm shadow-xl"
+            className="fixed bottom-0 right-0 z-50 flex flex-col rounded-lg border bg-background/80 backdrop-blur-sm shadow-xl md:bottom-6 md:right-6 md:h-[500px] md:w-[350px] h-full w-full"
           >
             <motion.div 
               initial={{ opacity: 0 }}
@@ -185,16 +185,16 @@ export default function AiAssistant() {
               exit={{ opacity: 0 }}
               className="flex h-full flex-col"
             >
-              <motion.div className="flex items-center justify-between border-b p-4">
+              <motion.div className="flex items-center justify-between border-b p-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10">
                 <h3 className="font-medium">AI-assistant of Nikita</h3>
                 <motion.button
                   onClick={handleCloseChat}
-                  className="rounded-full p-1 hover:bg-muted"
+                  className="rounded-full p-2 hover:bg-muted"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Close"
                 >
-                  <Cross2Icon className="h-4 w-4" />
+                  <Cross2Icon className="h-5 w-5" />
                 </motion.button>
               </motion.div>
 

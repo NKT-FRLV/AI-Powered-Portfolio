@@ -10,6 +10,7 @@ import { Input } from "@/app/components/ui/input";
 import { Textarea } from "@/app/components/ui/textarea";
 import { Label } from "@/app/components/ui/label";
 import emailjs from "@emailjs/browser";
+import { emailjsConfig } from '@/app/config/emailjs';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must contain at least 2 characters" }),
@@ -27,7 +28,11 @@ export default function ContactForm() {
 
   // Initialize EmailJS
   useEffect(() => {
-    emailjs.init(process.env.EMAILJS_PUBLIC_KEY || ""); // Using public key from .env
+    try {
+      emailjs.init(emailjsConfig.publicKey);
+    } catch (error) {
+      console.error('EmailJS initialization error:', error);
+    }
   }, []);
 
   const {
@@ -50,6 +55,10 @@ export default function ContactForm() {
     setError(null);
 
     try {
+      if (!emailjsConfig.serviceId || !emailjsConfig.templateId) {
+        throw new Error('EmailJS configuration is missing');
+      }
+
       // Prepare data for sending via EmailJS
       const templateParams = {
         from_name: data.name,
@@ -61,8 +70,8 @@ export default function ContactForm() {
 
       // Send email via EmailJS directly from the client
       await emailjs.send(
-        process.env.EMAILJS_SERVICE_ID || "", // EMAILJS_SERVICE_ID
-        process.env.EMAILJS_TEMPLATE_ID || "", // EMAILJS_TEMPLATE_ID
+        emailjsConfig.serviceId,
+        emailjsConfig.templateId,
         templateParams
       );
 
@@ -74,7 +83,12 @@ export default function ContactForm() {
         setIsSuccess(false);
       }, 5000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred while sending the form");
+      console.error('Form submission error:', err);
+      setError(
+        err instanceof Error 
+          ? err.message 
+          : "An error occurred while sending the form. Please try again later."
+      );
     } finally {
       setIsSubmitting(false);
     }

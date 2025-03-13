@@ -4,8 +4,15 @@ const nextConfig: NextConfig = {
   distDir: '.next',
   /* config options here */
   transpilePackages: ["@emailjs/nodejs"],
+  env: {
+    NEXT_PUBLIC_EMAILJS_SERVICE_ID: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+    NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+  },
   // Настройка для серверного рендеринга
-  // output: 'standalone',
+  output: 'standalone',
+  // Перемещаем serverComponentsExternalPackages на верхний уровень
+  serverExternalPackages: ['openai'],
   // Игнорируем ошибки сборки, связанные с ESM/CJS
   webpack: (config) => {
     config.resolve.fallback = {
@@ -55,15 +62,13 @@ const nextConfig: NextConfig = {
   // Включаем оптимизацию изображений
   images: {
     formats: ['image/avif', 'image/webp'],
-    // Включаем оптимизацию для внешних изображений
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**',
       },
     ],
-    // unoptimized: true
-    unoptimized: false // Меняем на false для серверной оптимизации
+    unoptimized: false
   },
   // Включаем экспериментальные функции для улучшения производительности
   experimental: {
@@ -79,8 +84,8 @@ const nextConfig: NextConfig = {
     },
   },
   // Настройки для оптимизации производительности
-  poweredByHeader: false, // Отключаем заголовок X-Powered-By
-  compress: true, // Включаем сжатие
+  poweredByHeader: false,
+  compress: true,
 };
 
 export default nextConfig;
