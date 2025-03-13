@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   transpilePackages: ["@emailjs/nodejs"],
   // Настройка для серверного рендеринга
-  output: 'export',
+  // output: 'standalone',
   // Игнорируем ошибки сборки, связанные с ESM/CJS
   webpack: (config) => {
     config.resolve.fallback = {
@@ -62,7 +62,8 @@ const nextConfig: NextConfig = {
         hostname: '**',
       },
     ],
-    unoptimized: true // Для статической генерации
+    // unoptimized: true
+    unoptimized: false // Меняем на false для серверной оптимизации
   },
   // Включаем экспериментальные функции для улучшения производительности
   experimental: {
