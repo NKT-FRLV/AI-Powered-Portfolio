@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { myEducation } from "../data";
 import { FaUniversity, FaGraduationCap, FaSwimmer } from 'react-icons/fa';
 
@@ -13,6 +13,8 @@ const logoMap: Record<string, React.ElementType> = {
 };
 
 export default function Education() {
+  const [isOpen, setIsOpen] = useState<Record<string, boolean>>({});
+
   return (
     <section id="education" className="py-16 md:py-24 bg-[hsl(var(--muted))]/50">
       <div className="container px-4 md:px-6">
@@ -56,24 +58,49 @@ export default function Education() {
                     <p className="text-[hsl(var(--muted-foreground))]">{edu.profesion}</p>
                     <p className="text-sm text-[hsl(var(--muted-foreground))]">{edu.date}</p>
                     <p className="text-[hsl(var(--muted-foreground))]">{edu.content}</p>
-                    <details className="group cursor-pointer pt-2">
-                      <summary className="font-medium text-[hsl(var(--primary))] hover:underline">
-                        Learn More
-                      </summary>
-                      <div className="mt-3 text-sm text-[hsl(var(--muted-foreground))]">
-                        <p>{edu.info}</p>
-                        {edu.documentationPath && (
-                          <a 
-                            href={edu.documentationPath} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="mt-2 inline-flex items-center text-[hsl(var(--primary))] hover:underline"
+                    <div className="group cursor-pointer pt-2">
+                      {edu.info && (
+                        <>
+                          <motion.div
+                            className="font-medium text-[hsl(var(--primary))] hover:underline"
+                            onClick={() => setIsOpen(prev => ({ ...prev, [edu.title]: !prev[edu.title] }))}
+                            initial={false}
                           >
-                            View Certificate
-                          </a>
-                        )}
-                      </div>
-                    </details>
+                            Learn More
+                          </motion.div>
+                          <AnimatePresence initial={false}>
+                            {isOpen[edu.title] && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 100,
+                                  damping: 20,
+                                  opacity: { duration: 0.2 }
+                                }}
+                                className="overflow-hidden"
+                              >
+                                <div className="mt-3 text-sm text-[hsl(var(--muted-foreground)]">
+                                  <p>{edu.info}</p>
+                                  {edu.documentationPath && (
+                                    <a 
+                                      href={edu.documentationPath} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="mt-2 inline-flex items-center text-[hsl(var(--primary))] hover:underline"
+                                    >
+                                      View Certificate
+                                    </a>
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </motion.div>

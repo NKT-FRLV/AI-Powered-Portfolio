@@ -26,6 +26,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({ onClick, theme }) => {
     },
     hover: { 
       scale: 1.1,
+      transition: { duration: 0.5 }
     },
     tap: { scale: 0.9 }
   };
@@ -43,12 +44,12 @@ const ChatButton: React.FC<ChatButtonProps> = ({ onClick, theme }) => {
   };
 
   const buttonClass = theme === 'dark' 
-    ? "fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800 shadow-lg hover:shadow-2xl border border-zinc-600"
-    : "fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg hover:shadow-2xl border border-zinc-200";
+    ? "fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-black shadow-lg hover:shadow-2xl border border-white"
+    : "fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg hover:shadow-2xl border border-black";
 
   const glowClass = theme === 'dark'
-    ? "absolute inset-0 rounded-full bg-zinc-400/10"
-    : "absolute inset-0 rounded-full bg-zinc-900/5";
+    ? "absolute inset-0 rounded-full bg-white/15 shadow-[0_0_15px_rgba(255,255,255,0.3)] animate-glow transition-all duration-300"
+    : "absolute inset-0 rounded-full bg-zinc-900/20 shadow-[0_0_15px_rgba(0,0,0,0.2)] animate-glow transition-all duration-300";
 
   return (
     <motion.button

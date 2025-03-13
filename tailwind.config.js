@@ -156,10 +156,12 @@ module.exports = {
         },
         'glow': {
           '0%, 100%': {
-            boxShadow: '0 0 5px 2px rgba(var(--foreground-rgb), 0.3)'
+            opacity: '0.5',
+            filter: 'brightness(1)'
           },
           '50%': {
-            boxShadow: '0 0 20px 5px rgba(var(--foreground-rgb), 0.6)'
+            opacity: '0.8',
+            filter: 'brightness(1.2)'
           }
         }
       },
