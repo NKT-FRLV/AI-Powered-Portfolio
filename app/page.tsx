@@ -1,3 +1,4 @@
+export const dynamic = 'force-static';
 
 import HomePage from './components/HomePage/home-page'
 
