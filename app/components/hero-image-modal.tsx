@@ -11,6 +11,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import { Button } from "@/app/components/ui/button"
+import { motion } from "framer-motion"
 
 export function HeroImageModal() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -29,7 +30,18 @@ export function HeroImageModal() {
         side="bottom" 
         className="h-[95vh] p-0 overflow-hidden bg-background/80 backdrop-blur-sm data-[state=open]:animate-sheet-in data-[state=closed]:animate-sheet-out"
       >
-        <div className="flex flex-col h-full justify-center items-center py-12">
+        <motion.div 
+          className="flex flex-col h-full justify-center items-center py-12"
+          drag="y"
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={0.4}
+          onDragEnd={(e, { offset, velocity }) => {
+            const swipe = Math.abs(offset.y);
+            if (swipe > 100 || velocity.y > 200) {
+              setIsOpen(false);
+            }
+          }}
+        >
           <SheetHeader className="p-6 shrink-0 w-full">
             <SheetTitle className="text-center">My photo</SheetTitle>
             <SheetDescription className="text-center">
@@ -47,7 +59,7 @@ export function HeroImageModal() {
             />
           </div>
           <div className="h-16 shrink-0 w-full" />
-        </div>
+        </motion.div>
       </SheetContent>
     </Sheet>
   )

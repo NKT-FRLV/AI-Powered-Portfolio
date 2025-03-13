@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { socialsLinks } from "../data";
-import { FaGithub, FaInstagram, FaTelegram, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaInstagram, FaTelegram, FaLinkedin, FaChevronUp } from 'react-icons/fa';
 
 // Mapping string identifiers to icon components
 const iconMap: Record<string, React.ElementType> = {
@@ -17,8 +17,27 @@ const iconMap: Record<string, React.ElementType> = {
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
-    <footer className="border-t bg-[hsl(var(--muted))]/20">
+    <footer className="relative border-t bg-[hsl(var(--muted))]/20">
+      <div className="fixed bottom-2 left-0 right-0 z-50 flex justify-center pointer-events-none">
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.1 }}
+          onClick={scrollToTop}
+          className="pointer-events-auto bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] p-3 rounded-full shadow-lg"
+          aria-label="Scroll to top"
+        >
+          <FaChevronUp size={20} />
+        </motion.button>
+      </div>
       <div className="container px-4 py-8 md:px-6 md:py-12">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <motion.div 
