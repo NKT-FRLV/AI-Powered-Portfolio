@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  distDir: '.next',
   /* config options here */
   transpilePackages: ["@emailjs/nodejs"],
+  // Настройка для серверного рендеринга
+  output: 'standalone',
   // Игнорируем ошибки сборки, связанные с ESM/CJS
   webpack: (config) => {
     config.resolve.fallback = {
@@ -76,7 +79,6 @@ const nextConfig: NextConfig = {
   // Настройки для оптимизации производительности
   poweredByHeader: false, // Отключаем заголовок X-Powered-By
   compress: true, // Включаем сжатие
-  output: 'standalone',
 };
 
 export default nextConfig;
