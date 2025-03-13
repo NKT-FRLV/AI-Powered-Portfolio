@@ -1,13 +1,18 @@
 import { cn } from "@/app/lib/utils";
 
-// Используем тип вместо пустого интерфейса
-type SkeletonProps = React.HTMLAttributes<HTMLDivElement>;
-
-export function Skeleton({ className, ...props }: SkeletonProps) {
+function Skeleton({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
+      className={cn(
+        "animate-skeleton rounded-md bg-muted/50 shadow-sm",
+        className
+      )}
       {...props}
     />
-  );
-} 
+  )
+}
+
+export { Skeleton } 

@@ -31,44 +31,42 @@ export const scrollToSection = async (
   sectionId: string, 
   sectionsRef: Map<string, HTMLElement>
 ) => {
-  // Предварительно загружаем все компоненты
-  if (typeof window !== 'undefined' && (window as any).preloadAllComponents) {
-    await (window as any).preloadAllComponents();
-  } else {
-    // Используем локальную функцию как запасной вариант
-    await preloadComponentForSection(sectionId);
-  }
+  console.log(`Scrolling to section: ${sectionId}`);
   
-  // Получаем элемент из нашего рефа
+  // Предварительно загружаем компонент
+  await preloadComponentForSection(sectionId);
+  
+  // Получаем элемент из нашего рефа или по ID
   const targetElement = sectionsRef.get(sectionId) || document.getElementById(sectionId);
-  if (!targetElement) return;
   
-  // Получаем позицию элемента
-  const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-  const offsetPosition = targetPosition - 80; // Учитываем высоту хедера
-  
-  // Используем framer-motion для анимированной прокрутки
-  const start = window.scrollY;
-  const change = offsetPosition - start;
-  const duration = 800; // ms
-  let startTime: number | null = null;
-  
-  function animateScroll(timestamp: number) {
-    if (!startTime) startTime = timestamp;
-    const elapsed = timestamp - startTime;
-    
-    // Функция плавности (easeInOutCubic)
-    const t = elapsed / duration;
-    const easeT = t < 0.5 
-      ? 4 * t * t * t 
-      : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    
-    window.scrollTo(0, start + change * easeT);
-    
-    if (elapsed < duration) {
-      requestAnimationFrame(animateScroll);
-    }
+  if (!targetElement) {
+    console.error(`Section with id "${sectionId}" not found`);
+    return;
   }
   
-  requestAnimationFrame(animateScroll);
+  console.log(`Found target element:`, targetElement);
+  
+  // Получаем текущую позицию прокрутки
+  const currentScrollPosition = window.pageYOffset;
+  console.log(`Current scroll position: ${currentScrollPosition}`);
+  
+  // Получаем позицию элемента относительно документа
+  const elementRect = targetElement.getBoundingClientRect();
+  console.log(`Element rect:`, elementRect);
+  
+  // Рассчитываем абсолютную позицию элемента
+  const absoluteElementPosition = elementRect.top + window.pageYOffset;
+  console.log(`Absolute element position: ${absoluteElementPosition}`);
+  
+  // Рассчитываем позицию с учетом высоты хедера (80px)
+  const headerOffset = 80;
+  const offsetPosition = absoluteElementPosition - headerOffset;
+  
+  console.log(`Target scroll position: ${offsetPosition}`);
+  
+  // Используем только один метод прокрутки
+  window.scrollTo({
+    top: offsetPosition,
+    behavior: 'smooth'
+  });
 }; 

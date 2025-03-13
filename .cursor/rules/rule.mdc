@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+---
+
+# Your rule content
+
+- use shadcn ui components to build ui
+- forbiden use transition: all in css
+- write styles using tailwind css and tailwind.config.js
+- only smooth transitions
+

@@ -2,7 +2,6 @@
 
 import React from "react";
 import NextLink from "next/link";
-import Image from 'next/image';
 import { motion } from "framer-motion";
 
 const Logo: React.FC = () => {
@@ -25,27 +24,71 @@ const Logo: React.FC = () => {
               transition: { duration: 0.5 }
             },
             hover: {
-              scale: 1.1,
+              scale: [1, 1.1, 1],
               rotate: [0, -10, 10, -5, 5, 0],
-              transition: { duration: 0.5, repeat: Infinity, repeatType: "loop" }
+              transition: { duration: 0.8, repeat: Infinity, repeatType: "loop" }
             }
           }}
           initial="initial"
           animate="animate"
           whileHover="hover"
         >
-          <Image 
-            src="/nf-logo.svg" 
-            alt="Nikita's Logo" 
-            width={40} 
-            height={40} 
-            className="rounded-full"
-            priority // Добавляем приоритет для загрузки логотипа
-          />
+           {/* Встроенный SVG, автоматически меняющий цвета в темной теме */}
+           <motion.svg
+            width="40"
+            height="40"
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            // Для плавного переключения цветов можно добавить transition-colors
+            className="transition-colors duration-300"
+          >
+            {/* 
+              В circle и path добавлены классы, которые:
+              - В светлой теме: fill-black stroke-white
+              - В темной теме: fill-white stroke-black
+            */}
+            <circle
+              cx="20"
+              cy="20"
+              r="19"
+              className="fill-black dark:fill-white stroke-transparent dark:stroke-transparent"
+              strokeWidth="4"
+            />
+            <path
+              d="M10 28 L30 28"
+              className="stroke-white dark:stroke-black"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+            {/* Буква N */}
+            <path
+              d="M13 12 L13 28 M13 12 L20 28 M20 12 L20 28"
+              className="stroke-white dark:stroke-black"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* Буква F */}
+            <path
+              d="M23 12 L30 12 M23 12 L23 28 M23 20 L28 20"
+              className="stroke-white dark:stroke-black"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* Декоративная точка */}
+            <circle
+              cx="20"
+              cy="8"
+              r="1.5"
+              className="fill-white dark:fill-black"
+            />
+          </motion.svg>
         </motion.div>
       </NextLink>
     </motion.div>
   );
 };
 
-export default Logo; 
+export default Logo;

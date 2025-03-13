@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { skills, projects, myEducation, languages } from "../../data";
+import { skills, projects, myEducation, languages, aboutMe } from "../../data";
 import fs from "fs";
 import path from "path";
 
@@ -84,6 +84,7 @@ function getNikitaData() {
       content: edu.content,
     })),
     languages: languages.map((lang) => `${lang.name} (${lang.percent}%)`),
+    about: aboutMe,
   };
 }
 
@@ -115,6 +116,7 @@ export async function POST(request: Request) {
         - Projects: ${JSON.stringify(nikitaData.projects)}
         - Education: ${JSON.stringify(nikitaData.education)}
         - Languages: ${nikitaData.languages.join(", ")}
+        - About: ${nikitaData.about}
         
         Answer concisely, friendly, and informatively. If you are asked about something not related to Nikita or his work, politely redirect the conversation to the topic of Nikita's portfolio.
         Answer in language of the user.
@@ -135,7 +137,7 @@ export async function POST(request: Request) {
     });
 
     // Получаем ответ от ChatGPT
-    const aiResponse = completion.choices[0].message.content || "Извините, я не смог сформулировать ответ. Пожалуйста, попробуйте задать вопрос иначе.";
+    const aiResponse = completion.choices[0].message.content || "Sorry, I couldn't formulate an answer. Please try asking your question differently.";
 
     // Логируем расход токенов
     await logTokenUsage(
@@ -160,11 +162,11 @@ export async function POST(request: Request) {
     // Возвращаем ответ
     return NextResponse.json({ message: aiResponse }, { status: 200 });
   } catch (error) {
-    console.error("Ошибка при обработке запроса к AI-ассистенту:", error);
+    console.error("Error processing request to AI assistant:", error);
     
     // Возвращаем ошибку
     return NextResponse.json(
-      { error: "Произошла ошибка при обработке запроса" },
+      { error: "An error occurred while processing the request" },
       { status: 500 }
     );
   }

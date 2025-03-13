@@ -5,6 +5,7 @@ import closingTagImage from '../public/closing-tag-screen.webp'
 import blogCustomizerImage from '../public/blog-customizer.webp'
 import ticTacToeImage from '../public/gameAI.webp'
 import GHUserAnalyzerImage from '../public/GH-User-Analyzer.webp'
+import { NavItem } from './components/header/navigation';
 
 const gitHubRepoUrl = 'https://github.com/NKT-FRLV';
 
@@ -140,3 +141,27 @@ export const socialsLinks = [
   { id: 'telegram', link: 'https://web.telegram.org/k/#-955617383', icon: 'telegram' },
   { id: 'linkedin', link: 'https://www.linkedin.com/in/nikita-frolov-22a008342/', icon: 'linkedin' },
 ] 
+
+export const aboutMe = `
+  Context About Nikita
+  Nikita is a seasoned frontend developer with 2.5 years of experience at Reu, a forward-thinking company where he honed his craft in building modern, user-focused web applications. At Reu, Nikita thrived as part of a vibrant, multidisciplinary team that brought together testers, project managers, backend developers, and designers. This diverse group operated under the Agile methodology, fostering a collaborative environment where Nikita played an active role in sprint planning, daily stand-ups, and retrospectives.
+
+  His responsibilities at Reu were both challenging and rewarding:
+
+  Designing and maintaining intuitive user interfaces using React and TypeScript.
+  Collaborating with backend developers to integrate APIs, ensuring seamless functionality across applications.
+  Optimizing performance and ensuring cross-browser compatibility for a flawless user experience.
+  Championing clean code principles and participating in code reviews to uphold high-quality standards.
+  Partnering with designers to translate creative visions into visually stunning and functional interfaces.
+  Beyond development, Nikita worked closely with testers to craft unit and integration tests, ensuring robust and reliable code. He also collaborated with managers to align on project timelines, prioritize tasks, and deliver successful releases. This experience sharpened his technical expertise while cultivating essential skills in teamwork, communication, and project management.
+
+  Nikita’s time at Reu was a transformative period that solidified his passion for frontend development and his ability to thrive in fast-paced, team-driven settings. His blend of technical proficiency and collaborative spirit makes him a standout professional in the field.
+`
+export const navItems: NavItem[] = [
+  { id: 'about', label: 'About Me' },
+  { id: 'education', label: 'Education' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'languages', label: 'Languages' },
+  { id: 'contact', label: 'Contact' }
+];

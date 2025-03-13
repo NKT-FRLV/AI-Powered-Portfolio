@@ -5,6 +5,7 @@ import Header from "./components/header";
 import Hero from "./components/hero";
 import About from "./components/about";
 import dynamic from "next/dynamic";
+import { Skeleton } from "./components/ui/skeleton";
 
 // Используем приоритеты загрузки для компонентов
 // Компоненты, которые видны сразу при загрузке страницы, импортируем напрямую
@@ -24,12 +25,6 @@ const AiAssistant = dynamic(() => import("./components/ai-assistant"), {
   loading: () => null
 });
 
-// Компоненты-заглушки для отложенной загрузки с разными размерами
-const ComponentSkeleton = ({ height = 400 }: { height?: number }) => (
-  <div className="w-full py-12">
-    <div style={{ height: `${height}px` }} className="w-full rounded-lg bg-muted/50 animate-pulse" />
-  </div>
-);
 
 export default function Home() {
   // Используем состояние для отслеживания, загружены ли все компоненты
@@ -56,21 +51,29 @@ export default function Home() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const sectionId = entry.target.id;
-          setVisibleSections(prev => ({
-            ...prev,
-            [sectionId]: true
-          }));
+          if (sectionId) {
+            setVisibleSections(prev => ({
+              ...prev,
+              [sectionId]: true
+            }));
+          }
         }
       });
     }, observerOptions);
 
-    // Наблюдаем за секциями
-    const sections = document.querySelectorAll('section[id]');
-    sections.forEach(section => {
-      sectionObserver.observe(section);
-    });
+    // Даем время для рендеринга компонентов
+    setTimeout(() => {
+      // Наблюдаем за секциями
+      const sections = document.querySelectorAll('section[id]');
+      console.log('Observing sections:', Array.from(sections).map(section => section.id));
+      
+      sections.forEach(section => {
+        sectionObserver.observe(section);
+      });
+    }, 500);
 
     return () => {
+      const sections = document.querySelectorAll('section[id]');
       sections.forEach(section => {
         sectionObserver.unobserve(section);
       });
@@ -115,41 +118,29 @@ export default function Home() {
       <Hero />
       <About />
       
-      <section id="education">
-        <Suspense fallback={<ComponentSkeleton height={400} />}>
-          <Education />
-        </Suspense>
-      </section>
+      <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[400px] max-w-5xl" />}>
+        <Education />
+      </Suspense>
       
-      <section id="skills">
-        <Suspense fallback={<ComponentSkeleton height={500} />}>
-          <Skills />
-        </Suspense>
-      </section>
+      <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[500px] max-w-5xl" />}>
+        <Skills />
+      </Suspense>
       
-      <section id="projects">
-        <Suspense fallback={<ComponentSkeleton height={600} />}>
-          {(visibleSections.education || isLoaded) && <Projects />}
-        </Suspense>
-      </section>
+      <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[600px] max-w-5xl" />}>
+        {(visibleSections.education || isLoaded) && <Projects />}
+      </Suspense>
       
-      <section id="languages">
-        <Suspense fallback={<ComponentSkeleton height={300} />}>
-          {(visibleSections.skills || isLoaded) && <Languages />}
-        </Suspense>
-      </section>
+      <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[300px] max-w-5xl" />}>
+        {(visibleSections.skills || isLoaded) && <Languages />}
+      </Suspense>
       
-      <section id="contact">
-        <Suspense fallback={<ComponentSkeleton height={450} />}>
-          {(visibleSections.projects || isLoaded) && <ContactForm />}
-        </Suspense>
-      </section>
+      <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[450px] max-w-5xl" />}>
+        {(visibleSections.projects || isLoaded) && <ContactForm />}
+      </Suspense>
       
-      <section id="footer">
-        <Suspense fallback={<ComponentSkeleton height={200} />}>
-          {(visibleSections.languages || isLoaded) && <Footer />}
-        </Suspense>
-      </section>
+      <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[200px] max-w-5xl" />}>
+        {(visibleSections.languages || isLoaded) && <Footer />}
+      </Suspense>
       
       {/* Загружаем AI Assistant только после загрузки основных компонентов */}
       {isLoaded && <AiAssistant />}

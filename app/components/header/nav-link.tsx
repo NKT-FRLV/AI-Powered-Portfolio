@@ -25,20 +25,6 @@ const NavLink: React.FC<NavLinkProps> = ({ id, label, isActive, onClick }) => {
       whileTap={{ scale: 0.95 }}
     >
       {label}
-      {isActive && (
-        <motion.div 
-          className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
-          layoutId="activeNavIndicator"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ 
-            type: "spring", 
-            stiffness: 500, 
-            damping: 30,
-            duration: 0.3
-          }}
-        />
-      )}
     </motion.a>
   );
 };

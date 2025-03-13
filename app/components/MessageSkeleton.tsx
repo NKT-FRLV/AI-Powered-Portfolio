@@ -17,7 +17,7 @@ export const MessageSkeleton: React.FC<MessageSkeletonProps> = ({ className = ""
     >
       <div className="flex items-center space-x-2">
         <div className="w-4 h-4 rounded-full bg-primary/30 animate-pulse"></div>
-        <div className="text-sm text-muted-foreground">Печатает сообщение...</div>
+        <div className="text-sm text-muted-foreground">Thinking...</div>
       </div>
     </motion.div>
   );

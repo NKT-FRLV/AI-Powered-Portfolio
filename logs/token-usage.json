@@ -160,5 +160,41 @@
     "totalTokens": 917,
     "cost": 0.001426,
     "query": "ывфафываываыався"
+  },
+  {
+    "timestamp": "2025-03-13T13:38:11.108Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 1129,
+    "completionTokens": 60,
+    "totalTokens": 1189,
+    "cost": 0.0018135,
+    "query": "Здорова че каку"
+  },
+  {
+    "timestamp": "2025-03-13T13:47:19.794Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 1122,
+    "completionTokens": 37,
+    "totalTokens": 1159,
+    "cost": 0.001757,
+    "query": "sdf"
+  },
+  {
+    "timestamp": "2025-03-13T13:58:57.571Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 1121,
+    "completionTokens": 37,
+    "totalTokens": 1158,
+    "cost": 0.0017555000000000001,
+    "query": "asdf"
+  },
+  {
+    "timestamp": "2025-03-13T14:05:32.776Z",
+    "model": "gpt-3.5-turbo",
+    "promptTokens": 1123,
+    "completionTokens": 65,
+    "totalTokens": 1188,
+    "cost": 0.0018145,
+    "query": "че как"
   }
 ]
