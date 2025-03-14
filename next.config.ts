@@ -11,6 +11,31 @@ const nextConfig: NextConfig = {
   },
   // Настройка для серверного рендеринга
   output: 'standalone',
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  // Указываем базовый путь
+  basePath: '',
+  rewrites: async () => {
+    return [
+      {
+        source: '/api/:path*',
+        destination: '/api/:path*',
+      },
+    ];
+  },
+  // Явно указываем обработку маршрутов
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
+        ],
+      },
+    ];
+  },
   // Перемещаем serverComponentsExternalPackages на верхний уровень
   serverExternalPackages: ['openai'],
   // Игнорируем ошибки сборки, связанные с ESM/CJS
