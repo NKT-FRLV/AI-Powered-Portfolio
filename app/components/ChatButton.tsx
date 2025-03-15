@@ -204,14 +204,6 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     prevNotificationCountRef.current = notificationCount;
   }, [notificationCount, playSoundOnNotification, enableHapticFeedback]);
 
-  // Position mapping
-  const positionClasses = {
-    'bottom-right': 'bottom-6 right-6',
-    'bottom-left': 'bottom-6 left-6',
-    'top-right': 'top-6 right-6',
-    'top-left': 'top-6 left-6'
-  };
-
   // Size mapping
   const sizeClasses = {
     'sm': 'h-12 w-12',
@@ -249,22 +241,10 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   const buttonVariants = {
     initial: prefersReducedMotion 
       ? { opacity: 0 } 
-      : { scale: 0, opacity: 0 },
+      : { scale: 0, opacity: 0, rotate: -180, transition: { duration: 0.3 } },
     animate: prefersReducedMotion
-      ? { 
-          opacity: 1,
-          transition: { duration: 0.3 }
-        }
-      : { 
-          scale: 1, 
-          opacity: 1,
-          transition: { 
-            type: "spring", 
-            stiffness: 100,
-            damping: 15,
-            mass: 1.2,
-          } 
-        },
+      ? { opacity: 1 }
+      : { scale: 1, opacity: 1, rotate: 0, transition: { duration: 0.3 } },
     exit: prefersReducedMotion
       ? { opacity: 0, transition: { duration: 0.2 } }
       : { 
@@ -280,8 +260,9 @@ const ChatButton: React.FC<ChatButtonProps> = ({
             ? "0 0 20px 5px rgba(255,255,255,0.3)" 
             : "0 0 20px 5px rgba(0,0,0,0.2)",
           transition: { 
-            duration: 0.3,
-            ease: "easeOut" 
+            duration: 0.5,
+            ease: [0.19, 1, 0.22, 1],
+            boxShadow: { duration: 0.5, ease: "easeInOut" }
           }
         },
     tap: prefersReducedMotion
@@ -386,9 +367,11 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     },
     hover: {
       scale: 1.2,
+      rotate: 360,
       transition: {
-        duration: 0.5,
-        ease: "easeOut"
+        duration: 1.2,
+        ease: [0.34, 1.56, 0.64, 1],
+        rotate: { type: "spring", stiffness: 60, damping: 15 }
       }
     },
   } : { animate: {}, hover: {} };
@@ -454,10 +437,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50 focus-visible:ring-offset-2 
        focus-visible:ring-offset-white ${isKeyboardFocused ? 'ring-2 ring-black/50 ring-offset-2 ring-offset-white' : ''}`;
 
-  // Add hover effect class for the button
-  const hoverEffectClass = !prefersReducedMotion 
-    ? 'transition-all duration-300' 
-    : '';
+
 
   const glowClass = theme === 'dark'
     ? "absolute inset-0 rounded-full bg-white/15 shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300"
@@ -468,8 +448,8 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     : "absolute -inset-2 rounded-full border-2 border-black/10 transition-all duration-300";
 
   const radioWaveClass = (index: number) => theme === 'dark'
-    ? `absolute ${positionClasses[position]} rounded-full border ${index === 0 ? 'border-blue-400/40' : index === 1 ? 'border-indigo-400/30' : 'border-purple-400/20'} pointer-events-none`
-    : `absolute ${positionClasses[position]} rounded-full border ${index === 0 ? 'border-blue-500/30' : index === 1 ? 'border-indigo-500/20' : 'border-purple-500/10'} pointer-events-none`;
+    ? `absolute rounded-full border ${index === 0 ? 'border-blue-400/40' : index === 1 ? 'border-indigo-400/30' : 'border-purple-400/20'} pointer-events-none`
+    : `absolute rounded-full border ${index === 0 ? 'border-blue-500/30' : index === 1 ? 'border-indigo-500/20' : 'border-purple-500/10'} pointer-events-none`;
 
   const waveSize = size === 'sm' ? 'h-12 w-12' : size === 'md' ? 'h-16 w-16' : 'h-20 w-20';
   
@@ -592,16 +572,14 @@ const ChatButton: React.FC<ChatButtonProps> = ({
               setIsKeyboardFocused(false);
               setIsTooltipVisible(false);
             }}
-            className={`${buttonClass} relative ${sizeClasses[size]} rounded-full flex items-center justify-center`}
+            className={`${buttonClass} relative ${sizeClasses[size]} rounded-full flex items-center justify-center transition-box-shadow duration-300`}
             aria-label={`${label}${notificationCount > 0 ? `, ${notificationCount} new messages` : ''}`}
-            aria-haspopup="dialog"
             aria-expanded={isTooltipVisible}
             aria-describedby={isTooltipVisible ? "chat-tooltip" : undefined}
             aria-live={notificationCount > 0 ? "polite" : "off"}
             aria-atomic="true"
             aria-busy={isKeyboardFocused}
             aria-controls="chat-container"
-            title={`${label}${notificationCount > 0 ? `, ${notificationCount} new messages` : ''}`}
             tabIndex={0}
             role="button"
             data-testid="chat-button"
@@ -673,7 +651,6 @@ const ChatButton: React.FC<ChatButtonProps> = ({
                 variants={iconVariants}
                 animate="animate"
                 whileHover="hover"
-                className={hoverEffectClass}
               >
                 <SiOpenai 
                   className={`${iconSizes[size]} ${theme === 'dark' ? 'text-white' : 'text-zinc-800'} drop-shadow-md`}

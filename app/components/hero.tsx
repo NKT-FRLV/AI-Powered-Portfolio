@@ -77,7 +77,7 @@ export default function Hero() {
       </div>
 
       <div className="container px-4 md:px-6 relative z-10">
-        <div className="grid gap-4 sm:gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
+        <div className="grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_500px]">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -85,9 +85,9 @@ export default function Hero() {
             className="flex flex-col justify-center space-y-2 sm:space-y-4"
           >
             <div className="space-y-2 xs:space-y-4 sm:space-y-6 md:space-y-8">
-              <h1 className="font-bold tracking-tighter flex flex-col gap-2 xs:gap-3 sm:gap-5 md:gap-6">
+              <h1 className="font-bold tracking-tighter flex flex-col gap-2 xs:gap-3 md:gap-0 font-rubik-mono">
                 <AnimatedLetters 
-                  letterClass={`${letterClass} text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-muted-foreground`} 
+                  letterClass={`${letterClass} text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-muted-foreground font-rubik-mono`} 
                   strArray={hi} 
                   idx={1} 
                 />
@@ -110,7 +110,7 @@ export default function Hero() {
                   idx={1} 
                 />
                 
-                <div className="mt-2 opacity-80 flex flex-col gap-2 xs:gap-3 sm:gap-4">
+                <div className="mt-2 opacity-80 flex flex-col gap-2 xs:gap-3 sm:gap-4 md:gap-0">
                   <AnimatedLetters 
                     letterClass={`${letterClass} text-base xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-muted-foreground/80`} 
                     strArray={fullText} 

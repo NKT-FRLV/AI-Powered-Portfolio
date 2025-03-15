@@ -118,6 +118,9 @@ export default function Home() {
       <Hero />
       <About />
       
+      {/* Load AI Assistant earlier for better user experience */}
+      <AiAssistant />
+      
       <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[400px] max-w-5xl" />}>
         <Education />
       </Suspense>
@@ -141,9 +144,6 @@ export default function Home() {
       <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[200px] max-w-5xl" />}>
         {(visibleSections.languages || isLoaded) && <Footer />}
       </Suspense>
-      
-      {/* Загружаем AI Assistant только после загрузки основных компонентов */}
-      {isLoaded && <AiAssistant />}
     </main>
   );
 }

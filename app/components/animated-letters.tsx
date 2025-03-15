@@ -70,7 +70,7 @@ const AnimatedLetters = ({
                           i <= nameEnd;
         
         // Формируем классы для символа
-        let charClasses = letterClass;
+        let charClasses = `${letterClass} font-rubik-mono`;
         if (isBracket && bracketClass) charClasses += ` ${bracketClass}`;
         if (isNamePart && nameClass) charClasses += ` ${nameClass}`;
         

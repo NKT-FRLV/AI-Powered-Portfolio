@@ -4,13 +4,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
 
-const exo2 = localFont({
-  src: "./fonts/Exo2-VariableFont_wght.ttf",
-  variable: "--font-exo2",
-  display: "swap",
-  preload: true,
-});
-
 const orbitron = localFont({
   src: "./fonts/Orbitron-VariableFont_wght.ttf",
   variable: "--font-orbitron",
@@ -19,10 +12,16 @@ const orbitron = localFont({
 });
 
 const rubikMonoOne = localFont({
-  src: "./fonts/RubikMonoOne-Regular.ttf",
-  variable: "--font-rubik",
+  src: [
+    {
+      path: "./fonts/RubikMonoOne-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    }
+  ],
+  variable: "--font-rubik-mono",
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 const geistSans = Geist({
@@ -125,7 +124,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${exo2.variable} ${orbitron.variable} ${rubikMonoOne.variable}`}
+        className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${rubikMonoOne.variable} font-rubik-mono`}
       >
         <ThemeProvider
           attribute="class"
