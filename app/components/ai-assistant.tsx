@@ -507,7 +507,7 @@ export default function AiAssistant() {
     initial: { 
       opacity: 0,
       y: "100%",
-      scale: 1
+      scale: 0.95
     },
     animate: { 
       opacity: 1,
@@ -515,17 +515,17 @@ export default function AiAssistant() {
       scale: 1,
       transition: { 
         type: "spring", 
-        damping: 25, 
-        stiffness: 300,
-        duration: 0.4
+        damping: 20, 
+        stiffness: 250,
+        duration: 0.5
       }
     },
     exit: { 
       opacity: 0,
       y: "100%",
-      scale: 1,
+      scale: 0.95,
       transition: { 
-        duration: 0.3,
+        duration: 0.4,
         ease: "easeInOut"
       }
     }
@@ -775,7 +775,7 @@ export default function AiAssistant() {
             soundUrl={notificationSound}
             enableHapticFeedback={hapticEnabled}
             tooltipText={unreadCount > 0 ? t.newMessages(unreadCount) : "Chat with Nikita's AI Assistant (Ctrl+/)"}
-            showTooltip={true}
+            showTooltip={false} // Убираем подсказку
           />
         )}
       </AnimatePresence>
@@ -793,11 +793,16 @@ export default function AiAssistant() {
             aria-modal="true"
             aria-labelledby="chat-title"
             aria-describedby="chat-description"
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20
+            }}
           >
             <motion.div 
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.3, delay: 0.1 } }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
               className="flex h-full flex-col"
             >
               <motion.div className="flex items-center justify-between border-b p-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10">

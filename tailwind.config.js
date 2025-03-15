@@ -183,14 +183,6 @@ module.exports = {
             transform: 'translateY(0)'
           }
         },
-        'chat-open': {
-          '0%': {
-            clipPath: 'circle(50% at bottom right)'
-          },
-          '100%': {
-            clipPath: 'inset(0% 0% 0% 0% round 0.5rem)'
-          }
-        },
         'chat-close': {
           '0%': {
             clipPath: 'inset(0% 0% 0% 0% round 0.5rem)'
@@ -220,7 +212,6 @@ module.exports = {
         "nav-out": "nav-out 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
         "skeleton": "skeleton 2s ease-in-out infinite",
         "message-appear": "message-appear 0.3s ease-out forwards",
-        "chat-open": "chat-open 0.5s ease-out forwards",
         "chat-close": "chat-close 0.4s ease-in forwards",
         "glow": "glow 3s ease-in-out infinite"
       },

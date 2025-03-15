@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { format } from "date-fns";
-import { ru } from "date-fns/locale";
+import React, { useState } from 'react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
-export interface ChatMessageProps {
+interface ChatMessageProps {
   id: string;
   content: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   timestamp: Date;
   isTyping?: boolean;
   index: number;
-  bubbleClassName?: string;
+  bubbleClassName: string;
   reactions?: string[];
   onReactionAdd?: (emoji: string) => void;
   showReactions?: boolean;
   language?: 'en' | 'ru';
 }
 
-export default function ChatMessage({
+const ChatMessage: React.FC<ChatMessageProps> = ({
   id,
   content,
   role,
@@ -28,18 +28,11 @@ export default function ChatMessage({
   reactions = [],
   onReactionAdd,
   showReactions = true,
-  language = 'en',
-}: ChatMessageProps) {
-  const isUser = role === "user";
+  language = 'en'
+}) => {
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   
-  // Default bubble classes if no custom classes are provided
-  const defaultBubbleClasses = isUser
-    ? "bg-blue-500 text-white rounded-2xl rounded-tr-none px-4 py-2"
-    : "bg-muted text-foreground rounded-2xl rounded-tl-none px-4 py-2";
-
-  // Available reactions
-  const availableReactions = ["👍", "❤️", "😂", "😮", "😢", "👏"];
+  const availableReactions = ['👍', '❤️', '😊', '🎉', '🤔', '👏'];
   
   // Translations
   const translations = {
@@ -69,122 +62,182 @@ export default function ChatMessage({
   
   const t = translations[language];
   
-  // Format time with localization
-  const formattedTime = format(timestamp, "HH:mm", {
-    locale: language === 'ru' ? ru : undefined
-  });
-
+  const messageVariants: Variants = {
+    initial: { 
+      opacity: 0, 
+      y: 20,
+      scale: 0.95
+    },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      scale: 1,
+      transition: { 
+        type: "spring",
+        damping: 25,
+        stiffness: 300,
+        duration: 0.4,
+        delay: index * 0.05 // Stagger effect based on message index
+      }
+    },
+    exit: { 
+      opacity: 0,
+      transition: { 
+        duration: 0.2
+      }
+    }
+  };
+  
+  const cursorVariants: Variants = {
+    blink: {
+      opacity: [0, 1, 0],
+      transition: {
+        duration: 1,
+        repeat: Infinity,
+        repeatType: "loop"
+      }
+    }
+  };
+  
+  const reactionPickerVariants: Variants = {
+    initial: { 
+      opacity: 0, 
+      scale: 0.8,
+      y: 10
+    },
+    animate: { 
+      opacity: 1, 
+      scale: 1,
+      y: 0,
+      transition: { 
+        type: "spring",
+        damping: 20,
+        stiffness: 300
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.8,
+      y: 10,
+      transition: { 
+        duration: 0.2
+      }
+    }
+  };
+  
+  const toggleReactionPicker = () => {
+    setShowReactionPicker(!showReactionPicker);
+  };
+  
+  const handleReactionClick = (emoji: string) => {
+    if (onReactionAdd) {
+      onReactionAdd(emoji);
+    }
+    setShowReactionPicker(false);
+  };
+  
+  const formattedTime = language === 'ru'
+    ? format(timestamp, 'HH:mm', { locale: ru })
+    : format(timestamp, 'h:mm a');
+  
   return (
     <motion.div
-      className={`mb-4 flex ${isUser ? "justify-end" : "justify-start"}`}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.2, delay: index * 0.05 }}
+      className={`flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
+      layout
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={messageVariants}
       role="listitem"
-      aria-label={`${isUser ? t.you : t.assistant} at ${formattedTime}`}
+      aria-label={`${role === 'user' ? t.you : t.assistant} at ${formattedTime}`}
     >
-      <div className={`max-w-[80%] ${isUser ? "items-end" : "items-start"}`}>
+      <div className="flex flex-col max-w-[80%]">
         <div 
-          className={`relative ${bubbleClassName || defaultBubbleClasses}`}
-          onDoubleClick={() => showReactions && onReactionAdd && setShowReactionPicker(true)}
+          className={`relative ${bubbleClassName}`}
           tabIndex={0}
           role="article"
           aria-labelledby={`message-${id}-sender`}
           aria-describedby={`message-${id}-content message-${id}-time`}
         >
           <span id={`message-${id}-sender`} className="sr-only">
-            {isUser ? t.you : t.assistant}
+            {role === 'user' ? t.you : t.assistant}
           </span>
           
-          {isTyping ? (
-            <div 
-              className="flex items-center space-x-1"
-              aria-label={t.isTyping}
-              role="status"
-            >
-              <div className="h-2 w-2 animate-bounce rounded-full bg-current"></div>
-              <div
-                className="h-2 w-2 animate-bounce rounded-full bg-current"
-                style={{ animationDelay: "0.2s" }}
-              ></div>
-              <div
-                className="h-2 w-2 animate-bounce rounded-full bg-current"
-                style={{ animationDelay: "0.4s" }}
-              ></div>
-            </div>
-          ) : (
-            <div 
-              className="whitespace-pre-wrap break-words"
-              id={`message-${id}-content`}
-            >
-              {content}
-            </div>
-          )}
+          <div 
+            className="whitespace-pre-wrap break-words"
+            id={`message-${id}-content`}
+          >
+            {content}
+            {isTyping && (
+              <motion.span
+                className="inline-block w-1.5 h-4 ml-0.5 bg-current"
+                variants={cursorVariants}
+                animate="blink"
+              />
+            )}
+          </div>
           
-          {/* Reaction picker */}
-          <AnimatePresence>
-            {showReactionPicker && (
-              <motion.div 
-                className="absolute bottom-full left-0 mb-2 flex space-x-1 bg-background/80 backdrop-blur-sm p-1 rounded-full shadow-lg border"
-                initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: 10 }}
-                transition={{ duration: 0.15 }}
-                role="menu"
+          {showReactions && !isTyping && (
+            <div className="absolute -bottom-6 right-0 flex items-center space-x-1">
+              {reactions.length > 0 && (
+                <div 
+                  className="flex items-center bg-background/80 backdrop-blur-sm rounded-full px-1.5 py-0.5 border shadow-sm"
+                  aria-label={t.messageReactions}
+                >
+                  {Array.from(new Set(reactions)).map((emoji) => (
+                    <div key={emoji} className="text-xs mx-0.5">
+                      {emoji} {reactions.filter(r => r === emoji).length > 1 && reactions.filter(r => r === emoji).length}
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              <button
+                onClick={toggleReactionPicker}
+                className="text-xs bg-background/80 backdrop-blur-sm rounded-full p-1 border shadow-sm hover:bg-muted transition-colors"
                 aria-label={t.addReaction}
               >
-                {availableReactions.map(emoji => (
-                  <button
-                    key={emoji}
-                    className="hover:bg-muted p-1 rounded-full transition-colors"
-                    onClick={() => {
-                      onReactionAdd?.(emoji);
-                      setShowReactionPicker(false);
-                    }}
-                    aria-label={t.reactWith(emoji)}
-                    role="menuitem"
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                  <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                  <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                </svg>
+              </button>
+              
+              <AnimatePresence>
+                {showReactionPicker && (
+                  <motion.div
+                    className="absolute -bottom-10 right-0 bg-background/90 backdrop-blur-sm rounded-full px-2 py-1 border shadow-md z-10"
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={reactionPickerVariants}
+                    role="menu"
+                    aria-label={t.addReaction}
                   >
-                    {emoji}
-                  </button>
-                ))}
-                <button
-                  className="hover:bg-muted p-1 rounded-full transition-colors text-xs"
-                  onClick={() => setShowReactionPicker(false)}
-                  aria-label={t.closeReactionPicker}
-                  role="menuitem"
-                >
-                  ✕
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    <div className="flex space-x-1.5">
+                      {availableReactions.map((emoji) => (
+                        <button
+                          key={emoji}
+                          onClick={() => handleReactionClick(emoji)}
+                          className="text-sm hover:scale-125 transition-transform"
+                          aria-label={t.reactWith(emoji)}
+                          role="menuitem"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
         </div>
         
-        {/* Display reactions */}
-        {reactions.length > 0 && (
-          <div 
-            className="flex mt-1 space-x-1"
-            aria-label={t.messageReactions}
-          >
-            {reactions.map((emoji, i) => (
-              <motion.button
-                key={`${emoji}-${i}`}
-                className="bg-background/80 backdrop-blur-sm rounded-full px-1 border shadow-sm text-xs"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                whileHover={{ scale: 1.2 }}
-                onClick={() => onReactionAdd?.(emoji)}
-                aria-label={t.reaction(emoji)}
-              >
-                {emoji}
-              </motion.button>
-            ))}
-          </div>
-        )}
-        
         <div 
-          className="mt-1 text-xs text-muted-foreground"
+          className="text-xs text-muted-foreground mt-1 self-end"
           id={`message-${id}-time`}
           aria-label={`${t.sentAt} ${formattedTime}`}
         >
@@ -193,4 +246,6 @@ export default function ChatMessage({
       </div>
     </motion.div>
   );
-} 
+};
+
+export default ChatMessage;

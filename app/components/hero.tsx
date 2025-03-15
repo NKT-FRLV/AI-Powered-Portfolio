@@ -50,11 +50,7 @@ export default function Hero() {
 
   return (
     <section className="relative h-screen flex items-center overflow-hidden">
-      {/* Background Shadow */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl light:bg-black"></div>
-        <div className="absolute top-[60%] -right-[5%] w-[30%] h-[30%] rounded-full bg-primary/5 dark:bg-primary/10 blur-3xl light:bg-black"></div>
-      </div>
+      
 
       {/* Фоновое изображение для больших экранов */}
       <div className="absolute right-0 top-0 h-full hidden lg:flex items-center justify-end">
@@ -72,7 +68,8 @@ export default function Hero() {
             height={1500}
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/20 to-background/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
         </motion.div>
       </div>
 

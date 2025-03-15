@@ -91,7 +91,8 @@ export default function Home() {
         import("../projects"),
         import("../languages"),
         import("../contact-form"),
-        import("../footer")
+        import("../footer"),
+        import("../ai-assistant")
       ];
 
       // Используем Promise.all для ожидания загрузки всех компонентов

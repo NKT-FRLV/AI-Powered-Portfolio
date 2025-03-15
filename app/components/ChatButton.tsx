@@ -241,28 +241,84 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   const buttonVariants = {
     initial: prefersReducedMotion 
       ? { opacity: 0 } 
-      : { scale: 0, opacity: 0, rotate: -180, transition: { duration: 0.3 } },
+      : { 
+          scale: 0, 
+          opacity: 0, 
+          rotate: -180,
+          boxShadow: "0px 0px 0px rgba(0,0,0,0)"
+        },
     animate: prefersReducedMotion
-      ? { opacity: 1 }
-      : { scale: 1, opacity: 1, rotate: 0, transition: { duration: 0.3 } },
+      ? { 
+          opacity: 1,
+          transition: {
+            duration: 0.3
+          }
+        }
+      : { 
+          scale: 1, 
+          opacity: 1, 
+          rotate: 0,
+          boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+          transition: { 
+            scale: {
+              type: "spring",
+              damping: 20,
+              stiffness: 300
+            },
+            rotate: {
+              type: "spring",
+              damping: 20,
+              stiffness: 300
+            },
+            opacity: {
+              duration: 0.4
+            }
+          } 
+        },
     exit: prefersReducedMotion
-      ? { opacity: 0, transition: { duration: 0.2 } }
+      ? { 
+          opacity: 0,
+          transition: { 
+            duration: 0.3 
+          } 
+        }
       : { 
           scale: 0,
           opacity: 0,
-          transition: { duration: 0.3, ease: "easeInOut" }
+          rotate: -180,
+          transition: { 
+            scale: {
+              type: "spring",
+              damping: 25,
+              stiffness: 300
+            },
+            rotate: {
+              type: "spring",
+              damping: 25,
+              stiffness: 300
+            },
+            opacity: {
+              duration: 0.3
+            }
+          }
         },
     hover: prefersReducedMotion
       ? { }
       : { 
           scale: 1.05,
           boxShadow: theme === 'dark' 
-            ? "0 0 20px 5px rgba(255,255,255,0.3)" 
-            : "0 0 20px 5px rgba(0,0,0,0.2)",
+            ? "0 0 25px 8px rgba(255,255,255,0.3)" 
+            : "0 0 25px 8px rgba(0,0,0,0.2)",
           transition: { 
-            duration: 0.5,
-            ease: [0.19, 1, 0.22, 1],
-            boxShadow: { duration: 0.5, ease: "easeInOut" }
+            scale: {
+              type: "spring",
+              damping: 15,
+              stiffness: 400
+            },
+            boxShadow: {
+              duration: 0.3,
+              ease: "easeOut"
+            }
           }
         },
     tap: prefersReducedMotion
@@ -270,8 +326,11 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       : { 
           scale: 0.95,
           transition: { 
-            duration: 0.1,
-            ease: "easeOut" 
+            scale: {
+              type: "spring",
+              damping: 15,
+              stiffness: 400
+            }
           }
         },
     focus: {
@@ -279,7 +338,16 @@ const ChatButton: React.FC<ChatButtonProps> = ({
         ? "0 0 0 3px rgba(255,255,255,0.5), 0 0 0 6px rgba(255,255,255,0.2)"
         : "0 0 0 3px rgba(0,0,0,0.3), 0 0 0 6px rgba(0,0,0,0.1)",
       scale: 1.02,
-      transition: { duration: 0.2 }
+      transition: { 
+        scale: {
+          duration: 0.2,
+          ease: "easeOut"
+        },
+        boxShadow: {
+          duration: 0.2,
+          ease: "easeOut"
+        }
+      }
     }
   };
   
@@ -343,16 +411,25 @@ const ChatButton: React.FC<ChatButtonProps> = ({
 
   // Disable or simplify animations based on user preference
   const glowVariants = !prefersReducedMotion && pulseEffect ? {
+    initial: {
+      opacity: 0.4,
+      filter: "brightness(1)"
+    },
     animate: {
       opacity: [0.4, 0.7, 0.4],
+      filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"],
       transition: {
         duration: 3,
         repeat: Infinity,
-        ease: "easeInOut",
-        repeatType: "mirror" as const
+        ease: [0.4, 0, 0.2, 1],
+        times: [0, 0.5, 1],
+        repeatType: "reverse" as const
       }
     }
-  } : { animate: {} };
+  } : { 
+    initial: { opacity: 0.4 },
+    animate: { opacity: 0.4 }
+  };
 
   const iconVariants = !prefersReducedMotion ? {
     animate: {
@@ -377,28 +454,41 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   } : { animate: {}, hover: {} };
 
   const ringVariants = !prefersReducedMotion && pulseEffect ? {
+    initial: {
+      opacity: 0.2,
+      scale: 1
+    },
     animate: {
-      opacity: [0.2, 0.5, 0.2],
+      opacity: [0.2, 0.4, 0.2],
+      scale: [1, 1.05, 1],
       transition: {
         duration: 4,
         repeat: Infinity,
-        ease: "easeInOut",
-        repeatType: "mirror" as const
+        ease: [0.4, 0, 0.2, 1],
+        times: [0, 0.5, 1],
+        repeatType: "reverse" as const
       }
     }
-  } : { animate: {} };
+  } : { 
+    initial: { opacity: 0.2, scale: 1 },
+    animate: { opacity: 0.2, scale: 1 }
+  };
 
   const radioWaveVariants = !prefersReducedMotion && pulseEffect ? {
-    initial: { scale: 0.4, opacity: 0 },
+    initial: { 
+      scale: 0.4, 
+      opacity: 0 
+    },
     animate: (i: number) => ({
       scale: [0.8, 2],
       opacity: [0.6, 0],
       transition: {
+        duration: 3,
         repeat: Infinity,
-        repeatDelay: 2,
-        duration: 5,
-        delay: i * 1.5,
-        ease: [0.2, 0.4, 0.6, 0.8],
+        repeatDelay: 1,
+        delay: i * 1,
+        ease: [0.4, 0, 0.2, 1],
+        times: [0, 1],
         repeatType: "loop" as const
       }
     })
@@ -412,15 +502,16 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     animate: { 
       opacity: 1,
       transition: { 
-        duration: 0.3,
+        duration: 0.5,
         when: "beforeChildren", 
-        staggerChildren: prefersReducedMotion ? 0 : 0.1 
+        staggerChildren: prefersReducedMotion ? 0 : 0.1,
+        delayChildren: 0.1
       }
     },
     exit: {
       opacity: 0,
       transition: {
-        duration: 0.2,
+        duration: 0.3,
         when: "afterChildren",
         staggerChildren: prefersReducedMotion ? 0 : 0.05,
         staggerDirection: -1
@@ -428,7 +519,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     }
   };
 
-  // Enhanced button classes with focus states
+  // Enhanced button classes without transition classes
   const buttonClass = theme === 'dark' 
     ? `bg-black/80 backdrop-blur-md shadow-xl border border-white/30 
        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 
@@ -440,16 +531,16 @@ const ChatButton: React.FC<ChatButtonProps> = ({
 
 
   const glowClass = theme === 'dark'
-    ? "absolute inset-0 rounded-full bg-white/15 shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300"
-    : "absolute inset-0 rounded-full bg-zinc-900/15 shadow-[0_0_20px_rgba(0,0,0,0.2)] transition-all duration-300";
+    ? "absolute inset-0 rounded-full bg-white/15 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+    : "absolute inset-0 rounded-full bg-zinc-900/15 shadow-[0_0_30px_rgba(0,0,0,0.2)]";
     
   const ringClass = theme === 'dark'
-    ? "absolute -inset-2 rounded-full border-2 border-white/15 transition-all duration-300"
-    : "absolute -inset-2 rounded-full border-2 border-black/10 transition-all duration-300";
+    ? "absolute -inset-2 rounded-full border-2 border-white/15"
+    : "absolute -inset-2 rounded-full border-2 border-black/10";
 
   const radioWaveClass = (index: number) => theme === 'dark'
-    ? `absolute rounded-full border ${index === 0 ? 'border-blue-400/40' : index === 1 ? 'border-indigo-400/30' : 'border-purple-400/20'} pointer-events-none`
-    : `absolute rounded-full border ${index === 0 ? 'border-blue-500/30' : index === 1 ? 'border-indigo-500/20' : 'border-purple-500/10'} pointer-events-none`;
+    ? `absolute rounded-full border ${index === 0 ? 'border-blue-400/50' : index === 1 ? 'border-indigo-400/40' : 'border-purple-400/30'} pointer-events-none`
+    : `absolute rounded-full border ${index === 0 ? 'border-blue-500/40' : index === 1 ? 'border-indigo-500/30' : 'border-purple-500/20'} pointer-events-none`;
 
   const waveSize = size === 'sm' ? 'h-12 w-12' : size === 'md' ? 'h-16 w-16' : 'h-20 w-20';
   
@@ -465,7 +556,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   const shouldShowBadge = showNotificationBadge && notificationCount > 0;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isVisible && (
         <motion.div
           className="fixed z-50"
