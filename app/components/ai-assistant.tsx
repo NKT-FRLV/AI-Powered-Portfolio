@@ -335,31 +335,15 @@ export default function AiAssistant() {
     setInput("");
 
     // Add typing indicator with realistic typing simulation
-    setMessages([...messages, userMessage, {
-      id: Date.now().toString() + "-typing",
-      content: "",
-      role: "assistant",
-      timestamp: new Date(),
-      isTyping: true,
-      reactions: []
-    }]);
+    setMessages([...messages, userMessage]);
 
     try {
-      // Simulate a realistic typing delay
-      const typingDelay = Math.min(1000 + userInput.length * 20, 3000);
-      
-      // Start API request in parallel with typing animation
-      const responsePromise = fetch("/api/ai-assistant", {
+      // Start API request
+      const response = await fetch("/api/ai-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userInput }),
       });
-      
-      // Wait for minimum typing delay to make it feel natural
-      await new Promise(resolve => setTimeout(resolve, typingDelay));
-      
-      // Now wait for API response if it's not ready yet
-      const response = await responsePromise;
 
       if (!response.ok) {
         throw new Error("Error when receiving a response from the assistant");
@@ -367,71 +351,17 @@ export default function AiAssistant() {
 
       const data = await response.json();
 
-      // Simulate gradual typing of the response
-      const assistantResponse = data.message;
-      const typingSpeed = 30; // ms per character, adjust for faster/slower typing
-      
-      // Find the typing message index
-      const newMessages = [...messages, userMessage];
-      const typingMessageIndex = newMessages.length;
-      
-      // Add the typing indicator
-      setMessages([
-        ...newMessages, 
-        {
-          id: Date.now().toString() + "-typing",
-          content: "",
+      // Immediately set the full response
+      setMessages(prev => {
+        const newMessages = [...prev];
+        newMessages.push({
+          id: Date.now().toString() + "-assistant",
+          content: data.message,
           role: "assistant",
           timestamp: new Date(),
-          isTyping: true,
+          isTyping: false,
           reactions: []
-        }
-      ]);
-      
-      // Gradually reveal the message character by character
-      let displayedText = "";
-      const fullText = assistantResponse;
-      
-      for (let i = 0; i <= fullText.length; i++) {
-        displayedText = fullText.substring(0, i);
-        
-        setMessages(prev => {
-          const updatedMessages = [...prev];
-          
-          // Update the typing message with the current text
-          if (updatedMessages.length > typingMessageIndex) {
-            updatedMessages[typingMessageIndex] = {
-              ...updatedMessages[typingMessageIndex],
-              content: displayedText,
-              isTyping: i < fullText.length
-            };
-          }
-          
-          return updatedMessages;
         });
-        
-        // Wait before showing the next character
-        if (i < fullText.length) {
-          // Randomize typing speed slightly for realism
-          const randomDelay = typingSpeed * (0.5 + Math.random());
-          await new Promise(resolve => setTimeout(resolve, randomDelay));
-        }
-      }
-      
-      // Ensure the final message is complete and marked as not typing
-      setMessages(prev => {
-        const finalMessages = [...prev];
-        
-        if (finalMessages.length > typingMessageIndex) {
-          finalMessages[typingMessageIndex] = {
-            id: Date.now().toString() + "-assistant",
-            content: fullText,
-            role: "assistant",
-            timestamp: new Date(),
-            isTyping: false,
-            reactions: []
-          };
-        }
         
         // Вызываем легкую вибрацию, когда ассистент завершил ответ
         triggerHapticFeedback(70);
@@ -439,7 +369,7 @@ export default function AiAssistant() {
         // Воспроизводим звук уведомления при получении сообщения от ассистента
         playNotificationSound();
         
-        return finalMessages;
+        return newMessages;
       });
       
     } catch (error) {
