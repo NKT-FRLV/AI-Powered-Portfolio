@@ -20,7 +20,7 @@ const AnimatedLetters = ({
   bracketClass = '', 
   nameClass = '',
   nameStart,
-  nameEnd
+  nameEnd,
 }: AnimatedLettersProps) => {
   // Используем useRef вместо useState для отслеживания состояния анимации
   // Это позволит избежать лишних ререндеров

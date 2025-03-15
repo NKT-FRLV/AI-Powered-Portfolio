@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { socialsLinks } from "../data";
@@ -16,12 +16,24 @@ const iconMap: Record<string, React.ElementType> = {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [isOnTheTop, setIsOnTheTop] = useState(false);
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+  const scrollTo = () => {
+    setIsOnTheTop(prev => !prev);
+    
+    if (isOnTheTop) {
+      // Скролл в самый низ
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    } else {
+      // Скролл наверх
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
@@ -29,11 +41,15 @@ export default function Footer() {
       <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center pointer-events-none">
         <motion.button
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ 
+            rotate: isOnTheTop ? 180 : 0,
+            opacity: 1,
+            y: 0 
+          }}
           whileHover={{ scale: 1.1 }}
-          onClick={scrollToTop}
+          onClick={scrollTo}
           className="pointer-events-auto bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] p-3 rounded-full shadow-lg"
-          aria-label="Scroll to top"
+          aria-label={isOnTheTop ? "Scroll to bottom" : "Scroll to top"}
         >
           <FaChevronUp size={20} />
         </motion.button>

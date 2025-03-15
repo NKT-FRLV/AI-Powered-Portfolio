@@ -60,7 +60,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
           </SheetHeader>
 
           <ScrollArea className="h-[calc(100vh-8rem)] px-6">
-            <nav className="space-y-2 py-6">
+            <nav className="space-y-4 py-6">
               <AnimatePresence>
                 {navItems.map((item, index) => (
                   <motion.div
