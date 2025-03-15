@@ -430,10 +430,10 @@ const ChatButton: React.FC<ChatButtonProps> = ({
 
   // Enhanced button classes with focus states
   const buttonClass = theme === 'dark' 
-    ? `bg-black/80 backdrop-blur-md shadow-xl hover:shadow-2xl border border-white/30 
+    ? `bg-black/80 backdrop-blur-md shadow-xl border border-white/30 
        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 
        focus-visible:ring-offset-black ${isKeyboardFocused ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-black' : ''}`
-    : `bg-white/90 backdrop-blur-md shadow-xl hover:shadow-2xl border border-black/20 
+    : `bg-white/90 backdrop-blur-md shadow-xl border border-black/20 
        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50 focus-visible:ring-offset-2 
        focus-visible:ring-offset-white ${isKeyboardFocused ? 'ring-2 ring-black/50 ring-offset-2 ring-offset-white' : ''}`;
 

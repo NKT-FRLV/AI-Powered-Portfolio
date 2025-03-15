@@ -38,7 +38,7 @@ export default function Footer() {
 
   return (
     <footer className="relative border-t bg-[hsl(var(--muted))]/20">
-      <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center pointer-events-none">
+      <div className="fixed bottom-4 left-0 right-0 z-10 flex justify-center pointer-events-none">
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ 

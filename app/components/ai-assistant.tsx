@@ -120,7 +120,7 @@ export default function AiAssistant() {
   
   const [bubbleStyle, setBubbleStyle] = useState<'rounded' | 'modern' | 'classic'>('modern');
   
-  const [saveChatHistory, setSaveChatHistory] = useState(true);
+  const [saveChatHistory, setSaveChatHistory] = useState(false);
   
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -138,6 +138,37 @@ export default function AiAssistant() {
   // Reference to speech recognition and synthesis
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
+  
+  // Audio reference for notification sound
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // Function to play notification sound
+  const playNotificationSound = useCallback(() => {
+    if (soundEnabled && typeof window !== 'undefined') {
+      try {
+        // Create new audio instance if not exists
+        if (!audioRef.current) {
+          audioRef.current = new Audio(notificationSound);
+        }
+        
+        // Reset audio to beginning if it's already playing
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        
+        // Play notification sound
+        const playPromise = audioRef.current.play();
+        
+        // Handle potential play() promise rejection
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log('Audio playback was prevented by the browser:', error);
+          });
+        }
+      } catch (error) {
+        console.error('Could not play notification sound:', error);
+      }
+    }
+  }, [soundEnabled, notificationSound]);
   
   const requestNotificationPermission = useCallback(async () => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
@@ -276,6 +307,17 @@ export default function AiAssistant() {
     });
   }, [setMessages]);
 
+  // Функция для вызова вибрации устройства
+  const triggerHapticFeedback = useCallback((pattern: number | number[] = 50) => {
+    if (hapticEnabled && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(pattern);
+      } catch (error) {
+        console.log('Haptic feedback not supported:', error);
+      }
+    }
+  }, [hapticEnabled]);
+
   const handleSubmit = async (e: React.FormEvent) => { 
     e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -391,6 +433,12 @@ export default function AiAssistant() {
           };
         }
         
+        // Вызываем легкую вибрацию, когда ассистент завершил ответ
+        triggerHapticFeedback(70);
+        
+        // Воспроизводим звук уведомления при получении сообщения от ассистента
+        playNotificationSound();
+        
         return finalMessages;
       });
       
@@ -410,6 +458,12 @@ export default function AiAssistant() {
             isTyping: false,
             reactions: []
           };
+          
+          // Вызываем вибрацию при ошибке (другой паттерн)
+          triggerHapticFeedback([70, 50, 70]);
+          
+          // Воспроизводим звук уведомления даже при ошибке
+          playNotificationSound();
         }
         
         return newMessages;
@@ -642,6 +696,32 @@ export default function AiAssistant() {
     synthRef.current.speak(utterance);
   }, [language]);
 
+  // Initialize audio for notification sound
+  useEffect(() => {
+    if (typeof window !== 'undefined' && soundEnabled) {
+      try {
+        audioRef.current = new Audio(notificationSound);
+        
+        // Add error handling for the audio element
+        audioRef.current.addEventListener('error', (e) => {
+          console.error('Error loading notification sound:', e);
+        });
+      } catch (error) {
+        console.error('Could not initialize audio:', error);
+      }
+    }
+    
+    return () => {
+      if (audioRef.current) {
+        // Remove event listeners
+        audioRef.current.removeEventListener('error', () => {});
+        // Pause and nullify
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [notificationSound, soundEnabled]);
+  
   // Update language settings in localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
