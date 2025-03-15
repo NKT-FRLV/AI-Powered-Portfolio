@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useEffect, useState, useRef } from 'react';
+import { useCallback, memo, useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { SiOpenai } from "react-icons/si";
 
@@ -38,27 +38,16 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   // Respect user's reduced motion preferences
   const prefersReducedMotion = useReducedMotion();
   
-  // State to track if the button has been shown to the user
+  // Component state
   const [hasBeenShown, setHasBeenShown] = useState(false);
-  
-  // Track if the button is focused via keyboard
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
-  
-  // Track previous notification count to detect changes
-  const prevNotificationCountRef = useRef(notificationCount);
-  
-  // Audio reference for notification sound
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  
-  // State to track if tooltip is visible
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-  
-  // Timeout reference for tooltip delay
+  const prevNotificationCountRef = useRef(notificationCount);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Memoize the click handler to prevent unnecessary re-renders
+  // Handle click with haptic feedback
   const handleClick = useCallback(() => {
-    // Trigger haptic feedback on mobile devices if supported and enabled
     if (enableHapticFeedback && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
       try {
         navigator.vibrate(50); // Short vibration (50ms)
@@ -66,7 +55,6 @@ const ChatButton: React.FC<ChatButtonProps> = ({
         console.log('Haptic feedback not supported:', error);
       }
     }
-    
     onClick();
   }, [onClick, enableHapticFeedback]);
   
@@ -76,44 +64,33 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       e.preventDefault();
       onClick();
     } else if (e.key === 'Escape') {
-      // Hide tooltip on Escape key
       setIsTooltipVisible(false);
-    } else if (e.key === 'Tab') {
-      // If tooltip is visible and user is tabbing, hide tooltip
-      if (isTooltipVisible) {
-        setIsTooltipVisible(false);
-      }
+    } else if (e.key === 'Tab' && isTooltipVisible) {
+      setIsTooltipVisible(false);
     }
   }, [onClick, isTooltipVisible]);
   
-  // Handle mouse enter for tooltip
+  // Tooltip handlers
   const handleMouseEnter = useCallback(() => {
     if (showTooltip) {
-      // Clear any existing timeout
       if (tooltipTimeoutRef.current) {
         clearTimeout(tooltipTimeoutRef.current);
       }
-      
-      // Set a timeout to show the tooltip after a delay
       tooltipTimeoutRef.current = setTimeout(() => {
         setIsTooltipVisible(true);
-      }, 500); // 500ms delay before showing tooltip
+      }, 500);
     }
   }, [showTooltip]);
   
-  // Handle mouse leave for tooltip
   const handleMouseLeave = useCallback(() => {
-    // Clear any existing timeout
     if (tooltipTimeoutRef.current) {
       clearTimeout(tooltipTimeoutRef.current);
       tooltipTimeoutRef.current = null;
     }
-    
-    // Hide the tooltip immediately
     setIsTooltipVisible(false);
   }, []);
   
-  // Clean up tooltip timeout on unmount
+  // Cleanup tooltip timeout on unmount
   useEffect(() => {
     return () => {
       if (tooltipTimeoutRef.current) {
@@ -134,14 +111,10 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     if (typeof window !== 'undefined' && playSoundOnNotification) {
       try {
         audioRef.current = new Audio(soundUrl);
-        
-        // Add error handling for the audio element
         audioRef.current.addEventListener('error', (e) => {
           console.error('Error loading notification sound:', e);
-          // Fallback to browser's default notification sound if available
           if ('Notification' in window && Notification.permission === 'granted') {
             try {
-              // Create a silent notification as a fallback
               new Notification('New message', {
                 silent: false,
                 icon: '/nf-logo.svg'
@@ -154,17 +127,15 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       } catch (error) {
         console.error('Could not initialize audio:', error);
       }
+      
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.removeEventListener('error', () => {});
+          audioRef.current.pause();
+          audioRef.current = null;
+        }
+      };
     }
-    
-    return () => {
-      if (audioRef.current) {
-        // Remove event listeners
-        audioRef.current.removeEventListener('error', () => {});
-        // Pause and nullify
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
   }, [soundUrl, playSoundOnNotification]);
   
   // Play sound when notification count increases
@@ -175,24 +146,20 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       notificationCount > prevNotificationCountRef.current && 
       notificationCount > 0
     ) {
-      // Reset audio to beginning if it's already playing
+      // Reset and play audio
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       
-      // Play notification sound
       const playPromise = audioRef.current.play();
-      
-      // Handle potential play() promise rejection (browsers require user interaction)
       if (playPromise !== undefined) {
         playPromise.catch(error => {
           console.log('Audio playback was prevented by the browser:', error);
         });
       }
       
-      // Trigger haptic feedback for notifications if supported and enabled
+      // Trigger haptic feedback for notifications
       if (enableHapticFeedback && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
         try {
-          // Pattern: vibrate 100ms, pause 50ms, vibrate 100ms
           navigator.vibrate([100, 50, 100]);
         } catch (error) {
           console.log('Haptic feedback not supported:', error);
@@ -200,33 +167,33 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       }
     }
     
-    // Update previous notification count reference
     prevNotificationCountRef.current = notificationCount;
   }, [notificationCount, playSoundOnNotification, enableHapticFeedback]);
 
-  // Size mapping
-  const sizeClasses = {
-    'sm': 'h-12 w-12',
-    'md': 'h-16 w-16',
-    'lg': 'h-20 w-20'
-  };
-
-  const iconSizes = {
-    'sm': 'h-6 w-6',
-    'md': 'h-8 w-8',
-    'lg': 'h-10 w-10'
-  };
-
-  const badgeSizes = {
-    'sm': 'h-5 w-5 text-xs',
-    'md': 'h-6 w-6 text-xs',
-    'lg': 'h-7 w-7 text-sm'
-  };
-
-  const badgePositions = {
-    'sm': '-top-1 -right-1',
-    'md': '-top-1.5 -right-1.5',
-    'lg': '-top-2 -right-2'
+  // Configuration objects
+  const sizeConfig = {
+    sizes: {
+      'sm': 'h-12 w-12',
+      'md': 'h-16 w-16',
+      'lg': 'h-20 w-20'
+    },
+    icons: {
+      'sm': 'h-6 w-6',
+      'md': 'h-8 w-8',
+      'lg': 'h-10 w-10'
+    },
+    badges: {
+      size: {
+        'sm': 'h-5 w-5 text-xs',
+        'md': 'h-6 w-6 text-xs',
+        'lg': 'h-7 w-7 text-sm'
+      },
+      position: {
+        'sm': '-top-1 -right-1',
+        'md': '-top-1.5 -right-1.5',
+        'lg': '-top-2 -right-2'
+      }
+    }
   };
   
   // Tooltip position based on button position
@@ -237,317 +204,220 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     'top-left': 'top-24 left-6'
   };
 
-  // Simplified animations if user prefers reduced motion
-  const buttonVariants = {
-    initial: prefersReducedMotion 
-      ? { opacity: 0 } 
-      : { 
-          scale: 0, 
-          opacity: 0, 
-          rotate: -180,
-          boxShadow: "0px 0px 0px rgba(0,0,0,0)"
-        },
-    animate: prefersReducedMotion
-      ? { 
-          opacity: 1,
-          transition: {
-            duration: 0.3
-          }
-        }
-      : { 
-          scale: 1, 
-          opacity: 1, 
-          rotate: 0,
-          boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-          transition: { 
-            scale: {
+  // Animation variants with simplified logic
+  const animations = {
+    button: {
+      initial: prefersReducedMotion 
+        ? {} 
+        : { scale: 0, rotate: -180 },
+      animate: prefersReducedMotion
+        ? { opacity: 1, transition: { duration: 0.3 } }
+        : { 
+            scale: 1,  
+            rotate: 0,
+            transition: { 
               type: "spring",
               damping: 20,
-              stiffness: 300
-            },
-            rotate: {
-              type: "spring",
-              damping: 20,
-              stiffness: 300
-            },
-            opacity: {
+              stiffness: 300,
               duration: 0.4
-            }
-          } 
-        },
-    exit: prefersReducedMotion
-      ? { 
-          opacity: 0,
-          transition: { 
-            duration: 0.3 
-          } 
-        }
-      : { 
-          scale: 0,
-          opacity: 0,
-          rotate: -180,
-          transition: { 
-            scale: {
+            } 
+          },
+      exit: prefersReducedMotion
+        ? { }
+        : { 
+            scale: 0,
+            rotate: -180,
+            transition: { 
               type: "spring",
               damping: 25,
-              stiffness: 300
-            },
-            rotate: {
-              type: "spring",
-              damping: 25,
-              stiffness: 300
-            },
-            opacity: {
+              stiffness: 300,
               duration: 0.3
             }
-          }
-        },
-    hover: prefersReducedMotion
-      ? { }
-      : { 
-          scale: 1.05,
-          boxShadow: theme === 'dark' 
-            ? "0 0 25px 8px rgba(255,255,255,0.3)" 
-            : "0 0 25px 8px rgba(0,0,0,0.2)",
-          transition: { 
-            scale: {
+          },
+      hover: prefersReducedMotion
+        ? {}
+        : { 
+            scale: 1.05,
+            boxShadow: theme === 'dark' 
+              ? "0 0 25px 8px rgba(255,255,255,0.3)" 
+              : "0 0 25px 8px rgba(0,0,0,0.2)",
+            transition: { 
               type: "spring",
               damping: 15,
-              stiffness: 400
-            },
-            boxShadow: {
-              duration: 0.3,
-              ease: "easeOut"
+              stiffness: 400,
+              duration: 0.5
             }
-          }
-        },
-    tap: prefersReducedMotion
-      ? { opacity: 0.8 }
-      : { 
-          scale: 0.95,
-          transition: { 
-            scale: {
+          },
+      tap: prefersReducedMotion
+        ? { opacity: 0.8 }
+        : { 
+            scale: 0.95,
+            transition: { 
               type: "spring",
               damping: 15,
               stiffness: 400
             }
-          }
-        },
-    focus: {
-      boxShadow: theme === 'dark'
-        ? "0 0 0 3px rgba(255,255,255,0.5), 0 0 0 6px rgba(255,255,255,0.2)"
-        : "0 0 0 3px rgba(0,0,0,0.3), 0 0 0 6px rgba(0,0,0,0.1)",
-      scale: 1.02,
-      transition: { 
-        scale: {
-          duration: 0.2,
-          ease: "easeOut"
-        },
-        boxShadow: {
-          duration: 0.2,
-          ease: "easeOut"
+          },
+      focus: {
+        boxShadow: theme === 'dark'
+          ? "0 0 0 3px rgba(255,255,255,0.5), 0 0 0 6px rgba(255,255,255,0.2)"
+          : "0 0 0 3px rgba(0,0,0,0.3), 0 0 0 6px rgba(0,0,0,0.1)",
+        scale: 1.02,
+        transition: { duration: 0.2 }
+      }
+    },
+    tooltip: {
+      initial: { opacity: 0, y: 10, scale: 0.9 },
+      animate: { 
+        opacity: 1, 
+        y: 0, 
+        scale: 1,
+        transition: {
+          type: "spring",
+          stiffness: 500,
+          damping: 30
+        }
+      },
+      exit: { 
+        opacity: 0, 
+        y: 10, 
+        scale: 0.9,
+        transition: { duration: 0.2 }
+      }
+    },
+    badge: {
+      initial: { scale: 0, opacity: 0 },
+      animate: { 
+        scale: 1, 
+        opacity: 1,
+        transition: {
+          type: "spring",
+          stiffness: 500,
+          damping: 15
+        }
+      },
+      exit: { scale: 0, opacity: 0, transition: { duration: 0.2 } },
+      pulse: {
+        scale: [1, 1.2, 1],
+        transition: {
+          duration: 0.6,
+          repeat: 3,
+          repeatType: "loop" as const
+        }
+      }
+    },
+    icon: !prefersReducedMotion ? {
+      animate: {
+        rotate: [0, 5, -5, 0],
+        transition: {
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          repeatType: "loop" as const
+        }
+      },
+      hover: {
+        scale: 1.2,
+        rotate: 360,
+        transition: {
+          duration: 1.2,
+          ease: [0.34, 1.56, 0.64, 1]
+        }
+      }
+    } : { animate: {}, hover: {} },
+    container: {
+      initial: { opacity: 0 },
+      animate: { 
+        opacity: 1,
+        transition: { 
+          duration: 0.4,
+          when: "beforeChildren", 
+          staggerChildren: 0
+        }
+      },
+      exit: {
+        opacity: 0,
+        transition: {
+          duration: 0.3,
+          when: "afterChildren",
+          staggerChildren: prefersReducedMotion ? 0 : 0.05,
+          
         }
       }
     }
   };
-  
-  // Tooltip animation variants
-  const tooltipVariants = {
-    initial: { opacity: 0, y: 10, scale: 0.9 },
-    animate: { 
-      opacity: 1, 
-      y: 0, 
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 500,
-        damping: 30
+
+  // Simplified effects and pulse animations
+  const pulseAnimations = !prefersReducedMotion && pulseEffect ? {
+    glow: {
+      initial: { opacity: 0.4 },
+      animate: {
+        opacity: [0.4, 0.7, 0.4],
+        filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"],
+        transition: {
+          duration: 3,
+          repeat: Infinity,
+          ease: [0.4, 0, 0.2, 1],
+          repeatType: "reverse" as const
+        }
       }
     },
-    exit: { 
-      opacity: 0, 
-      y: 10, 
-      scale: 0.9,
-      transition: {
-        duration: 0.2
+    ring: {
+      initial: { opacity: 0.2, scale: 1 },
+      animate: {
+        opacity: [0.2, 0.4, 0.2],
+        scale: [1, 1.05, 1],
+        transition: {
+          duration: 4,
+          repeat: Infinity,
+          ease: [0.4, 0, 0.2, 1],
+          repeatType: "reverse" as const
+        }
       }
     },
-    hover: {
-      scale: 1.02,
-      transition: {
-        duration: 0.2
-      }
+    wave: {
+      initial: { scale: 0.4, opacity: 0 },
+      animate: (i: number) => ({
+        scale: [0.8, 2],
+        opacity: [0.6, 0],
+        transition: {
+          duration: 3,
+          repeat: Infinity,
+          repeatDelay: 1,
+          delay: i * 1,
+          ease: [0.4, 0, 0.2, 1],
+          repeatType: "loop" as const
+        }
+      })
     }
+  } : {
+    glow: { initial: { opacity: 0.4 }, animate: { opacity: 0.4 } },
+    ring: { initial: { opacity: 0.2, scale: 1 }, animate: { opacity: 0.2, scale: 1 } },
+    wave: { initial: { opacity: 0 }, animate: { opacity: 0 } }
   };
 
-  // Badge animation variants
-  const badgeVariants = {
-    initial: { scale: 0, opacity: 0 },
-    animate: { 
-      scale: 1, 
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 500,
-        damping: 15
-      }
-    },
-    exit: { 
-      scale: 0, 
-      opacity: 0,
-      transition: {
-        duration: 0.2
-      }
-    },
-    pulse: {
-      scale: [1, 1.2, 1],
-      transition: {
-        duration: 0.6,
-        repeat: 3,
-        repeatType: "loop" as const
-      }
-    }
+  // Theme-based style classes
+  const themeClasses = {
+    button: theme === 'dark' 
+      ? `bg-black/80 backdrop-blur-md shadow-xl border border-white/30 
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 
+         focus-visible:ring-offset-black ${isKeyboardFocused ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-black' : ''}`
+      : `bg-white/90 backdrop-blur-md shadow-xl border border-black/20 
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50 focus-visible:ring-offset-2 
+         focus-visible:ring-offset-white ${isKeyboardFocused ? 'ring-2 ring-black/50 ring-offset-2 ring-offset-white' : ''}`,
+    glow: theme === 'dark'
+      ? "absolute inset-0 rounded-full bg-white/15 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+      : "absolute inset-0 rounded-full bg-zinc-900/15 shadow-[0_0_30px_rgba(0,0,0,0.2)]",
+    ring: theme === 'dark'
+      ? "absolute -inset-2 rounded-full border-2 border-white/15"
+      : "absolute -inset-2 rounded-full border-2 border-black/10",
+    tooltip: theme === 'dark'
+      ? "bg-zinc-800 text-white border border-zinc-700 shadow-lg"
+      : "bg-white text-zinc-800 border border-zinc-200 shadow-lg",
+    radioWave: (index: number) => theme === 'dark'
+      ? `absolute rounded-full border ${index === 0 ? 'border-blue-400/50' : index === 1 ? 'border-indigo-400/40' : 'border-purple-400/30'} pointer-events-none`
+      : `absolute rounded-full border ${index === 0 ? 'border-blue-500/40' : index === 1 ? 'border-indigo-500/30' : 'border-purple-500/20'} pointer-events-none`
   };
-
-  // Disable or simplify animations based on user preference
-  const glowVariants = !prefersReducedMotion && pulseEffect ? {
-    initial: {
-      opacity: 0.4,
-      filter: "brightness(1)"
-    },
-    animate: {
-      opacity: [0.4, 0.7, 0.4],
-      filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        ease: [0.4, 0, 0.2, 1],
-        times: [0, 0.5, 1],
-        repeatType: "reverse" as const
-      }
-    }
-  } : { 
-    initial: { opacity: 0.4 },
-    animate: { opacity: 0.4 }
-  };
-
-  const iconVariants = !prefersReducedMotion ? {
-    animate: {
-      rotate: [0, 5, -5, 0],
-      transition: {
-        duration: 5,
-        repeat: Infinity,
-        ease: "easeInOut",
-        times: [0, 0.25, 0.75, 1],
-        repeatType: "loop" as const
-      }
-    },
-    hover: {
-      scale: 1.2,
-      rotate: 360,
-      transition: {
-        duration: 1.2,
-        ease: [0.34, 1.56, 0.64, 1],
-        rotate: { type: "spring", stiffness: 60, damping: 15 }
-      }
-    },
-  } : { animate: {}, hover: {} };
-
-  const ringVariants = !prefersReducedMotion && pulseEffect ? {
-    initial: {
-      opacity: 0.2,
-      scale: 1
-    },
-    animate: {
-      opacity: [0.2, 0.4, 0.2],
-      scale: [1, 1.05, 1],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-        ease: [0.4, 0, 0.2, 1],
-        times: [0, 0.5, 1],
-        repeatType: "reverse" as const
-      }
-    }
-  } : { 
-    initial: { opacity: 0.2, scale: 1 },
-    animate: { opacity: 0.2, scale: 1 }
-  };
-
-  const radioWaveVariants = !prefersReducedMotion && pulseEffect ? {
-    initial: { 
-      scale: 0.4, 
-      opacity: 0 
-    },
-    animate: (i: number) => ({
-      scale: [0.8, 2],
-      opacity: [0.6, 0],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        repeatDelay: 1,
-        delay: i * 1,
-        ease: [0.4, 0, 0.2, 1],
-        times: [0, 1],
-        repeatType: "loop" as const
-      }
-    })
-  } : { 
-    initial: { opacity: 0 },
-    animate: { opacity: 0 }
-  };
-
-  const containerVariants = {
-    initial: { opacity: 0 },
-    animate: { 
-      opacity: 1,
-      transition: { 
-        duration: 0.5,
-        when: "beforeChildren", 
-        staggerChildren: prefersReducedMotion ? 0 : 0.1,
-        delayChildren: 0.1
-      }
-    },
-    exit: {
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-        when: "afterChildren",
-        staggerChildren: prefersReducedMotion ? 0 : 0.05,
-        staggerDirection: -1
-      }
-    }
-  };
-
-  // Enhanced button classes without transition classes
-  const buttonClass = theme === 'dark' 
-    ? `bg-black/80 backdrop-blur-md shadow-xl border border-white/30 
-       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 
-       focus-visible:ring-offset-black ${isKeyboardFocused ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-black' : ''}`
-    : `bg-white/90 backdrop-blur-md shadow-xl border border-black/20 
-       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50 focus-visible:ring-offset-2 
-       focus-visible:ring-offset-white ${isKeyboardFocused ? 'ring-2 ring-black/50 ring-offset-2 ring-offset-white' : ''}`;
-
-
-
-  const glowClass = theme === 'dark'
-    ? "absolute inset-0 rounded-full bg-white/15 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
-    : "absolute inset-0 rounded-full bg-zinc-900/15 shadow-[0_0_30px_rgba(0,0,0,0.2)]";
-    
-  const ringClass = theme === 'dark'
-    ? "absolute -inset-2 rounded-full border-2 border-white/15"
-    : "absolute -inset-2 rounded-full border-2 border-black/10";
-
-  const radioWaveClass = (index: number) => theme === 'dark'
-    ? `absolute rounded-full border ${index === 0 ? 'border-blue-400/50' : index === 1 ? 'border-indigo-400/40' : 'border-purple-400/30'} pointer-events-none`
-    : `absolute rounded-full border ${index === 0 ? 'border-blue-500/40' : index === 1 ? 'border-indigo-500/30' : 'border-purple-500/20'} pointer-events-none`;
-
-  const waveSize = size === 'sm' ? 'h-12 w-12' : size === 'md' ? 'h-16 w-16' : 'h-20 w-20';
-  
-  // Tooltip class based on theme
-  const tooltipClass = theme === 'dark'
-    ? "bg-zinc-800 text-white border border-zinc-700 shadow-lg"
-    : "bg-white text-zinc-800 border border-zinc-200 shadow-lg";
 
   // Get the current animation state based on keyboard focus
   const currentAnimationState = isKeyboardFocused ? "focus" : "animate";
@@ -566,7 +436,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
             right: position.includes('right') ? 24 : undefined,
             left: position.includes('left') ? 24 : undefined
           }}
-          variants={containerVariants}
+          variants={animations.container}
           initial="initial"
           animate="animate"
           exit="exit"
@@ -578,12 +448,11 @@ const ChatButton: React.FC<ChatButtonProps> = ({
                 id="chat-tooltip"
                 role="tooltip"
                 aria-hidden={!isTooltipVisible}
-                className={`absolute ${tooltipPositionClasses[position]} z-50 px-3 py-2 rounded-md ${tooltipClass} text-sm whitespace-nowrap`}
-                variants={tooltipVariants}
+                className={`absolute ${tooltipPositionClasses[position]} z-50 px-3 py-2 rounded-md ${themeClasses.tooltip} text-sm whitespace-nowrap`}
+                variants={animations.tooltip}
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                whileHover="hover"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div>
@@ -623,8 +492,8 @@ const ChatButton: React.FC<ChatButtonProps> = ({
           {pulseEffect && !prefersReducedMotion && [0, 1, 2].map((i) => (
             <motion.div
               key={`radio-wave-${i}`}
-              className={`${radioWaveClass(i)} ${waveSize}`}
-              variants={radioWaveVariants}
+              className={`${themeClasses.radioWave(i)} ${sizeConfig.sizes[size]}`}
+              variants={pulseAnimations.wave}
               custom={i}
               initial="initial"
               animate="animate"
@@ -637,7 +506,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
           ))}
 
           <motion.button
-            variants={buttonVariants}
+            variants={animations.button}
             initial="initial"
             animate={currentAnimationState}
             exit="exit"
@@ -663,7 +532,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
               setIsKeyboardFocused(false);
               setIsTooltipVisible(false);
             }}
-            className={`${buttonClass} relative ${sizeClasses[size]} rounded-full flex items-center justify-center transition-box-shadow duration-300`}
+            className={`${themeClasses.button} relative ${sizeConfig.sizes[size]} rounded-full flex items-center justify-center transition-box-shadow duration-500`}
             aria-label={`${label}${notificationCount > 0 ? `, ${notificationCount} new messages` : ''}`}
             aria-expanded={isTooltipVisible}
             aria-describedby={isTooltipVisible ? "chat-tooltip" : undefined}
@@ -679,8 +548,8 @@ const ChatButton: React.FC<ChatButtonProps> = ({
             <AnimatePresence>
               {shouldShowBadge && (
                 <motion.div
-                  className={`absolute ${badgePositions[size]} flex items-center justify-center rounded-full bg-red-500 text-white font-bold ${badgeSizes[size]} z-10`}
-                  variants={badgeVariants}
+                  className={`absolute ${sizeConfig.badges.position[size]} flex items-center justify-center rounded-full bg-red-500 text-white font-bold ${sizeConfig.badges.size[size]} z-10`}
+                  variants={animations.badge}
                   initial="initial"
                   animate={notificationCount > 0 ? ["animate", "pulse"] : "animate"}
                   exit="exit"
@@ -691,23 +560,28 @@ const ChatButton: React.FC<ChatButtonProps> = ({
               )}
             </AnimatePresence>
 
+            {/* Visual effects - only when pulse effect is enabled */}
             {pulseEffect && (
-              <motion.div
-                className={glowClass}
-                variants={glowVariants}
-                animate="animate"
-              />
-            )}
-            
-            {pulseEffect && (
-              <motion.div
-                className={ringClass}
-                variants={ringVariants}
-                animate="animate"
-              />
+              <>
+                <motion.div
+                  className={themeClasses.glow}
+                  variants={pulseAnimations.glow}
+                  initial="initial"
+                  animate="animate"
+                />
+                
+                <motion.div
+                  className={themeClasses.ring}
+                  variants={pulseAnimations.ring}
+                  initial="initial"
+                  animate="animate"
+                />
+              </>
             )}
 
+            {/* Icon container */}
             <motion.div className="relative z-10 flex items-center justify-center">
+              {/* Gradient background */}
               <motion.div
                 className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/10 to-blue-500/10 dark:from-purple-500/20 dark:to-blue-500/20 opacity-60"
                 animate={!prefersReducedMotion && pulseEffect ? {
@@ -721,7 +595,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
                 } : {}}
               />
               
-              {/* Add a subtle glow effect behind the icon */}
+              {/* Subtle glow effect */}
               {!prefersReducedMotion && (
                 <motion.div 
                   className="absolute inset-0 rounded-full bg-gradient-radial from-blue-400/30 to-transparent"
@@ -738,13 +612,14 @@ const ChatButton: React.FC<ChatButtonProps> = ({
                 />
               )}
               
+              {/* Icon with animations */}
               <motion.div
-                variants={iconVariants}
+                variants={animations.icon}
                 animate="animate"
                 whileHover="hover"
               >
                 <SiOpenai 
-                  className={`${iconSizes[size]} ${theme === 'dark' ? 'text-white' : 'text-zinc-800'} drop-shadow-md`}
+                  className={`${sizeConfig.icons[size]} ${theme === 'dark' ? 'text-white' : 'text-zinc-800'} drop-shadow-md`}
                   aria-hidden="true"
                 />
               </motion.div>
@@ -756,5 +631,5 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
+// Export memoized component to prevent unnecessary re-renders
 export default memo(ChatButton);

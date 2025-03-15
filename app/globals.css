@@ -35,7 +35,7 @@
     --foreground-rgb: 0, 0, 0;
     --muted-rgb: 240, 240, 240;
     color-scheme: light;
-    transition: all 0.3s ease;
+    /* transition: all 0.3s ease; */
   }
 
   .dark {
