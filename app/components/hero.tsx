@@ -32,7 +32,7 @@ export default function Hero() {
   const nameArray = "I'm <Nikita>".split('');
   const frontend = "Web Developer".split('');
   const fullText = "React • Network • UX/UI".split('');
-  const aiIntegration = "AI Integrator".split('');
+  const aiIntegration = "AI enthusiast".split('');
 
   // Находим индексы для имени и скобок в строке "I'm <Nikita>"
   const leftBracketIndex = nameArray.findIndex(char => char === '<');
