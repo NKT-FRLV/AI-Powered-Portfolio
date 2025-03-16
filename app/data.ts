@@ -52,7 +52,7 @@ export const myEducation: {
     content: 'A comprehensive professional retraining program focused on mastering modern front-end technologies, including React, JavaScript, and web development best practices.',
     info: 'Yandex.Praktikum is an educational platform created by Yandex, one of the leading tech companies in Europe and Russia. The platform offers deep, practical training programs in software development, data analysis, and design. The Frontend Developer program provides intensive hands-on experience in JavaScript, React, and web development, preparing students for real-world projects and careers in IT.',
     logo: 'university',
-    documentationPath: 'documents/Practikum-certificate.pdf',
+    documentationPath: '/documents/Practikum-certificate.pdf',
     documentName: 'Nikita_Yandex-Praktikum_Education'
   },
   { 
@@ -62,7 +62,7 @@ export const myEducation: {
     content: 'Studied hospitality management and specialized in the hotel industry.',
     info: 'The Russian State University of Tourism and Service (RSUTS) is a leading institution in Russia focused on training professionals in the tourism and hospitality industries. Founded in 1952, the university offers programs in hospitality management, service design, and business administration. RSUTS is renowned for its strong partnerships with global hotel chains and travel agencies, providing students with excellent opportunities for internships and career development.',
     logo: 'graduation-cap',
-    documentationPath: 'documents/Education-University.pdf',
+    documentationPath: '/documents/Education-University.pdf',
     documentName: 'Nikita_University_Education'
   },
   { 
@@ -72,7 +72,7 @@ export const myEducation: {
     content: 'Diving school in Sharm El-Sheikh. Earned the PADI Pro certification and gained the ability to dive up to 40 meters deep.',
     info: 'The PADI Diving School in Sharm El-Sheikh is a globally recognized training center',
     logo: 'swimmer',
-    documentationPath: 'documents/OPEN-WATER-DIVER.pdf',
+    documentationPath: '/documents/OPEN-WATER-DIVER.pdf',
     documentName: 'Nikita_Diving_Education'
   }
 ];
@@ -155,7 +155,7 @@ export const aboutMe = `
   Partnering with designers to translate creative visions into visually stunning and functional interfaces.
   Beyond development, Nikita worked closely with testers to craft unit and integration tests, ensuring robust and reliable code. He also collaborated with managers to align on project timelines, prioritize tasks, and deliver successful releases. This experience sharpened his technical expertise while cultivating essential skills in teamwork, communication, and project management.
 
-  Nikita’s time at Reu was a transformative period that solidified his passion for frontend development and his ability to thrive in fast-paced, team-driven settings. His blend of technical proficiency and collaborative spirit makes him a standout professional in the field.
+  Nikita's time at Reu was a transformative period that solidified his passion for frontend development and his ability to thrive in fast-paced, team-driven settings. His blend of technical proficiency and collaborative spirit makes him a standout professional in the field.
 `
 export const navItems: NavItem[] = [
   { id: 'about', label: 'About Me' },

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
@@ -704,8 +704,6 @@ export default function AiAssistant() {
             playSoundOnNotification={soundEnabled}
             soundUrl={notificationSound}
             enableHapticFeedback={hapticEnabled}
-            tooltipText={unreadCount > 0 ? t.newMessages(unreadCount) : "Chat with Nikita's AI Assistant (Ctrl+/)"}
-            showTooltip={false} // Убираем подсказку
           />
         )}
       </AnimatePresence>

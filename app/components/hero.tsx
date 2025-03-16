@@ -41,8 +41,8 @@ export default function Hero() {
   const nameEndIndex = rightBracketIndex - 1;
 
   // Добавляем классы для анимации при наведении
-  const nameHoverClass = "hover:text-primary transition-colors duration-300";
-  const frontendHoverClass = "hover:text-primary transition-colors duration-300";
+  const nameHoverClass = "hover:text-primary";
+  const frontendHoverClass = "hover:text-primary";
   
   // Добавляем классы для тени текста
   const textShadowClass = "drop-shadow-sm";
@@ -63,7 +63,7 @@ export default function Hero() {
           <Image
             src="/nikita_color.webp"
             alt="Hero image"
-            className="h-full w-auto object-contain opacity-60 dark:opacity-40 transition-opacity duration-500"
+            className="h-full w-auto object-contain opacity-60 dark:opacity-40"
             width={1000}
             height={1500}
             priority
@@ -75,10 +75,7 @@ export default function Hero() {
 
       <div className="container px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_500px]">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+          <div 
             className="flex flex-col justify-center space-y-2 sm:space-y-4"
           >
             <div className="space-y-2 xs:space-y-4 sm:space-y-6 md:space-y-8">
@@ -138,19 +135,18 @@ export default function Hero() {
             >
               <Button 
                 size="sm" 
-                className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-button-glow" 
+                className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-button-glow hover:scale-105 hover:shadow-lg hover:border-primary/50 transition-all duration-500 ease-in-out" 
                 asChild
               >
                 <a href="#contact" className="relative z-10">
-                  <span className="relative z-10 group-hover:text-primary-foreground transition-colors duration-300">Contact Me</span>
-                  <span className="absolute inset-0 bg-primary/80 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                  <span className="relative z-10 group-hover:text-primary-foreground">Contact Me</span>
                 </a>
               </Button>
               <div className="block lg:hidden w-fit">
                 <HeroImageModal />
               </div>
             </motion.div>
-          </motion.div>
+          </div>
           {/* Пустой div для сохранения сетки на больших экранах */}
           <div className="hidden lg:block"></div>
         </div>

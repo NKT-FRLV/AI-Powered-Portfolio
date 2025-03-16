@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import {
   Sheet,
@@ -15,8 +15,7 @@ import { motion } from "framer-motion"
 import { Camera } from "lucide-react"
 
 export function HeroImageModal() {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [isHovered, setIsHovered] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
 
   return (
@@ -24,14 +23,10 @@ export function HeroImageModal() {
       <SheetTrigger asChild>
         <Button 
           size="sm" 
-          variant="outline"
-          className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group border-primary/20 animate-button-glow"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group border-primary/20 animate-button-glow hover:scale-105 hover:shadow-lg hover:border-primary/50 transition-all duration-500 ease-in-out"
         >
-          <Camera className={`w-4 h-4 mr-2 transition-all duration-300 ${isHovered ? 'text-primary' : 'opacity-70'}`} />
-          <span className="relative z-10 group-hover:text-primary transition-colors duration-300">Photo</span>
-          <span className="absolute inset-0 bg-primary/5 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+          <Camera className='w-4 h-4 mr-2 opacity-70' />
+            Photo
         </Button>
       </SheetTrigger>
       <SheetContent 

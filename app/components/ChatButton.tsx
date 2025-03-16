@@ -15,14 +15,11 @@ interface ChatButtonProps {
   playSoundOnNotification?: boolean;
   soundUrl?: string;
   enableHapticFeedback?: boolean;
-  tooltipText?: string;
-  showTooltip?: boolean;
 }
 
 const ChatButton: React.FC<ChatButtonProps> = ({ 
   onClick, 
   theme, 
-  isVisible = true, 
   position = 'bottom-right',
   size = 'md',
   label = 'Open AI-assistant',
@@ -32,19 +29,14 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   playSoundOnNotification = false,
   soundUrl = '/sounds/notification.mp3',
   enableHapticFeedback = true,
-  tooltipText = 'Chat with AI Assistant',
-  showTooltip = true
 }) => {
   // Respect user's reduced motion preferences
   const prefersReducedMotion = useReducedMotion();
   
   // Component state
-  const [hasBeenShown, setHasBeenShown] = useState(false);
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const prevNotificationCountRef = useRef(notificationCount);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const tooltipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Handle click with haptic feedback
   const handleClick = useCallback(() => {
@@ -63,48 +55,8 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onClick();
-    } else if (e.key === 'Escape') {
-      setIsTooltipVisible(false);
-    } else if (e.key === 'Tab' && isTooltipVisible) {
-      setIsTooltipVisible(false);
     }
-  }, [onClick, isTooltipVisible]);
-  
-  // Tooltip handlers
-  const handleMouseEnter = useCallback(() => {
-    if (showTooltip) {
-      if (tooltipTimeoutRef.current) {
-        clearTimeout(tooltipTimeoutRef.current);
-      }
-      tooltipTimeoutRef.current = setTimeout(() => {
-        setIsTooltipVisible(true);
-      }, 500);
-    }
-  }, [showTooltip]);
-  
-  const handleMouseLeave = useCallback(() => {
-    if (tooltipTimeoutRef.current) {
-      clearTimeout(tooltipTimeoutRef.current);
-      tooltipTimeoutRef.current = null;
-    }
-    setIsTooltipVisible(false);
-  }, []);
-  
-  // Cleanup tooltip timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (tooltipTimeoutRef.current) {
-        clearTimeout(tooltipTimeoutRef.current);
-      }
-    };
-  }, []);
-  
-  // Mark the button as shown after it appears
-  useEffect(() => {
-    if (isVisible && !hasBeenShown) {
-      setHasBeenShown(true);
-    }
-  }, [isVisible, hasBeenShown]);
+  }, [onClick]);
   
   // Initialize audio element
   useEffect(() => {
@@ -195,43 +147,28 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       }
     }
   };
-  
-  // Tooltip position based on button position
-  const tooltipPositionClasses = {
-    'bottom-right': 'bottom-24 right-6',
-    'bottom-left': 'bottom-24 left-6',
-    'top-right': 'top-24 right-6',
-    'top-left': 'top-24 left-6'
-  };
 
   // Animation variants with simplified logic
   const animations = {
     button: {
       initial: prefersReducedMotion 
         ? {} 
-        : { scale: 0, rotate: -180 },
+        : { scale: 0.6, rotate: -180, opacity: 0 },
       animate: prefersReducedMotion
         ? { opacity: 1, transition: { duration: 0.3 } }
         : { 
             scale: 1,  
             rotate: 0,
-            transition: { 
-              type: "spring",
-              damping: 20,
-              stiffness: 300,
-              duration: 0.4
-            } 
+            opacity: 1
           },
       exit: prefersReducedMotion
         ? { }
         : { 
-            scale: 0,
-            rotate: -180,
-            transition: { 
-              type: "spring",
-              damping: 25,
-              stiffness: 300,
-              duration: 0.3
+            scale: 0.6,
+            opacity: 0,
+            transition: {
+              duration: 0.2,
+              ease: "easeOut"
             }
           },
       hover: prefersReducedMotion
@@ -241,48 +178,17 @@ const ChatButton: React.FC<ChatButtonProps> = ({
             boxShadow: theme === 'dark' 
               ? "0 0 25px 8px rgba(255,255,255,0.3)" 
               : "0 0 25px 8px rgba(0,0,0,0.2)",
-            transition: { 
-              type: "spring",
-              damping: 15,
-              stiffness: 400,
-              duration: 0.5
-            }
           },
       tap: prefersReducedMotion
         ? { opacity: 0.8 }
         : { 
             scale: 0.95,
-            transition: { 
-              type: "spring",
-              damping: 15,
-              stiffness: 400
-            }
           },
       focus: {
         boxShadow: theme === 'dark'
           ? "0 0 0 3px rgba(255,255,255,0.5), 0 0 0 6px rgba(255,255,255,0.2)"
           : "0 0 0 3px rgba(0,0,0,0.3), 0 0 0 6px rgba(0,0,0,0.1)",
         scale: 1.02,
-        transition: { duration: 0.2 }
-      }
-    },
-    tooltip: {
-      initial: { opacity: 0, y: 10, scale: 0.9 },
-      animate: { 
-        opacity: 1, 
-        y: 0, 
-        scale: 1,
-        transition: {
-          type: "spring",
-          stiffness: 500,
-          damping: 30
-        }
-      },
-      exit: { 
-        opacity: 0, 
-        y: 10, 
-        scale: 0.9,
-        transition: { duration: 0.2 }
       }
     },
     badge: {
@@ -306,45 +212,6 @@ const ChatButton: React.FC<ChatButtonProps> = ({
         }
       }
     },
-    icon: !prefersReducedMotion ? {
-      animate: {
-        rotate: [0, 5, -5, 0],
-        transition: {
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatType: "loop" as const
-        }
-      },
-      hover: {
-        scale: 1.2,
-        rotate: 360,
-        transition: {
-          duration: 1.2,
-          ease: [0.34, 1.56, 0.64, 1]
-        }
-      }
-    } : { animate: {}, hover: {} },
-    container: {
-      initial: { opacity: 0 },
-      animate: { 
-        opacity: 1,
-        transition: { 
-          duration: 0.4,
-          when: "beforeChildren", 
-          staggerChildren: 0
-        }
-      },
-      exit: {
-        opacity: 0,
-        transition: {
-          duration: 0.3,
-          when: "afterChildren",
-          staggerChildren: prefersReducedMotion ? 0 : 0.05,
-          
-        }
-      }
-    }
   };
 
   // Simplified effects and pulse animations
@@ -399,10 +266,10 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   // Theme-based style classes
   const themeClasses = {
     button: theme === 'dark' 
-      ? `bg-black/80 backdrop-blur-md shadow-xl border border-white/30 
+      ? `bg-black/80 backdrop-blur-md border border-white/30 
          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 
          focus-visible:ring-offset-black ${isKeyboardFocused ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-black' : ''}`
-      : `bg-white/90 backdrop-blur-md shadow-xl border border-black/20 
+      : `bg-white/90 backdrop-blur-md border border-black/20 
          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/50 focus-visible:ring-offset-2 
          focus-visible:ring-offset-white ${isKeyboardFocused ? 'ring-2 ring-black/50 ring-offset-2 ring-offset-white' : ''}`,
     glow: theme === 'dark'
@@ -411,9 +278,6 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     ring: theme === 'dark'
       ? "absolute -inset-2 rounded-full border-2 border-white/15"
       : "absolute -inset-2 rounded-full border-2 border-black/10",
-    tooltip: theme === 'dark'
-      ? "bg-zinc-800 text-white border border-zinc-700 shadow-lg"
-      : "bg-white text-zinc-800 border border-zinc-200 shadow-lg",
     radioWave: (index: number) => theme === 'dark'
       ? `absolute rounded-full border ${index === 0 ? 'border-blue-400/50' : index === 1 ? 'border-indigo-400/40' : 'border-purple-400/30'} pointer-events-none`
       : `absolute rounded-full border ${index === 0 ? 'border-blue-500/40' : index === 1 ? 'border-indigo-500/30' : 'border-purple-500/20'} pointer-events-none`
@@ -426,8 +290,6 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   const shouldShowBadge = showNotificationBadge && notificationCount > 0;
 
   return (
-    <AnimatePresence mode="wait">
-      {isVisible && (
         <motion.div
           className="fixed z-50"
           style={{ 
@@ -436,58 +298,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
             right: position.includes('right') ? 24 : undefined,
             left: position.includes('left') ? 24 : undefined
           }}
-          variants={animations.container}
-          initial="initial"
-          animate="animate"
-          exit="exit"
         >
-          {/* Tooltip */}
-          <AnimatePresence>
-            {isTooltipVisible && showTooltip && (
-              <motion.div
-                id="chat-tooltip"
-                role="tooltip"
-                aria-hidden={!isTooltipVisible}
-                className={`absolute ${tooltipPositionClasses[position]} z-50 px-3 py-2 rounded-md ${themeClasses.tooltip} text-sm whitespace-nowrap`}
-                variants={animations.tooltip}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <div>
-                    {tooltipText}
-                    {notificationCount > 0 && (
-                      <span className="ml-1 font-medium">
-                        ({notificationCount} new {notificationCount === 1 ? 'message' : 'messages'})
-                      </span>
-                    )}
-                  </div>
-                  
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsTooltipVisible(false);
-                    }}
-                    className={`rounded-full p-0.5 ${theme === 'dark' ? 'hover:bg-zinc-700' : 'hover:bg-zinc-200'} transition-colors`}
-                    aria-label="Close tooltip"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </button>
-                </div>
-                
-                {notificationCount > 0 && (
-                  <div className="mt-1 text-xs opacity-80">
-                    Click to open chat
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
           {/* Radio waves (3 layers) - only shown if animation is enabled */}
           {pulseEffect && !prefersReducedMotion && [0, 1, 2].map((i) => (
             <motion.div
@@ -512,35 +323,42 @@ const ChatButton: React.FC<ChatButtonProps> = ({
             exit="exit"
             whileHover="hover"
             whileTap="tap"
+            transition={{ 
+              duration: 0.4,
+              ease: "linear",
+              scale: { 
+                type: "spring", 
+                stiffness: 150, 
+                damping: 15,
+              },
+              rotate: { 
+                duration: 0.4, 
+                ease: "linear" 
+              },
+              opacity: { 
+                duration: 0.4,
+                ease: "linear"
+              }
+            }}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
             onFocus={() => {
               // Only show focus styles when using keyboard navigation
               if (document.activeElement instanceof HTMLElement && 
                   document.activeElement.matches(':focus-visible')) {
                 setIsKeyboardFocused(true);
               }
-              
-              // Show tooltip on focus as well
-              if (showTooltip) {
-                setIsTooltipVisible(true);
-              }
             }}
             onBlur={() => {
               setIsKeyboardFocused(false);
-              setIsTooltipVisible(false);
             }}
             className={`${themeClasses.button} relative ${sizeConfig.sizes[size]} rounded-full flex items-center justify-center transition-box-shadow duration-500`}
             aria-label={`${label}${notificationCount > 0 ? `, ${notificationCount} new messages` : ''}`}
-            aria-expanded={isTooltipVisible}
-            aria-describedby={isTooltipVisible ? "chat-tooltip" : undefined}
             aria-live={notificationCount > 0 ? "polite" : "off"}
             aria-atomic="true"
             aria-busy={isKeyboardFocused}
             aria-controls="chat-container"
-            tabIndex={0}
+            tabIndex={1}
             role="button"
             data-testid="chat-button"
           >
@@ -578,56 +396,12 @@ const ChatButton: React.FC<ChatButtonProps> = ({
                 />
               </>
             )}
-
-            {/* Icon container */}
-            <motion.div className="relative z-10 flex items-center justify-center">
-              {/* Gradient background */}
-              <motion.div
-                className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/10 to-blue-500/10 dark:from-purple-500/20 dark:to-blue-500/20 opacity-60"
-                animate={!prefersReducedMotion && pulseEffect ? {
-                  opacity: [0.3, 0.6, 0.3],
-                  transition: { 
-                    duration: 3, 
-                    repeat: Infinity, 
-                    ease: "easeInOut", 
-                    repeatType: "mirror" as const 
-                  }
-                } : {}}
-              />
-              
-              {/* Subtle glow effect */}
-              {!prefersReducedMotion && (
-                <motion.div 
-                  className="absolute inset-0 rounded-full bg-gradient-radial from-blue-400/30 to-transparent"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ 
-                    opacity: [0.2, 0.4, 0.2], 
-                    scale: [0.8, 1.2, 0.8],
-                    transition: { 
-                      duration: 3, 
-                      repeat: Infinity,
-                      repeatType: "loop" as const
-                    }
-                  }}
-                />
-              )}
-              
               {/* Icon with animations */}
-              <motion.div
-                variants={animations.icon}
-                animate="animate"
-                whileHover="hover"
-              >
                 <SiOpenai 
                   className={`${sizeConfig.icons[size]} ${theme === 'dark' ? 'text-white' : 'text-zinc-800'} drop-shadow-md`}
-                  aria-hidden="true"
                 />
-              </motion.div>
-            </motion.div>
           </motion.button>
         </motion.div>
-      )}
-    </AnimatePresence>
   );
 };
 
