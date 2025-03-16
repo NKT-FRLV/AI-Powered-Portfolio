@@ -19,10 +19,13 @@ const Languages = lazy(() => import("../languages"));
 const ContactForm = lazy(() => import("../contact-form"));
 const Footer = lazy(() => import("../footer"));
 
-// AI Assistant загружаем с опцией ssr: false и с низким приоритетом
-const AiAssistant = dynamic(() => import("../ai-assistant"), {
+// AI Assistant загружаем в отдельном чанке с ленивой загрузкой после рендеринга страницы
+const AiAssistant = dynamic(() => import("../ai-assistant").then(mod => ({ default: mod.default })), {
   ssr: false,
-  loading: () => null
+  loading: () => null,
+  // Используем webpackChunkName для создания отдельного чанка
+  // @ts-expect-error - Next.js dynamic import не поддерживает типизацию для webpackChunkName
+  webpackChunkName: 'ai-assistant-chunk'
 });
 
 
@@ -38,6 +41,9 @@ export default function Home() {
     contact: false,
     footer: false
   });
+  
+  // Состояние для отслеживания загрузки AI Assistant
+  const [loadAiAssistant, setLoadAiAssistant] = useState(false);
 
   // Используем IntersectionObserver для отслеживания видимости секций
   useEffect(() => {
@@ -91,13 +97,16 @@ export default function Home() {
         import("../projects"),
         import("../languages"),
         import("../contact-form"),
-        import("../footer"),
-        import("../ai-assistant")
+        import("../footer")
+        // Убираем AI Assistant из предварительной загрузки
       ];
 
       // Используем Promise.all для ожидания загрузки всех компонентов
       await Promise.all(promises);
       setIsLoaded(true);
+      
+      // После загрузки всех основных компонентов, разрешаем загрузку AI Assistant
+      setLoadAiAssistant(true);
     };
 
     // Делаем функцию preloadComponents доступной глобально для использования в header.tsx
@@ -119,8 +128,8 @@ export default function Home() {
       <Hero />
       <About />
       
-      {/* Load AI Assistant earlier for better user experience */}
-      <AiAssistant />
+      {/* Загружаем AI Assistant только после загрузки основных компонентов */}
+      {loadAiAssistant && <AiAssistant />}
       
       <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[400px] max-w-5xl" />}>
         <Education />
