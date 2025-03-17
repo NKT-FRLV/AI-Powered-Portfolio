@@ -19,10 +19,9 @@ const BurgerButton: React.FC<BurgerButtonProps> = ({ isOpen, toggleMenu }) => {
       className={cn(
         "relative md:hidden rounded-full",
         "focus-visible:ring-1 focus-visible:ring-offset-1",
-        "bg-secondary/40 hover:bg-secondary/60",
-        "backdrop-blur-sm border border-border/30",
-        "transition-colors duration-300",
-        isOpen && "bg-secondary/60"
+        "hover:bg-secondary/40",
+        "backdrop-blur-sm",
+        "transition-colors duration-300"
       )}
       aria-label={isOpen ? "Close Menu" : "Open Menu"}
     >

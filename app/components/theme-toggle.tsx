@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/app/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
-export function ThemeToggle() {
+const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -42,4 +42,6 @@ export function ThemeToggle() {
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
-} 
+};
+
+export default ThemeToggle;

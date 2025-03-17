@@ -40,8 +40,8 @@ export const DocumentPreview: React.FC<DocumentPreviewProps> = ({
         className="relative w-full max-w-4xl h-[80vh] bg-[hsl(var(--background))] rounded-lg overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-xs md:text-sm lg:text-lg font-semibold">{document.name}</h3>
+        <div className="flex items-center justify-between align-center p-4 border-b">
+          <h3 className="text-xs md:text-sm lg:text-lg font-semibold max-w-[60%] truncate">{document.name}</h3>
           <div className="flex items-center gap-2">
             <a 
               href={document.path} 

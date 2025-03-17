@@ -129,6 +129,13 @@ export default function AiAssistant() {
   // Add state for screen reader announcements
   const [announcement, setAnnouncement] = useState<string | null>(null);
   
+  // Ref для хранения актуального значения isOpen
+  const isOpenRef = useRef(isOpen);
+  // Обновляем ref при изменении isOpen
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
   // Add state for voice input and speech synthesis
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -401,15 +408,20 @@ export default function AiAssistant() {
     }
   };
 
-  // Effect to handle unread messages and announcements
+  // Effect to handle single notification message after initial load
   useEffect(() => {
+    // Вызывается только один раз при монтировании компонента
     const simulateNewMessage = () => {
-      if (!isOpen) {
-        const newCount = unreadCount + 1;
-        setUnreadCount(newCount);
+      // Используем ref для доступа к актуальному значению isOpen
+      if (!isOpenRef.current) {
+        // Добавляем только 1 непрочитанное сообщение
+        setUnreadCount(1);
+        
+        // Сохраняем локальную копию t.newMessages для использования внутри эффекта
+        const message = translations[language].newMessages(1);
         
         // Create screen reader announcement
-        setAnnouncement(t.newMessages(newCount));
+        setAnnouncement(message);
         
         // Clear announcement after it's been read
         setTimeout(() => {
@@ -418,14 +430,13 @@ export default function AiAssistant() {
       }
     };
 
-    const interval = setInterval(() => {
-      if (!isOpen && Math.random() > 0.7) {
-        simulateNewMessage();
-      }
-    }, 30000);
+    // Создаем только одно уведомление через 7 секунд после первого монтирования компонента
+    const timer = setTimeout(simulateNewMessage, 7000);
 
-    return () => clearInterval(interval);
-  }, [isOpen, unreadCount, t]);
+    // Очищаем таймер при размонтировании
+    return () => clearTimeout(timer);
+    // Пустой массив зависимостей означает, что эффект выполнится только один раз при монтировании
+  }, []);
 
   useEffect(() => {
     if (isOpen) {

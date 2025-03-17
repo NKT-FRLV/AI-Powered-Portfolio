@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, memo, useRef, useCallback } from "react";
+import { useState, useEffect, memo, useRef, useCallback } from "react";
+import dynamic from 'next/dynamic'
 import { motion } from "framer-motion";
-import { ThemeToggle } from "../theme-toggle";
 import Logo from "./logo";
 import Navigation from "./navigation";
 import Socials from "./socials";
@@ -10,6 +10,9 @@ import ScrollIndicator from "./scroll-indicator";
 import { scrollToSection } from "./scroll-utils";
 import BurgerButton from "./burger-button";
 import MobileNavigation from "./mobile-navigation";
+
+
+const ThemeToggle = dynamic(() => import('@/app/components/theme-toggle'), { ssr: false })
 
 // Мемоизированный компонент Header для предотвращения ненужных ререндеров
 function Header() {
