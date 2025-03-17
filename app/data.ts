@@ -29,10 +29,10 @@ export const skills: { name: string; percent: number; icon: string }[] = [
 ];
 
 export const languages: { name: string; percent: number; code: string }[] = [
-  { name: 'Russian', percent: 95, code: 'RU' },
+  { name: 'Russian', percent: 100, code: 'RU' },
   { name: 'English', percent: 90, code: 'GB' },
-  { name: 'Spanish', percent: 70, code: 'ES' },
-  { name: 'Swedish', percent: 50, code: 'SE' }
+  { name: 'Spanish', percent: 85, code: 'ES' },
+  { name: 'Swedish', percent: 15, code: 'SE' }
 ];
 
 export const myEducation: {

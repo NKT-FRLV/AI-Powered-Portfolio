@@ -29,7 +29,7 @@ const SocialButton = memo(({ social }: { social: SocialLinkProps }) => {
       asChild
       variant="ghost"
       size="icon"
-      className="text-muted-foreground hover:text-foreground"
+      className="text-muted-foreground bg-transparent hover:bg-transparent hover:text-white  hover:scale-110 transition-all duration-300"
     >
       <a 
         href={social.link} 

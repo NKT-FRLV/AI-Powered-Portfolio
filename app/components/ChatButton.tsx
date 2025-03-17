@@ -312,7 +312,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     wave: {
       initial: { scale: 0.4, opacity: 0 },
       animate: (i: number) => ({
-        scale: [0.8, 2],
+        scale: [0.8, 1.6],
         opacity: [0, 0.6, 0],
         transition: {
           duration: 3,
