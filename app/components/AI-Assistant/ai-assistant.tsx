@@ -51,6 +51,8 @@ const translations = {
     closeChat: "Close chat",
     textToSpeechAvailable: "Text-to-speech available",
     speaking: "Speaking...",
+    stopSpeaking: "Stop speaking",
+    readAloud: "Read message aloud",
     newMessages: (count: number) => `You have ${count} new ${count === 1 ? 'message' : 'messages'}`,
     errorMessage: "Sorry, an error occurred. Please try again later."
   },
@@ -75,12 +77,14 @@ const translations = {
     closeChat: "Закрыть чат",
     textToSpeechAvailable: "Доступно озвучивание текста",
     speaking: "Говорю...",
+    stopSpeaking: "Остановить озвучивание",
+    readAloud: "Озвучить сообщение",
     newMessages: (count: number) => `У вас ${count} ${count === 1 ? 'новое сообщение' : count >= 2 && count <= 4 ? 'новых сообщения' : 'новых сообщений'}`,
     errorMessage: "Извините, произошла ошибка. Пожалуйста, попробуйте позже."
   }
 };
 
-export default function AiAssistant() {
+const AiAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, systemTheme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
@@ -611,6 +615,13 @@ export default function AiAssistant() {
   const speakMessage = useCallback((text: string) => {
     if (!synthRef.current) return;
     
+    // If already speaking, stop speaking and return
+    if (isSpeaking) {
+      synthRef.current.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+    
     // Cancel any ongoing speech
     synthRef.current.cancel();
     
@@ -635,7 +646,7 @@ export default function AiAssistant() {
     utterance.onerror = () => setIsSpeaking(false);
     
     synthRef.current.speak(utterance);
-  }, [language]);
+  }, [language, isSpeaking]);
 
   // Initialize audio for notification sound
   useEffect(() => {
@@ -1018,21 +1029,21 @@ export default function AiAssistant() {
                         className={`rounded-full p-2 ${isSpeaking ? getAccentColorClasses() + ' text-white' : 'hover:bg-muted'}`}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        aria-label={isSpeaking 
-                          ? language === 'ru' ? "Остановить озвучивание" : "Stop speaking" 
-                          : language === 'ru' ? "Озвучить последнее сообщение" : "Read last message aloud"
-                        }
-                        title={isSpeaking 
-                          ? language === 'ru' ? "Остановить озвучивание" : "Stop speaking" 
-                          : language === 'ru' ? "Озвучить последнее сообщение" : "Read last message aloud"
-                        }
-                        disabled={isSpeaking}
+                        aria-label={isSpeaking ? t.stopSpeaking : t.readAloud}
+                        title={isSpeaking ? t.stopSpeaking : t.readAloud}
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                        </svg>
+                        {isSpeaking ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                          </svg>
+                        )}
                       </motion.button>
                       
                       <div className="text-xs text-muted-foreground">
@@ -1050,3 +1061,5 @@ export default function AiAssistant() {
     </>
   );
 }
+
+export default AiAssistant;

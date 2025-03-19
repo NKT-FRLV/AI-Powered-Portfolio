@@ -237,7 +237,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         </div>
         
         <div 
-          className="text-xs text-muted-foreground mt-1 self-end"
+          className="text-xs text-muted-foreground mt-1 self-start ml-2"
           id={`message-${id}-time`}
           aria-label={`${t.sentAt} ${formattedTime}`}
         >
