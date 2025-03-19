@@ -20,19 +20,19 @@ interface MobileNavigationProps {
   activeSection: string | null;
   handleLinkClick: (e: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
   closeMobileMenu: () => void;
+  sectionsLoaded?: boolean;
 }
 
 const MobileNavigation: React.FC<MobileNavigationProps> = ({
   isOpen,
   activeSection,
   handleLinkClick,
-  closeMobileMenu
+  closeMobileMenu,
+  sectionsLoaded = true
 }) => {
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => {
-      if (!open) closeMobileMenu();
-    }}>
+    <Sheet open={isOpen} onOpenChange={closeMobileMenu}>
       <SheetContent 
         side="left" 
         className={cn(
@@ -82,15 +82,18 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
                         "transition-all duration-200",
                         activeSection === item.id 
                           ? "border-l-primary bg-secondary/40" 
-                          : "border-l-transparent hover:border-l-primary/50 hover:bg-secondary/20"
+                          : "border-l-transparent hover:border-l-primary/50 hover:bg-secondary/20",
+                        !sectionsLoaded && "opacity-50 cursor-not-allowed"
                       )}
                       asChild
+                      disabled={!sectionsLoaded}
                     >
                       <NavLink
                         id={item.id}
                         label={item.label}
                         isActive={activeSection === item.id}
                         onClick={handleLinkClick}
+                        disabled={!sectionsLoaded}
                       />
                     </Button>
                   </motion.div>

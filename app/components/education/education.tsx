@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import { myEducation } from "../data";
-import { EducationHeader } from "./education/EducationHeader";
-import { EducationItem } from "./education/EducationItem";
-import { DocumentPreview } from "./education/DocumentPreview";
+import { myEducation } from "../../data";
+import { EducationHeader } from "./EducationHeader";
+import { EducationItem } from "./EducationItem";
+import { DocumentPreview } from "./DocumentPreview";
 
-export default function Education() {
+const Education = () => {
   const [isOpen, setIsOpen] = useState<Record<string, boolean>>({});
   const [previewDoc, setPreviewDoc] = useState<{path: string, name: string} | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,3 +69,5 @@ export default function Education() {
     </section>
   );
 } 
+
+export default Education;

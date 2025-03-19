@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
-import { useOptimistic } from "../hooks/useOptimistic";
+import { useOptimistic } from "../../hooks/useOptimistic";
 import ChatButton from "./ChatButton";
 import ChatMessage from "./ChatMessage";
 import MessageInput from "./MessageInput";

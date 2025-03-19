@@ -1,9 +1,8 @@
-"use client";
+'use client'
 
-import React from "react";
 import { motion } from "framer-motion";
 
-export default function About() {
+const About = () => {
   return (
     <section id="about" className="py-16 md:py-24">
       <div className="container px-4 md:px-6">
@@ -57,3 +56,5 @@ export default function About() {
     </section>
   );
 } 
+
+export default About;

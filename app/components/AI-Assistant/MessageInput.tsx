@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, RefObject } from "react";
+import { ChangeEvent, FormEvent, RefObject } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 

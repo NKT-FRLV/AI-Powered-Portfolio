@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import AnimatedLetters from "@/app/components/animated-letters";
+import AnimatedLetters from "@/app/components/hero/animated-letters";
 import { useAnimatedLetters } from "@/app/hooks/useAnimatedLetters";
-import { HeroImageModal } from "@/app/components/hero-image-modal";
+import HeroImageModal from "@/app/components/hero/hero-image-modal";
+import { TypewriterText } from "@/app/components/hero/TypewriterText";
 import { Button } from "@/app/components/ui/button";
-import { TypewriterText } from "@/app/components/TypewriterText";
 
-export default function Hero() {
+
+const Hero = () => {
   const { letterClass } = useAnimatedLetters({
     triggerOnLoad: true,
     animationDuration: 2500,
@@ -154,3 +155,5 @@ export default function Hero() {
     </section>
   );
 } 
+
+export default Hero;

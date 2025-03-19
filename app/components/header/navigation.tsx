@@ -13,9 +13,10 @@ export interface NavItem {
 interface NavigationProps {
   activeSection: string | null;
   handleLinkClick: (e: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
+  sectionsLoaded?: boolean;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ activeSection, handleLinkClick }) => {
+const Navigation: React.FC<NavigationProps> = ({ activeSection, handleLinkClick, sectionsLoaded = true }) => {
   return (
     <motion.nav 
       initial={{ opacity: 0, y: -10 }}
@@ -30,6 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, handleLinkClick 
           label={item.label}
           isActive={activeSection === item.id}
           onClick={handleLinkClick}
+          disabled={!sectionsLoaded}
         />
       ))}
     </motion.nav>

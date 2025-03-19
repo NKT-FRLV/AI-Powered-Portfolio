@@ -126,6 +126,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${rubikMonoOne.variable} font-rubik-mono`}
       >
+        
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -133,7 +134,9 @@ export default function RootLayout({
           disableTransitionOnChange={false}
           storageKey="theme"
         >
-          {children}
+          <main className="min-h-screen bg-background">
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>

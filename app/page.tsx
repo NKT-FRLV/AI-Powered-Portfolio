@@ -1,5 +1,6 @@
-import HomePage from './components/HomePage/home-page'
 
-export default function Page() {
-  return <HomePage />
+import PortfolioContent from './components/HomePage/portfolio-content'
+
+export default async function Page() {
+  return <PortfolioContent />
 }

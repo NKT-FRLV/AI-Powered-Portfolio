@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
 import { languages } from "../data";
 import Flags from 'react-world-flags';
 
-export default function Languages() {
+const Languages = () => {
   return (
     <section id="languages" className="py-16 md:py-24">
       <div className="container px-4 md:px-6">
@@ -60,3 +59,5 @@ export default function Languages() {
     </section>
   );
 } 
+
+export default Languages;

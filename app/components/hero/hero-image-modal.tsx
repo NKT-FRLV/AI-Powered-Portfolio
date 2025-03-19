@@ -14,7 +14,7 @@ import { Button } from "@/app/components/ui/button"
 import { motion } from "framer-motion"
 import { Camera } from "lucide-react"
 
-export function HeroImageModal() {
+const HeroImageModal = () => {
   const [isOpen, setIsOpen] = useState(false)
 
 
@@ -67,3 +67,5 @@ export function HeroImageModal() {
     </Sheet>
   )
 } 
+
+export default HeroImageModal; 
