@@ -27,7 +27,7 @@ const Languages = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg"
+              className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <div className="flex items-center gap-6">
                 <div className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-[hsl(var(--border))]">

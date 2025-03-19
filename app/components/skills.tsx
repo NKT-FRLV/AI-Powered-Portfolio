@@ -55,7 +55,7 @@ export default function Skills() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg"
+                className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="flex flex-col items-center space-y-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[hsl(var(--muted))]">

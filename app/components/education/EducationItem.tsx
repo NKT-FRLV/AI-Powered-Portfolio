@@ -50,7 +50,7 @@ export const EducationItem: React.FC<EducationItemProps> = ({
         delay: index * 0.15,
         ease: [0.21, 0.45, 0.32, 0.9]
       }}
-      className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg"
+      className="group relative overflow-hidden rounded-lg border bg-[hsl(var(--background))] p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
     >
       <div className="flex flex-col md:flex-row md:items-start gap-6">
         <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--muted))]">
