@@ -91,11 +91,11 @@ const ChatContainer = ({ isOpen, setIsOpen }: ChatContainerProps) => {
   }, [optimisticMessages, isOpen]);
 
   // Focus input field when chat opens
-  useEffect(() => {
-    if (isOpen) {
-      inputRef.current?.focus();
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     inputRef.current?.focus();
+  //   }
+  // }, [isOpen]);
 
   // Handle keyboard shortcuts when chat is open
   useEffect(() => {
@@ -202,7 +202,6 @@ const ChatContainer = ({ isOpen, setIsOpen }: ChatContainerProps) => {
     }
   };
 
-  if (!isOpen) return null;
 
   return (
     <AnimatePresence mode="wait">

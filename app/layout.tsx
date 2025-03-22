@@ -7,7 +7,7 @@ import { ThemeProvider } from "./components/theme-provider";
 const orbitron = localFont({
   src: "./fonts/Orbitron-VariableFont_wght.ttf",
   variable: "--font-orbitron",
-  display: "swap",
+  display: "block",
   preload: true,
 });
 
@@ -20,7 +20,7 @@ const rubikMonoOne = localFont({
     }
   ],
   variable: "--font-rubik-mono",
-  display: "swap",
+  display: "block",
   preload: true,
 });
 
@@ -105,11 +105,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-        
+        <link
+          rel="preload"
+          href="/fonts/RubikMonoOne-Regular.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Orbitron-VariableFont_wght.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
         <link
           rel="icon"
           href="/nf-logo.svg"

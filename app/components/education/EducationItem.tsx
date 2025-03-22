@@ -1,8 +1,13 @@
 "use client";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { FaUniversity, FaGraduationCap, FaSwimmer, FaChevronDown } from 'react-icons/fa';
+import dynamic from "next/dynamic";
 
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaUniversity, FaGraduationCap, FaSwimmer, FaFileAlt, FaChevronDown } from 'react-icons/fa';
+const EducationExtraInfo = dynamic(() => import("./EducationExtraInfo"), {
+  ssr: false, // Компонент не нужен при SSR
+  loading: () => null,
+});
 
 // Mapping string identifiers to icon components
 const logoMap: Record<string, React.ElementType> = {
@@ -30,18 +35,26 @@ export interface EducationItemProps {
 }
 
 // Компонент для отображения элемента образования
-export const EducationItem: React.FC<EducationItemProps> = ({ 
+const EducationItem = ({ 
   edu, 
   index, 
   isOpen, 
   setIsOpen,
   openDocumentPreview 
-}) => {
+}: EducationItemProps) => {
   const LogoComponent = logoMap[edu.logo] || FaUniversity;
   
+  const [isPreloaded, setIsPreloaded] = useState(false);
+
+  const handleDownloadLazyComponent = async () => {
+    await import("./EducationExtraInfo")
+    setIsPreloaded(true); // Подготовка компонента к моментальному рендеру
+  };
+
   return (
     <motion.div 
       key={edu.title}
+      onMouseEnter={handleDownloadLazyComponent}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -82,50 +95,20 @@ export const EducationItem: React.FC<EducationItemProps> = ({
                   >
                     <FaChevronDown className="h-4 w-4" />
                   </motion.span>
-                  <motion.div 
-                    className="absolute bottom-0 left-0 h-[2px] bg-[hsl(var(--primary))] w-full origin-left"
-                    variants={{
-                      hover: { scaleX: 1 },
-                      initial: { scaleX: 0 }
-                    }}
-                    initial="initial"
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 10
-                    }}
-                  />
                 </motion.div>
-                <AnimatePresence initial={false}>
-                  {isOpen[edu.title] && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{
-                        duration: 0.3,
-                        opacity: { duration: 0.25 }
-                      }}
-                      className="overflow-hidden"
-                    >
-                      <div className="mt-3 text-sm text-[hsl(var(--muted-foreground)] p-3 rounded-md bg-[hsl(var(--muted))]/30">
-                        <p>{edu.info}</p>
-                        {edu.documentationPath && (
-                          <motion.button 
-                            onClick={() => openDocumentPreview(edu.documentationPath!, edu.documentName!)}
-                            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary))]/90 transition-colors"
-                            aria-label={`View certificate for ${edu.title}`}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                          >
-                            <FaFileAlt className="h-4 w-4" />
-                            View Certificate
-                          </motion.button>
-                        )}
-                      </div>
-                    </motion.div>
+                
+                  { isPreloaded && (
+                    <EducationExtraInfo 
+                      isOpen={isOpen[edu.title]}
+                      info={edu.info}
+                      documentationPath={edu.documentationPath}
+                      documentName={edu.documentName}
+                      openDocumentPreview={openDocumentPreview}
+                      title={edu.title}
+                      style={{ display: isOpen[edu.title] ? "block" : "none" }}
+                    />
                   )}
-                </AnimatePresence>
+
               </>
             )}
           </div>
@@ -134,3 +117,5 @@ export const EducationItem: React.FC<EducationItemProps> = ({
     </motion.div>
   );
 }; 
+
+export default EducationItem;

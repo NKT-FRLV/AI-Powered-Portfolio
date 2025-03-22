@@ -1,23 +1,11 @@
 import { useCallback, memo, useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { SiOpenai } from "react-icons/si";
+import { ChatButtonProps } from './types';
+import { useNotificationSound } from './hooks/useNotificationSound';
 
-interface ChatButtonProps {
-  onClick: () => void;
-  theme: string | undefined;
-  isVisible?: boolean;
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
-  size?: 'sm' | 'md' | 'lg';
-  label?: string;
-  pulseEffect?: boolean;
-  notificationCount?: number;
-  showNotificationBadge?: boolean;
-  playSoundOnNotification?: boolean;
-  soundUrl?: string;
-  enableHapticFeedback?: boolean;
-}
-
-const ChatButton: React.FC<ChatButtonProps> = ({ 
+const ChatButton = ({ 
+  onMouseEnter,
   onClick, 
   theme, 
   position = 'bottom-right',
@@ -28,27 +16,24 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   showNotificationBadge = false,
   playSoundOnNotification = false,
   soundUrl = '/sounds/notification.mp3',
-  enableHapticFeedback = true,
-}) => {
+}: ChatButtonProps) => {
   // Respect user's reduced motion preferences
   const prefersReducedMotion = useReducedMotion();
   
   // Component state
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
   const prevNotificationCountRef = useRef(notificationCount);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  // Handle click with haptic feedback
+  
+  // Use notification sound hook
+  const { playSound } = useNotificationSound({
+    soundEnabled: playSoundOnNotification,
+    soundUrl
+  });
+  
+  // Handle click
   const handleClick = useCallback(() => {
-    if (enableHapticFeedback && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-      try {
-        navigator.vibrate(50); // Short vibration (50ms)
-      } catch (error) {
-        console.log('Haptic feedback not supported:', error);
-      }
-    }
     onClick();
-  }, [onClick, enableHapticFeedback]);
+  }, [onClick]);
   
   // Handle keyboard events for accessibility
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -58,69 +43,18 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     }
   }, [onClick]);
   
-  // Initialize audio element
-  useEffect(() => {
-    if (typeof window !== 'undefined' && playSoundOnNotification) {
-      try {
-        audioRef.current = new Audio(soundUrl);
-        audioRef.current.addEventListener('error', (e) => {
-          console.error('Error loading notification sound:', e);
-          if ('Notification' in window && Notification.permission === 'granted') {
-            try {
-              new Notification('New message', {
-                silent: false,
-                icon: '/nf-logo.svg'
-              });
-            } catch (notificationError) {
-              console.error('Notification fallback failed:', notificationError);
-            }
-          }
-        });
-      } catch (error) {
-        console.error('Could not initialize audio:', error);
-      }
-      
-      return () => {
-        if (audioRef.current) {
-          audioRef.current.removeEventListener('error', () => {});
-          audioRef.current.pause();
-          audioRef.current = null;
-        }
-      };
-    }
-  }, [soundUrl, playSoundOnNotification]);
-  
   // Play sound when notification count increases
   useEffect(() => {
     if (
       playSoundOnNotification && 
-      audioRef.current && 
       notificationCount > prevNotificationCountRef.current && 
       notificationCount > 0
     ) {
-      // Reset and play audio
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.log('Audio playback was prevented by the browser:', error);
-        });
-      }
-      
-      // Trigger haptic feedback for notifications
-      if (enableHapticFeedback && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-        try {
-          navigator.vibrate([100, 50, 100]);
-        } catch (error) {
-          console.log('Haptic feedback not supported:', error);
-        }
-      }
+      playSound();
     }
     
     prevNotificationCountRef.current = notificationCount;
-  }, [notificationCount, playSoundOnNotification, enableHapticFeedback]);
+  }, [notificationCount, playSoundOnNotification, playSound]);
 
   // Configuration objects
   const sizeConfig = {
@@ -190,8 +124,8 @@ const ChatButton: React.FC<ChatButtonProps> = ({
         : { 
             scale: 1.05,
             boxShadow: theme === 'dark' 
-              ? "0 0 20px 8px rgba(255,255,255,0.3)" 
-              : "0 0 20px 8px rgba(0,0,0,0.2)",
+              ? "0 0 15px 6px rgba(255,255,255,0.25)" 
+              : "0 0 15px 6px rgba(0,0,0,0.25)",
             transition: {
               boxShadow: {
                 duration: 0.3,
@@ -254,10 +188,10 @@ const ChatButton: React.FC<ChatButtonProps> = ({
   // Simplified effects and pulse animations
   const pulseAnimations = !prefersReducedMotion && pulseEffect ? {
     glow: {
-      initial: { opacity: 0, scale: 0.8 },
+      initial: { opacity: 0, scale: 0.6 },
       animate: {
         opacity: [0, 0.4, 0.7, 0.4],
-        filter: ["brightness(0.8)", "brightness(1)", "brightness(1.2)", "brightness(1)"],
+        filter: ["brightness(0.6)", "brightness(0.8)", "brightness(1)", "brightness(0.8)"],
         scale: [0.8, 1],
         transition: {
           opacity: {
@@ -312,14 +246,14 @@ const ChatButton: React.FC<ChatButtonProps> = ({
     wave: {
       initial: { scale: 0.4, opacity: 0 },
       animate: (i: number) => ({
-        scale: [0.8, 1.6],
+        scale: [0.8, 1.5],
         opacity: [0, 0.6, 0],
         transition: {
           duration: 3,
           times: [0, 0.3, 1],
           repeat: Infinity,
           repeatDelay: 1,
-          delay: 0.6 + (i * 0.2), // Волны появляются последовательно
+          delay: 0.6 + (i * 0.6), // Увеличиваем дистанцию между волнами (было 0.2)
           ease: [0.4, 0, 0.2, 1],
           repeatType: "loop" as const
         }
@@ -344,8 +278,8 @@ const ChatButton: React.FC<ChatButtonProps> = ({
       ? "absolute inset-0 rounded-full bg-white/15"
       : "absolute inset-0 rounded-full bg-zinc-900/15",
     ring: theme === 'dark'
-      ? "absolute -inset-2 rounded-full border-2 border-white/15"
-      : "absolute -inset-2 rounded-full border-2 border-black/10",
+      ? "absolute -inset-1.5 rounded-full border-2 border-white/15"
+      : "absolute -inset-1.5 rounded-full border-2 border-black/10",
     radioWave: (index: number) => theme === 'dark'
       ? `absolute rounded-full border ${index === 0 ? 'border-blue-400/50' : index === 1 ? 'border-indigo-400/40' : 'border-purple-400/30'} pointer-events-none`
       : `absolute rounded-full border ${index === 0 ? 'border-blue-500/40' : index === 1 ? 'border-indigo-500/30' : 'border-purple-500/20'} pointer-events-none`
@@ -359,6 +293,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
 
   return (
         <motion.div
+          onMouseEnter={onMouseEnter}
           className="fixed z-50"
           style={{ 
             bottom: position.includes('bottom') ? 24 : undefined,
@@ -383,7 +318,7 @@ const ChatButton: React.FC<ChatButtonProps> = ({
               style={{
                 boxShadow: theme === 'dark' 
                   ? `0 0 ${5 - i * 1}px ${i === 0 ? 'rgba(96,165,250,0.2)' : i === 1 ? 'rgba(129,140,248,0.15)' : 'rgba(168,85,247,0.1)'}` 
-                  : `0 0 ${5 - i * 1}px ${i === 0 ? 'rgba(59,130,246,0.15)' : i === 1 ? 'rgba(99,102,241,0.1)' : 'rgba(147,51,234,0.05)'}`
+                  : `0 0 ${5 - i * 1}px ${i === 0 ? 'rgba(59,130,246,0.2)' : i === 1 ? 'rgba(99,102,241,0.15)' : 'rgba(147,51,234,0.1)'}`
               }}
             />
           ))}

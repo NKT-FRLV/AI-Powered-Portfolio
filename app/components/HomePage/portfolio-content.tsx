@@ -6,11 +6,13 @@ import Hero from "../hero";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 import Header from "../header";
+import About from "../about";
 import Footer from "../footer";
+import ScrollShivronButton from "../scroll-shivron/scroll-shivron-button";
 // Используем приоритеты загрузки для компонентов
 // Компоненты, которые видны сразу при загрузке страницы, импортируем напрямую
 // Компоненты, которые видны при первом скролле, загружаем с высоким приоритетом
-const About = lazy(() => import("../about"));
+// const About = lazy(() => import("../about"));
 const Education = lazy(() => import("../education/education"));
 const Skills = lazy(() => import("../skills"));
 
@@ -60,6 +62,7 @@ const PortfolioContent = () => {
   // Функция для установки активной секции с дебаунсингом
   const debouncedSetActiveSection = debounce(
     (newSection: string | null) => {
+
       // Обновляем активную секцию только если нет блокировки
       if (!userScrollLock.current) {
         setActiveSection(newSection);
@@ -74,7 +77,7 @@ const PortfolioContent = () => {
     const preloadComponents = async () => {
       // Предварительно загружаем компоненты, но с низким приоритетом
       const promises = [
-        import("../about"),
+        // import("../about"),
         import("../education/education"),
         import("../skills"),
         import("../projects"),
@@ -187,6 +190,31 @@ const PortfolioContent = () => {
     }
   }, []);
 
+  const scrollToEdge = useCallback((direction: 'top' | 'bottom') => {
+    // Блокируем обсервер на короткое время
+    userScrollLock.current = true;
+    
+    // Очищаем предыдущий таймаут, если есть
+    if (lockTimeout.current) {
+      clearTimeout(lockTimeout.current);
+    }
+    
+    // Устанавливаем активную секцию в зависимости от направления
+    const targetSection = direction === 'top' ? sectionIds[0] : sectionIds[sectionIds.length - 1];
+    setActiveSection(targetSection);
+    
+    // Выполняем скролл
+    window.scrollTo({
+      top: direction === 'top' ? 0 : document.documentElement.scrollHeight,
+      behavior: 'smooth'
+    });
+    
+    // Разблокируем обсервер через 1.5 секунды
+    lockTimeout.current = setTimeout(() => {
+      userScrollLock.current = false;
+    }, 1500);
+  }, []);
+
   // Очищаем таймаут при размонтировании
   useEffect(() => {
     return () => {
@@ -208,9 +236,7 @@ const PortfolioContent = () => {
       {/* Загружаем AI Assistant только после загрузки основных компонентов */}
       {loadAiAssistant && <AiAssistant />}
 
-      <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[400px] max-w-5xl" />}>
-        { isLoaded && <About />}
-      </Suspense>
+      <About />
       
       <Suspense fallback={<Skeleton className="container mx-auto my-8 h-[400px] max-w-5xl" />}>
         { isLoaded && <Education />}
@@ -232,8 +258,10 @@ const PortfolioContent = () => {
         {isLoaded && <ContactForm />}
       </Suspense>
 
+      <ScrollShivronButton isSectionsLoaded={isLoaded} scrollToEdge={scrollToEdge} />
+
       <Footer />
-      
+        
     </>
   );
 }

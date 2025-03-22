@@ -1,32 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import dynamic from "next/dynamic";
 import { myEducation } from "../../data";
 import { EducationHeader } from "./EducationHeader";
-import { EducationItem } from "./EducationItem";
-import { DocumentPreview } from "./DocumentPreview";
+import EducationItem from "./EducationItem";
+// import { DocumentPreview } from "./DocumentPreview";
+
+const DocumentPreview = dynamic(() => import("./DocumentPreview"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const Education = () => {
   const [isOpen, setIsOpen] = useState<Record<string, boolean>>({});
   const [previewDoc, setPreviewDoc] = useState<{path: string, name: string} | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDocument, setIsLoadingDocument] = useState(false);
+  const [isPreviewPreloaded, setIsPreviewPreloaded] = useState(false);
 
-  // Блокируем прокрутку страницы, когда открыто модальное окно
-  useEffect(() => {
-    if (previewDoc) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [previewDoc]);
+  const handleDownloadLazyComponent = async () => {
+    await import("./DocumentPreview")
+    setIsPreviewPreloaded(true);
+  };
+
+
+
 
   const openDocumentPreview = (path: string, name: string) => {
-    setIsLoading(true);
+    setIsLoadingDocument(true);
     // Добавляем префикс, если путь не начинается с /
     const fullPath = path.startsWith('/') ? path : `/${path}`;
     setPreviewDoc({ path: fullPath, name });
@@ -34,14 +35,17 @@ const Education = () => {
 
   const closeDocumentPreview = () => {
     setPreviewDoc(null);
-    setIsLoading(false);
+    setIsLoadingDocument(false);
   };
 
   return (
     <section id="education" className="py-16 md:py-24 bg-[hsl(var(--muted))]/50">
       <div className="container px-4 md:px-6">
         <EducationHeader />
-        <div className="mx-auto grid max-w-5xl gap-8 py-12">
+        <div
+         className="mx-auto grid max-w-5xl gap-8 py-12"
+         onMouseEnter={handleDownloadLazyComponent}
+         >
           {myEducation.map((edu, index) => (
             <EducationItem 
               key={edu.title}
@@ -56,16 +60,14 @@ const Education = () => {
       </div>
 
       {/* Document Preview Modal */}
-      <AnimatePresence>
-        {previewDoc && (
+        {isPreviewPreloaded && (
           <DocumentPreview 
             document={previewDoc}
-            isLoading={isLoading}
+            isLoading={isLoadingDocument}
             onClose={closeDocumentPreview}
-            setIsLoading={setIsLoading}
-          />
-        )}
-      </AnimatePresence>
+            setIsLoading={setIsLoadingDocument}
+        />
+      )}
     </section>
   );
 } 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import AnimatedLetters from "@/app/components/hero/animated-letters";
@@ -18,6 +18,9 @@ const Hero = () => {
 
   const [showDescription, setShowDescription] = useState(false);
 
+  // Флаг для блокировки обсервера при клике на ссылку
+  const userScrollLock = useRef(false);
+  const lockTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Show description after name animation completes
   useEffect(() => {
@@ -48,6 +51,39 @@ const Hero = () => {
   // Добавляем классы для тени текста
   const textShadowClass = "drop-shadow-sm";
   const nameTextShadowClass = "drop-shadow-md";
+
+  // Обработчик плавного скролла к секции
+  const scrollToSection = useCallback((e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    
+    // Блокируем обсервер на короткое время
+    userScrollLock.current = true;
+    
+    // Очищаем предыдущий таймаут, если есть
+    if (lockTimeout.current) {
+      clearTimeout(lockTimeout.current);
+    }
+    
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+      
+      // Разблокируем обсервер через 1.5 секунды
+      // (время на завершение анимации прокрутки)
+      lockTimeout.current = setTimeout(() => {
+        userScrollLock.current = false;
+      }, 1500);
+    }
+  }, []);
+
+  // Очищаем таймаут при размонтировании
+  useEffect(() => {
+    return () => {
+      if (lockTimeout.current) {
+        clearTimeout(lockTimeout.current);
+      }
+    };
+  }, []);
 
   return (
     <section className="relative h-screen flex items-center overflow-hidden">
@@ -80,24 +116,22 @@ const Hero = () => {
             className="flex flex-col justify-center space-y-2 sm:space-y-4"
           >
             <div className="space-y-2 xs:space-y-4 sm:space-y-6 md:space-y-8">
-              <h1 className="font-bold tracking-tighter flex flex-col gap-2 xs:gap-3 md:gap-0 font-rubik-mono">
+              <h1 className="font-bold tracking-tighter flex flex-col gap-2 xs:gap-3 md:gap-0">
                 <AnimatedLetters 
-                  letterClass={`${letterClass} text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-muted-foreground font-rubik-mono`} 
+                  letterClass={`${letterClass} text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-muted-foreground`} 
                   strArray={hi} 
                   idx={1} 
                 />
                 
-                <span className="block relative">
-                  <AnimatedLetters 
-                    letterClass={`${letterClass} text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold ${nameTextShadowClass}`} 
-                    strArray={nameArray} 
-                    idx={1} 
-                    bracketClass="bracket-class text-primary/70" 
-                    nameClass={`name-class font-extrabold ${nameHoverClass} text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-foreground`}
-                    nameStart={nameStartIndex}
-                    nameEnd={nameEndIndex}
-                  />
-                </span>
+                <AnimatedLetters 
+                  letterClass={`${letterClass} text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold ${nameTextShadowClass}`} 
+                  strArray={nameArray} 
+                  idx={1} 
+                  bracketClass="bracket-class text-primary/70" 
+                  nameClass={`name-class font-extrabold ${nameHoverClass} text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-foreground`}
+                  nameStart={nameStartIndex}
+                  nameEnd={nameEndIndex}
+                />
                 
                 <AnimatedLetters 
                   letterClass={`${letterClass} text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold ${frontendHoverClass} ${textShadowClass}`} 
@@ -136,11 +170,11 @@ const Hero = () => {
             >
               <Button 
                 size="sm" 
-                className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-button-glow hover:scale-105 hover:shadow-lg hover:border-primary/50 transition-all duration-500 ease-in-out" 
+                className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-300 ease-in-out" 
                 asChild
               >
-                <a href="#contact" className="relative z-10">
-                  <span className="relative z-10 group-hover:text-primary-foreground">Contact Me</span>
+                <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>
+                  Contact Me
                 </a>
               </Button>
               <div className="block lg:hidden w-fit">

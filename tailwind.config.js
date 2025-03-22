@@ -204,7 +204,8 @@ module.exports = {
         "nav-out": "nav-out 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
         "skeleton": "skeleton 2s ease-in-out infinite",
         "message-appear": "message-appear 0.3s ease-out forwards",
-        "glow": "glow 3s ease-in-out infinite"
+        "glow": "glow 3s ease-in-out infinite",
+        "button-glow": "glow 3s ease-in-out infinite"
       },
       backdropFilter: {
         'none': 'none',

@@ -1,23 +1,11 @@
 import { useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { ChatMessageProps } from './types';
+import { translations } from './translations';
+import { messageVariants, cursorVariants, reactionPickerVariants } from './animations';
 
-interface ChatMessageProps {
-  id: string;
-  content: string;
-  role: 'user' | 'assistant';
-  timestamp: Date;
-  isTyping?: boolean;
-  index: number;
-  bubbleClassName: string;
-  reactions?: string[];
-  onReactionAdd?: (emoji: string) => void;
-  showReactions?: boolean;
-  language?: 'en' | 'ru';
-}
-
-const ChatMessage: React.FC<ChatMessageProps> = ({
+const ChatMessage = ({
   id,
   content,
   role,
@@ -28,102 +16,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   reactions = [],
   onReactionAdd,
   showReactions = true,
-  language = 'en'
-}) => {
+}: ChatMessageProps) => {
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   
   const availableReactions = ['👍', '❤️', '😊', '🎉', '🤔', '👏'];
-  
-  // Translations
-  const translations = {
-    en: {
-      you: "You",
-      assistant: "Assistant",
-      isTyping: "Assistant is typing",
-      sentAt: "Sent at",
-      addReaction: "Add reaction",
-      reactWith: (emoji: string) => `React with ${emoji}`,
-      closeReactionPicker: "Close reaction picker",
-      messageReactions: "Message reactions",
-      reaction: (emoji: string) => `${emoji} reaction. Click to toggle.`
-    },
-    ru: {
-      you: "Вы",
-      assistant: "Ассистент",
-      isTyping: "Ассистент печатает",
-      sentAt: "Отправлено в",
-      addReaction: "Добавить реакцию",
-      reactWith: (emoji: string) => `Реагировать с ${emoji}`,
-      closeReactionPicker: "Закрыть выбор реакций",
-      messageReactions: "Реакции на сообщение",
-      reaction: (emoji: string) => `Реакция ${emoji}. Нажмите, чтобы переключить.`
-    }
-  };
-  
-  const t = translations[language];
-  
-  const messageVariants: Variants = {
-    initial: { 
-      opacity: 0, 
-      y: 20,
-      scale: 0.95
-    },
-    animate: { 
-      opacity: 1, 
-      y: 0,
-      scale: 1,
-      transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 300,
-        duration: 0.4,
-        delay: index * 0.05 // Stagger effect based on message index
-      }
-    },
-    exit: { 
-      opacity: 0,
-      transition: { 
-        duration: 0.2
-      }
-    }
-  };
-  
-  const cursorVariants: Variants = {
-    blink: {
-      opacity: [0, 1, 0],
-      transition: {
-        duration: 1,
-        repeat: Infinity,
-        repeatType: "loop"
-      }
-    }
-  };
-  
-  const reactionPickerVariants: Variants = {
-    initial: { 
-      opacity: 0, 
-      scale: 0.8,
-      y: 10
-    },
-    animate: { 
-      opacity: 1, 
-      scale: 1,
-      y: 0,
-      transition: { 
-        type: "spring",
-        damping: 20,
-        stiffness: 300
-      }
-    },
-    exit: { 
-      opacity: 0, 
-      scale: 0.8,
-      y: 10,
-      transition: { 
-        duration: 0.2
-      }
-    }
-  };
   
   const toggleReactionPicker = () => {
     setShowReactionPicker(!showReactionPicker);
@@ -136,9 +32,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     setShowReactionPicker(false);
   };
   
-  const formattedTime = language === 'ru'
-    ? format(timestamp, 'HH:mm', { locale: ru })
-    : format(timestamp, 'h:mm a');
+  const formattedTime = format(timestamp, 'h:mm a');
   
   return (
     <motion.div
@@ -148,8 +42,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       animate="animate"
       exit="exit"
       variants={messageVariants}
+      custom={index}
       role="listitem"
-      aria-label={`${role === 'user' ? t.you : t.assistant} at ${formattedTime}`}
+      aria-label={`${role === 'user' ? translations.you : translations.assistant} at ${formattedTime}`}
     >
       <div className="flex flex-col max-w-[80%]">
         <div 
@@ -160,7 +55,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           aria-describedby={`message-${id}-content message-${id}-time`}
         >
           <span id={`message-${id}-sender`} className="sr-only">
-            {role === 'user' ? t.you : t.assistant}
+            {role === 'user' ? translations.you : translations.assistant}
           </span>
           
           <div 
@@ -182,7 +77,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               {reactions.length > 0 && (
                 <div 
                   className="flex items-center bg-background/80 backdrop-blur-sm rounded-full px-1.5 py-0.5 border shadow-sm"
-                  aria-label={t.messageReactions}
+                  aria-label={translations.messageReactions}
                 >
                   {Array.from(new Set(reactions)).map((emoji) => (
                     <div key={emoji} className="text-xs mx-0.5">
@@ -195,7 +90,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               <button
                 onClick={toggleReactionPicker}
                 className="text-xs bg-background/80 backdrop-blur-sm rounded-full p-1 border shadow-sm hover:bg-muted transition-colors"
-                aria-label={t.addReaction}
+                aria-label={translations.addReaction}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -214,7 +109,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                     exit="exit"
                     variants={reactionPickerVariants}
                     role="menu"
-                    aria-label={t.addReaction}
+                    aria-label={translations.addReaction}
                   >
                     <div className="flex space-x-1.5">
                       {availableReactions.map((emoji) => (
@@ -222,7 +117,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                           key={emoji}
                           onClick={() => handleReactionClick(emoji)}
                           className="text-sm hover:scale-125 transition-transform"
-                          aria-label={t.reactWith(emoji)}
+                          aria-label={translations.reactWith(emoji)}
                           role="menuitem"
                         >
                           {emoji}
@@ -239,7 +134,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         <div 
           className="text-xs text-muted-foreground mt-1 self-start ml-2"
           id={`message-${id}-time`}
-          aria-label={`${t.sentAt} ${formattedTime}`}
+          aria-label={`${translations.sentAt} ${formattedTime}`}
         >
           {formattedTime}
         </div>

@@ -1,6 +1,6 @@
 "use client";
-
-import { useState, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useState, useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 
@@ -9,13 +9,20 @@ import { useSettings } from "./hooks/useSettings";
 
 // Components
 import ChatButton from "./ChatButton";
-import ChatContainer from "./ChatContainer";
+// import ChatContainer from "./ChatContainer";
+const ChatContainer = dynamic(() => import("./ChatContainer"), { ssr: false });
+
 
 // Types & utils
 import { translations } from "./translations";
 
 const AiAssistant = () => {
+  // State for onHover PreLoad ChatContainer
+  const [ isLoadedChatContainer, setIsLoadedChatContainer ] = useState(false);
+
   const [isOpen, setIsOpen] = useState(false);
+  const wasOpenOnce = useRef(false);
+
   const { theme, systemTheme } = useTheme();
   const currentTheme = theme === 'system' ? systemTheme : theme;
   
@@ -32,46 +39,45 @@ const AiAssistant = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [announcement, setAnnouncement] = useState<string | null>(null);
   
-  // Keep track of isOpen state for effects
-  const isOpenRef = useRef(isOpen);
+  // Добавляем ref для таймера
+  const notificationTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Update ref when isOpen changes
+  // Effect для симуляции нового сообщения
   useEffect(() => {
-    isOpenRef.current = isOpen;
-  }, [isOpen]);
+    // Очищаем предыдущий таймер если он существует
+    if (notificationTimerRef.current) {
+      clearTimeout(notificationTimerRef.current);
+      notificationTimerRef.current = null;
+    }
 
-  // Effect to simulate a new message notification after initial load
-  useEffect(() => {
-    // Only runs once on component mount
-    const simulateNewMessage = () => {
-      // Use ref to access current isOpen value
-      if (!isOpenRef.current) {
-        // Add just 1 unread message
-        setUnreadCount(1);
-        
-        const message = translations.newMessages(1);
-        
-        // Create screen reader announcement
-        setAnnouncement(message);
-        
-        // Clear announcement after it's been read
-        setTimeout(() => {
-          setAnnouncement(null);
-        }, 3000);
-        
-        // Play notification sound when simulating a new message
-        if (settings.soundEnabled) {
-          playSound();
+    // Создаем новый таймер только если чат никогда не открывался
+    if (!wasOpenOnce) {
+      notificationTimerRef.current = setTimeout(() => {
+        // Проверяем условия перед отправкой уведомления
+        if (!isOpen && !wasOpenOnce) {
+          setUnreadCount(1);
+          const message = translations.newMessages(1);
+          setAnnouncement(message);
+          
+          setTimeout(() => {
+            setAnnouncement(null);
+          }, 3000);
+          
+          if (settings.soundEnabled) {
+            playSound();
+          }
         }
+      }, 7000);
+    }
+
+    // Очищаем таймер при размонтировании
+    return () => {
+      if (notificationTimerRef.current) {
+        clearTimeout(notificationTimerRef.current);
+        notificationTimerRef.current = null;
       }
     };
-
-    // Create just one notification 7 seconds after initial mount
-    const timer = setTimeout(simulateNewMessage, 7000);
-
-    // Clean up timer on unmount
-    return () => clearTimeout(timer);
-  }, [playSound, settings.soundEnabled]);
+  }, [wasOpenOnce, isOpen, settings.soundEnabled, playSound]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -84,6 +90,9 @@ const AiAssistant = () => {
       
       // Ctrl/Cmd + / to toggle chat
       if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+        if (!isLoadedChatContainer) {
+          setIsLoadedChatContainer(true);
+        }
         e.preventDefault();
         setIsOpen(prev => !prev);
       }
@@ -95,6 +104,25 @@ const AiAssistant = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  // Обновляем handleChatButtonClick
+  const handleChatButtonClick = () => {
+    // Очищаем таймер при открытии чата
+    if (notificationTimerRef.current) {
+      clearTimeout(notificationTimerRef.current);
+      notificationTimerRef.current = null;
+    }
+    
+    setIsOpen(true);
+    setUnreadCount(0);
+    wasOpenOnce.current = true;
+  };
+
+  // Handle mouse enter to preload ChatContainer
+  const handleMouseEnter = () => {
+    setIsLoadedChatContainer(true);
+  };
+
 
   return (
     <>
@@ -110,7 +138,8 @@ const AiAssistant = () => {
       <AnimatePresence mode="wait">
         {!isOpen && (
           <ChatButton 
-            onClick={() => setIsOpen(true)} 
+            onMouseEnter={handleMouseEnter}
+            onClick={handleChatButtonClick} 
             theme={currentTheme}
             position="bottom-right"
             size="md"
@@ -125,10 +154,12 @@ const AiAssistant = () => {
       </AnimatePresence>
 
       {/* Chat Container */}
-      <ChatContainer 
-        isOpen={isOpen} 
-        setIsOpen={setIsOpen} 
-      />
+      {isLoadedChatContainer && (
+        <ChatContainer 
+          isOpen={isOpen} 
+          setIsOpen={setIsOpen} 
+        />
+      )}
     </>
   );
 }
