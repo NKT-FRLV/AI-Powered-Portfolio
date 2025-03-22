@@ -39,7 +39,7 @@ const VoiceControls = ({
         )}
       </motion.button>
       
-      <div className="text-xs text-muted-foreground">
+      <div className="text-xs text-muted-foreground font-roboto">
         {isSpeaking ? translations.speaking : translations.textToSpeechAvailable}
       </div>
     </div>

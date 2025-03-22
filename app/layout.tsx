@@ -1,14 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
 
 const orbitron = localFont({
-  src: "./fonts/Orbitron-VariableFont_wght.ttf",
+  src: [
+    {
+      path: "./fonts/Orbitron-VariableFont_wght.ttf",
+      weight: "100 900",
+      style: "normal",
+    }
+  ],
   variable: "--font-orbitron",
   display: "block",
   preload: true,
+});
+
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  display: "swap",
+  weight: "400",
 });
 
 const rubikMonoOne = localFont({
@@ -135,7 +149,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${rubikMonoOne.variable} font-rubik-mono`}
+        className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${rubikMonoOne.variable} ${roboto.variable}`}
       >
         
         <ThemeProvider

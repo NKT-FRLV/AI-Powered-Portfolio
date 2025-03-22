@@ -191,7 +191,7 @@ const ChatButton = ({
       initial: { opacity: 0, scale: 0.6 },
       animate: {
         opacity: [0, 0.4, 0.7, 0.4],
-        filter: ["brightness(0.6)", "brightness(0.8)", "brightness(1)", "brightness(0.8)"],
+        filter: ["brightness(0)", "brightness(0.5)", "brightness(1.2)", "brightness(0)"],
         scale: [0.8, 1],
         transition: {
           opacity: {

@@ -35,7 +35,7 @@ const EducationExtraInfo: React.FC<EducationExtraInfoProps> = ({
                 style={{...style}}
             >
                 <div className="mt-3 text-sm text-[hsl(var(--muted-foreground)] p-3 rounded-md bg-[hsl(var(--muted))]/30">
-                <p>{info}</p>
+                <p className="font-roboto font-black text-lg">{info}</p>
                 {documentationPath && (
                     <motion.button 
                     onClick={() => openDocumentPreview(documentationPath!, documentName!)}

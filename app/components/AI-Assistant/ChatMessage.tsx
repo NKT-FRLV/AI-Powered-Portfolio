@@ -48,7 +48,7 @@ const ChatMessage = ({
     >
       <div className="flex flex-col max-w-[80%]">
         <div 
-          className={`relative ${bubbleClassName}`}
+          className={`relative ${bubbleClassName} chat-message`}
           tabIndex={0}
           role="article"
           aria-labelledby={`message-${id}-sender`}

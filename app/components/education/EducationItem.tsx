@@ -71,8 +71,8 @@ const EducationItem = ({
         </div>
         <div className="space-y-2">
           <h3 className="text-xl font-bold">{edu.title}</h3>
-          <p className="text-[hsl(var(--muted-foreground))]">{edu.profesion}</p>
-          <p className="text-sm text-[hsl(var(--muted-foreground))]">{edu.date}</p>
+          <p className="text-[hsl(var(--muted-foreground))] font-black text-xl">{edu.profesion}</p>
+          <p className="text-sm text-[hsl(var(--muted-foreground))] font-black text-xl">{edu.date}</p>
           <p className="text-[hsl(var(--muted-foreground))]">{edu.content}</p>
           <div className="group cursor-pointer pt-2">
             {edu.info && (

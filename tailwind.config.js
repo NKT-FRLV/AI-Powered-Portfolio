@@ -23,6 +23,7 @@ module.exports = {
       'orbitron': ['var(--font-orbitron)', 'sans-serif'],
       'geist-sans': ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
       'geist-mono': ['var(--font-geist-mono)', 'monospace'],
+      'roboto': ['var(--font-roboto)', 'sans-serif'],
     },
     container: {
       center: true,
