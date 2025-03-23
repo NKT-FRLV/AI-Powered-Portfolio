@@ -95,6 +95,7 @@ const AiAssistant = () => {
         }
         e.preventDefault();
         setIsOpen(prev => !prev);
+
       }
     };
     
