@@ -266,6 +266,8 @@ a {
   .animate-fade-in {
     animation: fadeIn 0.5s ease-in-out forwards;
   }
+
+  /* Remove duplicated collapsible animations since they're now in tailwind.config.js */
 }
 
 @keyframes fadeIn {

@@ -6,6 +6,7 @@ import blogCustomizerImage from '../public/blog-customizer.webp'
 import ticTacToeImage from '../public/gameAI.webp'
 import GHUserAnalyzerImage from '../public/GH-User-Analyzer.webp'
 import { NavItem } from './components/header/navigation';
+import { AchievementCardProps } from './types/dataTypes';
 
 const gitHubRepoUrl = 'https://github.com/NKT-FRLV';
 
@@ -245,5 +246,146 @@ export const techStack = [
     name: "Testing", 
     description: "Ensuring code quality through automated testing with Jest and Cypress",
     bgClass: "bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/40"
+  }
+];
+
+// About section data
+export const aboutContent = {
+  shortBio: "Frontend developer with experience in creating modern web applications and a passion for building intuitive and responsive user interfaces.",
+  approach: "I strive to create clean, maintainable code that provides an excellent user experience. I pay special attention to details and always look for ways to optimize performance.",
+  goals: "My goal is to constantly improve my skills and stay up-to-date with the latest trends in web development. I aim to create innovative solutions that help businesses grow and develop.",
+  experience: "I've worked on various projects, from small websites to complex web applications. My experience includes working with React, TypeScript, Next.js, and integrating AI technologies into web applications."
+};
+
+export const characterTraits = [
+  { 
+    trait: "Creativity", 
+    description: "Finding innovative solutions for complex problems", 
+    icon: "sparkles",
+    color: "text-amber-500"
+  },
+  { 
+    trait: "Attention to Detail", 
+    description: "Noticing and fixing even the smallest issues", 
+    icon: "magnifying-glass",
+    color: "text-indigo-500"
+  },
+  { 
+    trait: "Analytical Thinking", 
+    description: "Breaking down complex problems into understandable components", 
+    icon: "chart-bar",
+    color: "text-emerald-500"
+  },
+  { 
+    trait: "Team Player", 
+    description: "Working effectively in teams, valuing everyone's contribution", 
+    icon: "users",
+    color: "text-blue-500"
+  }
+];
+
+export const workPreferences = [
+  { 
+    preference: "Remote Work", 
+    description: "Prefer flexible schedule and home office environment", 
+    icon: "home",
+    bgClass: "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40"
+  },
+  { 
+    preference: "Agile Methodologies", 
+    description: "Sprints, daily standups, and regular feedback", 
+    icon: "puzzle-piece",
+    bgClass: "bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-800/40"
+  },
+  { 
+    preference: "Open Communication", 
+    description: "Value transparency and open dialogue", 
+    icon: "chat-bubble-left-right",
+    bgClass: "bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/30 dark:hover:bg-amber-800/40"
+  },
+  { 
+    preference: "Continuous Learning", 
+    description: "Always learning new technologies and approaches", 
+    icon: "academic-cap",
+    bgClass: "bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/40"
+  }
+];
+
+// Professional achievements data
+export const achievements: AchievementCardProps[] = [
+  {
+    id: "perf-opt",
+    title: "Performance Optimization",
+    shortDescription: "Increased page loading speed by 75%",
+    icon: "bolt",
+    iconColor: "text-yellow-500",
+    problem: "Slow initial page load and high LCP metrics affecting user experience and SEO ranking",
+    solution: "Implemented code splitting, optimized asset loading, and utilized Next.js Image component with proper sizing",
+    result: "Reduced page load time from 4.2s to 1.1s and improved Core Web Vitals metrics across the board",
+    metrics: {
+      before: 25,
+      after: 100,
+      unit: "%"
+    }
+  },
+  {
+    id: "ux-redesign",
+    title: "UX Redesign",
+    shortDescription: "Reduced bounce rate by 40%",
+    icon: "sparkles",
+    iconColor: "text-purple-500",
+    problem: "Confusing navigation and unintuitive interface leading to high bounce rates and low conversion",
+    solution: "Conducted user research, implemented A/B testing, and redesigned the interface with a focus on intuitive user flows",
+    result: "Improved user engagement metrics with 40% lower bounce rate and 25% higher conversion rate",
+    metrics: {
+      before: 60,
+      after: 100,
+      unit: "%"
+    }
+  },
+  {
+    id: "accessibility",
+    title: "Accessibility Improvements",
+    shortDescription: "Achieved WCAG AA compliance",
+    icon: "check-circle",
+    iconColor: "text-green-500",
+    problem: "Website was not accessible to users with disabilities, failing several WCAG requirements",
+    solution: "Implemented semantic HTML, improved keyboard navigation, added ARIA attributes, and ensured proper color contrast",
+    result: "Achieved WCAG AA compliance and improved experience for all users, including those with disabilities",
+    metrics: {
+      before: 40,
+      after: 95,
+      unit: "%"
+    }
+  },
+  {
+    id: "code-refactor",
+    title: "Code Refactoring",
+    shortDescription: "Reduced bundle size by 35%",
+    icon: "code",
+    iconColor: "text-blue-500",
+    problem: "Legacy codebase with technical debt, inconsistencies, and redundant code",
+    solution: "Systematically refactored code, implemented modern patterns, and removed unused dependencies",
+    result: "Reduced bundle size by 35%, improved maintainability, and enabled faster feature development",
+    metrics: {
+      before: 65,
+      after: 100,
+      unit: "%"
+    }
+  },
+  {
+    id: "mobile-resp",
+    title: "Mobile Responsiveness",
+    shortDescription: "Improved mobile conversion by 50%",
+    icon: "device-mobile",
+    iconColor: "text-red-500",
+    problem: "Poor user experience on mobile devices with non-responsive layouts and small touch targets",
+    solution: "Implemented mobile-first approach, redesigned UI components, and improved touch interactions",
+    result: "Increased mobile traffic by 30% and improved mobile conversion rate by 50%",
+    metrics: {
+      before: 50,
+      after: 100,
+      unit: "%"
+    }
   }
 ];

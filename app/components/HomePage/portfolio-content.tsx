@@ -6,7 +6,7 @@ import Hero from "../hero";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 import Header from "../header";
-import About from "../about";
+import About from "../about/about";
 import Footer from "../footer";
 import ScrollShivronButton from "../scroll-shivron/scroll-shivron-button";
 // Используем приоритеты загрузки для компонентов

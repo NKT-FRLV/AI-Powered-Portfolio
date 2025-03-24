@@ -150,6 +150,7 @@ const ChatButton = ({
             }
           },
       focus: {
+        opacity: 1,
         boxShadow: theme === 'dark'
           ? "0 0 0 3px rgba(255,255,255,0.5), 0 0 0 6px rgba(255,255,255,0.2)"
           : "0 0 0 3px rgba(0,0,0,0.3), 0 0 0 6px rgba(0,0,0,0.1)",
@@ -286,7 +287,10 @@ const ChatButton = ({
   };
 
   // Get the current animation state based on keyboard focus
-  const currentAnimationState = isKeyboardFocused ? "focus" : "animate";
+  const currentAnimationState = useCallback(() => {
+    if (isKeyboardFocused) return "focus";
+    return "animate";
+  }, [isKeyboardFocused]);
 
   // Determine if we should show the notification badge
   const shouldShowBadge = showNotificationBadge && notificationCount > 0;
@@ -326,16 +330,15 @@ const ChatButton = ({
           <motion.button
             variants={animations.button}
             initial="initial"
-            animate={currentAnimationState}
+            animate={currentAnimationState()}
             exit="exit"
             whileHover="hover"
             whileTap="tap"
             onClick={handleClick}
             onKeyDown={handleKeyDown}
-            onFocus={() => {
-              // Only show focus styles when using keyboard navigation
-              if (document.activeElement instanceof HTMLElement && 
-                  document.activeElement.matches(':focus-visible')) {
+            onFocus={(e) => {
+              // Проверяем, что фокус получен с клавиатуры
+              if (!e.currentTarget.matches(':hover')) {
                 setIsKeyboardFocused(true);
               }
             }}
