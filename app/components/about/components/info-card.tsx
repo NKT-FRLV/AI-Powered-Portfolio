@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Icon } from "@/app/components/about/components/icon";
-import { IconName } from "@/app/components/about/components/icon";
+import Icon from "./Icon";
+import type { IconName } from "./Icon";
 interface InfoCardProps {
     icon: string;
     title: string;

@@ -1,4 +1,4 @@
-import React from "react";
+'use client';
 import {
   Code2, 
   Target, 
@@ -83,4 +83,6 @@ export function Icon({ name, className, size = 24 }: IconProps) {
     default:
       return null;
   }
-} 
+}
+
+export default Icon; 

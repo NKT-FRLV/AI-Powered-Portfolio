@@ -1,4 +1,4 @@
-import { IconName } from "../components/about/components/icon";
+import { IconName } from "@/app/components/about/components/Icon";
 
 export interface AchievementCardProps {
     id?: string;

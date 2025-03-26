@@ -10,7 +10,7 @@ import {
 import InfoCard from "./components/info-card";
 // import { Badge } from "@/components/ui/badge";
 // import { Button } from "@/components/ui/button";
-import { Icon } from "@/app/components/about/components/icon";
+import Icon from "./components/Icon";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 // import { ChevronDown } from "lucide-react";
 import {

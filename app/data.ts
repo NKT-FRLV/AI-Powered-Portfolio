@@ -179,14 +179,14 @@ export const interests = [
     bgClass: "bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900/30 dark:hover:bg-indigo-800/40"
   },
   { 
-    name: "Diving", 
-    description: "Love exploring underwater worlds",
-    bgClass: "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40"
-  },
-  { 
     name: "Traveling", 
     description: "Discovering new places and cultures",
     bgClass: "bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/40"
+  },
+  { 
+    name: "Diving", 
+    description: "Love exploring underwater worlds",
+    bgClass: "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40"
   },
   { 
     name: "Languages", 
