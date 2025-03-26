@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import InfoCard from "./components/info-card";
-import IconComponent from "./components/icon";
+import IconComponent from "./components/icon-component";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import {
   achievements,

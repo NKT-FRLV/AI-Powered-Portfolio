@@ -2,7 +2,7 @@
 import { useRef, useState, useEffect, useId } from 'react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import IconComponent from './icon';
+import IconComponent from './icon-component';
 import { ProgressComparison } from './progress-comparison';
 import { ChevronDown, X } from 'lucide-react';
 import { AchievementCardProps } from '@/app/types/dataTypes';
