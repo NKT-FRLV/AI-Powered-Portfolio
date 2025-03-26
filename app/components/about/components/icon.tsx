@@ -40,7 +40,7 @@ interface IconProps {
   size?: number;
 }
 
-export function Icon({ name, className, size = 24 }: IconProps) {
+function Icon({ name, className, size = 24 }: IconProps) {
   const iconProps = {
     size,
     className: cn("flex-shrink-0", className)
