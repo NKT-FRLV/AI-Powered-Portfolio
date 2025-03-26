@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import AnimatedLetters from "@/app/components/hero/animated-letters";
 import { useAnimatedLetters } from "@/app/hooks/useAnimatedLetters";
 import HeroImageModal from "@/app/components/hero/hero-image-modal";
-import { TypewriterText } from "@/app/components/hero/TypewriterText";
 import { Button } from "@/app/components/ui/button";
 
 
@@ -16,20 +15,10 @@ const Hero = () => {
     animationDuration: 2500,
   });
 
-  const [showDescription, setShowDescription] = useState(false);
 
   // Флаг для блокировки обсервера при клике на ссылку
   const userScrollLock = useRef(false);
   const lockTimeout = useRef<NodeJS.Timeout | null>(null);
-
-  // Show description after name animation completes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowDescription(true);
-    }, 2000);
-    
-    return () => clearTimeout(timer);
-  }, []);
 
   // Текстовые массивы для анимации
   const hi = "Hi,".split('');
@@ -152,15 +141,16 @@ const Hero = () => {
                   />
                 </div>
               </h1>
-              <div className="h-[60px] sm:h-[80px] flex items-center">
-                {showDescription && (
-                  <TypewriterText 
-                    text="Creating modern, responsive and accessible web applications using cutting-edge technologies."
-                    speed={30}
-                    className="max-w-[600px] text-xs text-muted-foreground xs:text-sm sm:text-base md:text-lg lg:text-xl"
-                  />
-                )}
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.25 }}
+                className="h-[60px] sm:h-[80px] flex items-center"
+              >
+                <span className="max-w-[600px] text-xs text-muted-foreground xs:text-sm sm:text-base md:text-lg lg:text-xl"	>
+                  Creating modern, responsive and accessible web applications using cutting-edge technologies.
+                </span> 
+              </motion.div>
             </div>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -169,7 +159,6 @@ const Hero = () => {
               className="flex flex-col gap-3 mt-8 xs:mt-10 sm:mt-4 min-[400px]:flex-row"
             >
               <Button 
-                size="sm" 
                 className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-300 ease-in-out" 
                 asChild
               >

@@ -6,7 +6,7 @@ import IconComponent from './icon-component';
 import { ProgressComparison } from './progress-comparison';
 import { ChevronDown, X } from 'lucide-react';
 import { AchievementCardProps } from '@/app/types/dataTypes';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 
 export function AchievementCard({
   title,
