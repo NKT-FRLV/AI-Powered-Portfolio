@@ -8,11 +8,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import InfoCard from "./components/info-card";
-// import { Badge } from "@/components/ui/badge";
-// import { Button } from "@/components/ui/button";
-import Icon from "./components/Icon";
+import IconComponent from "./components/icon";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-// import { ChevronDown } from "lucide-react";
 import {
   achievements,
   interests,
@@ -89,7 +86,7 @@ function About() {
               <AccordionItem value="traits">
                 <AccordionTrigger className="text-base sm:text-lg font-semibold px-2 xs:px-3 sm:px-4 py-2 sm:py-3">
                   <div className="flex items-center">
-                    <Icon name="user-check" className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                    <IconComponent name="user-check" className="mr-1.5 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                     <span>My Core Qualities</span>
                   </div>
                 </AccordionTrigger>
@@ -100,7 +97,7 @@ function About() {
                         key={trait.trait}
                         className="flex items-start gap-2 xs:gap-3 p-2 xs:p-3 sm:p-4 rounded-lg border bg-background/40 backdrop-blur-sm"
                       >
-                        <Icon name={trait.icon as any} className={`mt-0.5 sm:mt-1 ${trait.color}`} size={16} />
+                        <IconComponent name={trait.icon as any} className={`mt-0.5 sm:mt-1 ${trait.color}`} size={16} />
                         <div>
                           <h4 className="text-sm xs:text-base sm:text-lg font-medium">{trait.trait}</h4>
                           <p className="text-xs xs:text-sm text-muted-foreground">{trait.description}</p>
@@ -121,7 +118,7 @@ function About() {
                   <Tooltip key={pref.preference}>
                     <TooltipTrigger asChild>
                       <div className={`group flex items-center gap-1 sm:gap-2 rounded-md px-2 sm:px-3 py-1.5 sm:py-2 cursor-pointer transition-all hover:shadow-md ${pref.bgClass}`}>
-                        <Icon name={pref.icon as any} size={16} className="sm:w-[18px] sm:h-[18px] transition-transform group-hover:scale-110" />
+                        <IconComponent name={pref.icon as any} size={16} className="sm:w-[18px] sm:h-[18px] transition-transform group-hover:scale-110" />
                         <span className="font-medium text-xs sm:text-sm">{pref.preference}</span>
                       </div>
                     </TooltipTrigger>
@@ -143,7 +140,7 @@ function About() {
             className="mx-auto max-w-5xl py-12"
           >
             <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
-              <Icon name="award" className="text-primary sm:w-6 sm:h-6" size={20} />
+              <IconComponent name="award" className="text-primary sm:w-6 sm:h-6" size={20} />
               <span>Professional Achievements</span>
             </h3>
             
@@ -175,7 +172,7 @@ function About() {
           >
             <div className="space-y-3 sm:space-y-4">
               <h3 className="text-lg sm:text-xl font-bold flex items-center gap-1 sm:gap-2">
-                <Icon name="sparkles" className="text-primary sm:w-5 sm:h-5" size={16} />
+                <IconComponent name="sparkles" className="text-primary sm:w-5 sm:h-5" size={16} />
                 <span>My Interests</span>
               </h3>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -196,7 +193,7 @@ function About() {
             
             <div className="space-y-3 sm:space-y-4">
               <h3 className="text-lg sm:text-xl font-bold flex items-center gap-1 sm:gap-2">
-                <Icon name="code" className="text-primary sm:w-5 sm:h-5" size={16} />
+                <IconComponent name="code" className="text-primary sm:w-5 sm:h-5" size={16} />
                 <span>Tech Stack</span>
               </h3>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">

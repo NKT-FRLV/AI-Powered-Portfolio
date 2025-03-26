@@ -40,7 +40,7 @@ interface IconProps {
   size?: number;
 }
 
-function Icon({ name, className, size = 24 }: IconProps) {
+const IconComponent = ({ name, className, size = 24 }: IconProps) => {
   const iconProps = {
     size,
     className: cn("flex-shrink-0", className)
@@ -85,4 +85,4 @@ function Icon({ name, className, size = 24 }: IconProps) {
   }
 }
 
-export default Icon; 
+export default IconComponent; 

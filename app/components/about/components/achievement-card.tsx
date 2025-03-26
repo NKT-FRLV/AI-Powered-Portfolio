@@ -2,7 +2,7 @@
 import { useRef, useState, useEffect, useId } from 'react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import Icon from './Icon';
+import IconComponent from './icon';
 import { ProgressComparison } from './progress-comparison';
 import { ChevronDown, X } from 'lucide-react';
 import { AchievementCardProps } from '@/app/types/dataTypes';
@@ -66,7 +66,7 @@ export function AchievementCard({
                   iconColor,
                   "group-hover:bg-muted/80"
                 )}>
-                  <Icon name={icon} size={16} className="xs:w-[18px] xs:h-[18px] sm:w-5 sm:h-5" />
+                  <IconComponent name={icon} size={16} className="xs:w-[18px] xs:h-[18px] sm:w-5 sm:h-5" />
                 </div>
                 <div>
                   <h3 className="text-xs xs:text-sm sm:text-base font-medium line-clamp-1 group-hover:text-primary transition-colors">{title}</h3>
@@ -140,7 +140,7 @@ export function AchievementCard({
                         "flex items-center justify-center rounded-full bg-muted/50 p-1 xs:p-1.5 sm:p-2",
                         iconColor
                       )}>
-                        <Icon name={icon} size={16} className="xs:w-[18px] xs:h-[18px] sm:w-5 sm:h-5" />
+                        <IconComponent name={icon} size={16} className="xs:w-[18px] xs:h-[18px] sm:w-5 sm:h-5" />
                       </div>
                       <div>
                         <h3 className="text-xs xs:text-sm sm:text-base font-medium">{title}</h3>
