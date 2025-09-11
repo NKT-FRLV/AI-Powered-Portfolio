@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import dynamic from 'next/dynamic'
+// import dynamic from 'next/dynamic'
 import { motion } from "framer-motion";
 import Logo from "./logo";
 import Navigation from "./navigation";
@@ -9,9 +9,9 @@ import Socials from "./socials";
 import ScrollIndicator from "./scroll-indicator";
 import BurgerButton from "./burger-button";
 import MobileNavigation from "./mobile-navigation";
+import ThemeToggle from '@/app/components/header/theme-toggle';
 
-
-const ThemeToggle = dynamic(() => import('@/app/components/header/theme-toggle'), { ssr: false })
+// const ThemeToggle = dynamic(() => import('@/app/components/header/theme-toggle'), { ssr: false })
 
 // Интерфейс для свойств компонента Header
 interface HeaderProps {
@@ -108,6 +108,7 @@ const Header = ({ activeSection, sectionsLoaded = true, onSectionClick }: Header
     <>
       <header 
         className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+			// Header Animation - liquid header effect
           scrolled 
             ? 'border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm' 
             : 'bg-transparent shadow-none border-none'
@@ -158,5 +159,4 @@ const Header = ({ activeSection, sectionsLoaded = true, onSectionClick }: Header
   );
 }
 
-// Экспортируем компонент
 export default Header; 

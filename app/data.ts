@@ -5,6 +5,7 @@ import closingTagImage from '../public/closing-tag-screen.webp'
 import blogCustomizerImage from '../public/blog-customizer.webp'
 import ticTacToeImage from '../public/gameAI.webp'
 import GHUserAnalyzerImage from '../public/GH-User-Analyzer.webp'
+import TranslateImage from '../public/translator-img.png'
 import { NavItem } from './components/header/navigation';
 import { AchievementCardProps } from './types/dataTypes';
 
@@ -86,6 +87,14 @@ export const projects: {
   urlGitHub: string;
   urlDemo: string;
 }[] = [
+	{
+		title: 'Translate.nkt',
+		image: TranslateImage,
+		description: 'AI Powered translator, like Google Translate, but with more features.',
+		tecnologies: ['Next.js', 'TypeScript', 'AI-SDK', 'Open Router', 'STT/TTS', 'TailwindCSS', 'Shad/cn UI'],
+		urlGitHub: `${gitHubRepoUrl}/The-Real-Translator`,
+		urlDemo: 'https://translator.nkt-frlv.dev',
+	  },
   {
     title: 'AI User Analyzer',
     image: GHUserAnalyzerImage,
