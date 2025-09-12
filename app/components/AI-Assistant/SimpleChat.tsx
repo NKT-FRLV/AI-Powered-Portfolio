@@ -1,8 +1,7 @@
 'use client'
 
 import { useChat } from '@ai-sdk/react'
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Send, Settings, X, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,55 +39,48 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 
   const [input, setInput] = useState('')
   const isLoading = status === 'streaming' || status === 'submitted'
+  const isThinking = status === 'submitted' // Только до начала стриминга
 
-  // Starter suggestions for empty chat
-  const starterSuggestions = [
+  // Мемоизированные константы
+  const starterSuggestions = useMemo(() => [
     "Tell me about Nikita's skills",
-    "What projects has he worked on?",
+    "What projects has he worked on?", 
     "Show me his experience",
     "What technologies does he use?"
-  ]
+  ], [])
 
-  // Handle suggestion click
-  const handleSuggestionClick = (suggestion: string) => {
+  // Стабильные колбеки для предотвращения ререндеров
+  const handleSuggestionClick = useCallback((suggestion: string) => {
     sendMessage({ text: suggestion })
-  }
+  }, [sendMessage])
 
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || isLoading) return
     
     sendMessage({ text: input })
     setInput('')
-  }
+  }, [input, isLoading, sendMessage])
 
-  // Handle input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
-  }
+  }, [])
 
-  // Auto scroll to bottom
+  const clearHistory = useCallback(() => {
+    setMessages([])
+  }, [setMessages])
+
+  // Оптимизированный скролл - только при изменении количества сообщений
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [messages, isOpen])
-
-  const clearHistory = () => {
-    setMessages([])
-  }
+  }, [messages.length, isOpen])
 
   if (!isOpen) return null
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-50 w-full h-full md:w-96 md:h-[600px] bg-background/95 backdrop-blur-sm border rounded-none md:rounded-lg shadow-xl flex flex-col"
-      >
+    <div className="fixed bottom-0 right-0 z-50 w-full h-full bg-background/95 backdrop-blur-sm border rounded-none md:rounded-lg shadow-xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b bg-muted/50">
           <h3 className="font-semibold">AI Assistant</h3>
@@ -179,47 +171,35 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                    className={`max-w-[80%] rounded-2xl px-4 py-2 chat-message ${
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground rounded-tr-none'
                         : 'bg-muted text-foreground rounded-tl-none'
                     }`}
                   >
-                    {message.role === 'user' ? (
-                      <div className="text-sm whitespace-pre-wrap break-words">
-                        {message.parts?.find(part => part.type === 'text')?.text || ''}
-                      </div>
-                    ) : (
-                      <Response className="text-sm [&_.prose]:text-sm [&_.prose]:text-current">
-                        {message.parts?.find(part => part.type === 'text')?.text || ''}
-                      </Response>
-                    )}
+                    <div className="text-sm whitespace-pre-wrap break-words font-medium leading-relaxed font-sans">
+                      {message.role === 'user' ? (
+                        message.parts?.find(part => part.type === 'text')?.text || ''
+                      ) : (
+                        <Response className="font-sans">
+                          {message.parts?.find(part => part.type === 'text')?.text || ''}
+                        </Response>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
             
-            {/* Loading indicator */}
-            {isLoading && (
+            {/* Loading indicator - показывается только до начала стриминга */}
+            {isThinking && (
               <div className="flex justify-start">
                 <div className="bg-muted text-foreground rounded-2xl rounded-tl-none px-4 py-2">
-                  <div className="flex items-center space-x-1">
-                    <span className="text-sm">AI is thinking</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium font-sans">AI is thinking</span>
                     <div className="flex space-x-1">
-                      {[0, 1, 2].map((i) => (
-                        <motion.div
-                          key={i}
-                          className="w-1 h-1 bg-current rounded-full"
-                          animate={{ 
-                            scale: [1, 1.2, 1],
-                            opacity: [0.5, 1, 0.5]
-                          }}
-                          transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            delay: i * 0.2
-                          }}
-                        />
-                      ))}
+                      <div className="w-1 h-1 bg-current rounded-full animate-pulse" />
+                      <div className="w-1 h-1 bg-current rounded-full animate-pulse [animation-delay:0.2s]" />
+                      <div className="w-1 h-1 bg-current rounded-full animate-pulse [animation-delay:0.4s]" />
                     </div>
                   </div>
                 </div>
@@ -246,8 +226,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
             </Button>
           </form>
         </div>
-      </motion.div>
-    </AnimatePresence>
+    </div>
   )
 }
 

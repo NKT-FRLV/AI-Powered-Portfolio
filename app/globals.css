@@ -112,12 +112,9 @@ input, textarea {
   font-weight: 600;
 }
 
-/* Стили для сообщений в чате - используем Geist Sans */
+/* Стили для сообщений в чате - базовые стили */
 .chat-message {
-  font-family: var(--font-roboto), sans-serif;
-  font-weight: 600;
   line-height: 1.5;
-  font-size: 1rem;
 }
 
 a, button {

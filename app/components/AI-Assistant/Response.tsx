@@ -57,7 +57,7 @@ export const Response = ({
   const processedContent = processStreamingMarkdown(children)
 
   return (
-    <div className={cn('prose prose-sm max-w-none dark:prose-invert', className)} {...props}>
+    <div className={cn('max-w-none', className)} style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif !important' }} {...props}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeKatex]}
@@ -78,17 +78,62 @@ export const Response = ({
             }
 
             return (
-              <pre className="rounded-lg bg-muted p-4 overflow-x-auto">
-                <code className={`language-${language} text-sm`} {...props}>
+              <pre className="rounded-lg bg-muted p-4 overflow-x-auto font-mono">
+                <code className={`language-${language} text-sm font-mono`} {...props}>
                   {children}
                 </code>
               </pre>
             )
           },
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-border pl-4 italic text-muted-foreground">
+            <blockquote className="border-l-4 border-border pl-4 italic text-muted-foreground my-2 font-sans">
               {children}
             </blockquote>
+          ),
+          p: ({ children }) => (
+            <p className="mb-2 last:mb-0 leading-relaxed font-sans font-medium">
+              {children}
+            </p>
+          ),
+          h1: ({ children }) => (
+            <h1 className="text-lg font-semibold mb-2 mt-4 first:mt-0 font-sans">
+              {children}
+            </h1>
+          ),
+          h2: ({ children }) => (
+            <h2 className="text-base font-semibold mb-2 mt-3 first:mt-0 font-sans">
+              {children}
+            </h2>
+          ),
+          h3: ({ children }) => (
+            <h3 className="text-sm font-semibold mb-1 mt-2 first:mt-0 font-sans">
+              {children}
+            </h3>
+          ),
+          ul: ({ children }) => (
+            <ul className="list-disc list-inside mb-2 space-y-1 font-sans">
+              {children}
+            </ul>
+          ),
+          ol: ({ children }) => (
+            <ol className="list-decimal list-inside mb-2 space-y-1 font-sans">
+              {children}
+            </ol>
+          ),
+          li: ({ children }) => (
+            <li className="leading-relaxed font-sans font-medium">
+              {children}
+            </li>
+          ),
+          strong: ({ children }) => (
+            <strong className="font-semibold font-sans">
+              {children}
+            </strong>
+          ),
+          em: ({ children }) => (
+            <em className="italic font-sans">
+              {children}
+            </em>
           ),
           a: ({ href, children, ...props }) => {
             // Check if link is allowed
@@ -100,7 +145,7 @@ export const Response = ({
             return (
               <a 
                 href={href} 
-                className="text-primary underline underline-offset-4 hover:text-primary/80"
+                className="text-primary underline underline-offset-4 hover:text-primary/80 font-sans font-medium"
                 target="_blank" 
                 rel="noopener noreferrer"
                 {...props}
@@ -126,18 +171,18 @@ export const Response = ({
           },
           table: ({ children }) => (
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-border">
+              <table className="w-full border-collapse border border-border font-sans">
                 {children}
               </table>
             </div>
           ),
           th: ({ children }) => (
-            <th className="border border-border bg-muted px-3 py-2 text-left font-medium">
+            <th className="border border-border bg-muted px-3 py-2 text-left font-medium font-sans">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="border border-border px-3 py-2">
+            <td className="border border-border px-3 py-2 font-sans font-medium">
               {children}
             </td>
           ),
