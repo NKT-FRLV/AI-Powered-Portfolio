@@ -25,7 +25,7 @@ const NavLink: React.FC<NavLinkProps> = ({ id, label, isActive, onClick, disable
       key={id}
       href={`#${id}`}
       onClick={handleClick}
-      className={`transition-colors text-sm relative py-1 ${
+      className={`transition-colors text-sm relative will-change-transform py-1 ${
         isActive
           ? 'text-foreground font-medium' 
           : 'text-muted-foreground hover:text-foreground/80'
