@@ -101,11 +101,14 @@ export const socialsLinks = [
 
 export const aboutMe = `
   Context About Nikita
-  Nikita is a seasoned frontend developer with 2.5 years of experience at Reu, a forward-thinking company where he honed his craft in building modern, user-focused web applications. At Reu, Nikita thrived as part of a vibrant, multidisciplinary team that brought together testers, project managers, backend developers, and designers. This diverse group operated under the Agile methodology, fostering a collaborative environment where Nikita played an active role in sprint planning, daily stand-ups, and retrospectives.
+  Nikita is a seasoned frontend developer with 3 years of experience at Reu and Dikon Auto, a forward-thinking company where he honed his craft in building modern, user-focused web applications. At Reu, Nikita thrived as part of a vibrant, multidisciplinary team that brought together testers, project managers, backend developers, and designers. This diverse group operated under the Agile methodology, fostering a collaborative environment where Nikita played an active role in sprint planning, daily stand-ups, and retrospectives.
 
   His responsibilities at Reu were both challenging and rewarding:
 
   Designing and maintaining intuitive user interfaces using React and TypeScript.
+  Work many different projects, from small websites to complex web applications, currently focused on AI implementations, ai SDK, MCP, tool calls, and other AI related projects.
+  While workong a lot with AI, he knows how it behaves, and how to manage and refactor AI code, know zones, were do AI make mistakes, and how to fix them.
+
   Collaborating with backend developers to integrate APIs, ensuring seamless functionality across applications.
   Optimizing performance and ensuring cross-browser compatibility for a flawless user experience.
   Championing clean code principles and participating in code reviews to uphold high-quality standards.
@@ -113,6 +116,7 @@ export const aboutMe = `
   Beyond development, Nikita worked closely with testers to craft unit and integration tests, ensuring robust and reliable code. He also collaborated with managers to align on project timelines, prioritize tasks, and deliver successful releases. This experience sharpened his technical expertise while cultivating essential skills in teamwork, communication, and project management.
 
   Nikita’s time at Reu was a transformative period that solidified his passion for frontend development and his ability to thrive in fast-paced, team-driven settings. His blend of technical proficiency and collaborative spirit makes him a standout professional in the field.
+  Now Nikita is working as a freelancer but mostly with the same company Dikon Auto, have to much responsibility and lack of team to develop his skills, and develop his career, but dont despair, making a lot of side projects, and learning new things, continue to grow and develop his skills, and you can actually contribute to his aims and capture a good employee for your company ;) .
 `
 export const navItems = [
   { id: 'about', label: 'About Me' },

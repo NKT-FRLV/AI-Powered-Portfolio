@@ -1,4 +1,5 @@
 import { RefObject, ChangeEvent, FormEvent } from "react";
+import { UIMessage } from 'ai';
 
 // Types for Chat Messages
 export type MessageRole = "user" | "assistant";
@@ -11,6 +12,22 @@ export interface Message {
   isTyping?: boolean;
   reactions?: string[];
 }
+
+// Adapter functions between our Message type and AI SDK UIMessage
+export const messageToUIMessage = (message: Message): UIMessage => ({
+  id: message.id,
+  role: message.role,
+  parts: [{ type: 'text', text: message.content }]
+});
+
+export const uiMessageToMessage = (uiMessage: UIMessage): Message => ({
+  id: uiMessage.id,
+  content: uiMessage.parts.find(part => part.type === 'text')?.text || '',
+  role: uiMessage.role as MessageRole,
+  timestamp: new Date(),
+  isTyping: false,
+  reactions: []
+});
 
 // Chat Container Types
 export interface ChatContainerProps {

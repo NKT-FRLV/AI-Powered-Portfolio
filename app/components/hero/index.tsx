@@ -87,7 +87,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <Image
-            src="/nikita_color.webp"
+            src="/hero-nik.webp"
             alt="Hero image"
             className="h-full w-auto object-contain opacity-60 dark:opacity-40"
             width={1000}

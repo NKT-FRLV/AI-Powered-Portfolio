@@ -1,5 +1,4 @@
 "use client";
-import dynamic from "next/dynamic";
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
@@ -9,16 +8,15 @@ import { useSettings } from "./hooks/useSettings";
 
 // Components
 import ChatButton from "./ChatButton";
-// import ChatContainer from "./ChatContainer";
-const ChatContainer = dynamic(() => import("./ChatContainer"), { ssr: false });
+import SimpleChat from "./SimpleChat";
 
 
 // Types & utils
 import { translations } from "./translations";
 
 const AiAssistant = () => {
-  // State for onHover PreLoad ChatContainer
-  const [ isLoadedChatContainer, setIsLoadedChatContainer ] = useState(false);
+  // State for onHover PreLoad SimpleChat
+  const [ isLoadedSimpleChat, setIsLoadedSimpleChat ] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const wasOpenOnce = useRef(false);
@@ -90,8 +88,8 @@ const AiAssistant = () => {
       
       // Ctrl/Cmd + / to toggle chat
       if ((e.ctrlKey || e.metaKey) && e.key === '/') {
-        if (!isLoadedChatContainer) {
-          setIsLoadedChatContainer(true);
+        if (!isLoadedSimpleChat) {
+          setIsLoadedSimpleChat(true);
         }
         e.preventDefault();
         setIsOpen(prev => !prev);
@@ -104,7 +102,7 @@ const AiAssistant = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isLoadedSimpleChat]);
 
   // Обновляем handleChatButtonClick
   const handleChatButtonClick = () => {
@@ -119,9 +117,9 @@ const AiAssistant = () => {
     wasOpenOnce.current = true;
   };
 
-  // Handle mouse enter to preload ChatContainer
+  // Handle mouse enter to preload SimpleChat
   const handleMouseEnter = () => {
-    setIsLoadedChatContainer(true);
+    setIsLoadedSimpleChat(true);
   };
 
 
@@ -155,8 +153,8 @@ const AiAssistant = () => {
       </AnimatePresence>
 
       {/* Chat Container */}
-      {isLoadedChatContainer && (
-        <ChatContainer 
+      {isLoadedSimpleChat && (
+        <SimpleChat 
           isOpen={isOpen} 
           setIsOpen={setIsOpen} 
         />

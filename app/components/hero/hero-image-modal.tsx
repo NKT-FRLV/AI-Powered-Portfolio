@@ -53,7 +53,7 @@ const HeroImageModal = () => {
           </SheetHeader>
           <div className="relative w-full max-w-2xl aspect-[3/4] max-h-[60vh] overflow-hidden">
             <Image
-              src="/nikita_color.webp"
+              src="/hero-nik.webp"
               alt="Nikita Frolov"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 100vw"

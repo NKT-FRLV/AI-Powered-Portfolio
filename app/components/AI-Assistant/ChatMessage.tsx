@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { ChatMessageProps } from './types';
 import { translations } from './translations';
 import { messageVariants, cursorVariants, reactionPickerVariants } from './animations';
+import LoadingDots from './LoadingDots';
 
 const ChatMessage = ({
   id,
@@ -62,13 +63,22 @@ const ChatMessage = ({
             className="whitespace-pre-wrap break-words"
             id={`message-${id}-content`}
           >
-            {content}
-            {isTyping && (
-              <motion.span
-                className="inline-block w-1.5 h-4 ml-0.5 bg-current"
-                variants={cursorVariants}
-                animate="blink"
-              />
+            {id === 'loading' && isTyping ? (
+              <div className="flex items-center">
+                <span>{content}</span>
+                <LoadingDots />
+              </div>
+            ) : (
+              <>
+                {content}
+                {isTyping && (
+                  <motion.span
+                    className="inline-block w-1.5 h-4 ml-0.5 bg-current"
+                    variants={cursorVariants}
+                    animate="blink"
+                  />
+                )}
+              </>
             )}
           </div>
           
