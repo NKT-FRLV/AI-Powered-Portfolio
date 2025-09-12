@@ -136,7 +136,7 @@ const Header = ({ activeSection, sectionsLoaded = true, onSectionClick }: Header
             className="flex items-center gap-4"
           >
             {/* Социальные ссылки */}
-            <Socials />
+            <Socials hiddenOnMobile={true} size={25} />
             
             {/* Переключатель темы */}
             <ThemeToggle />

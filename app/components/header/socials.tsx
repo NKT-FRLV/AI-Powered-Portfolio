@@ -1,14 +1,16 @@
-"use client";
-
-import React from "react";
+import { FC } from "react";
 import SocialButton from "./social-button";
 import { socialsLinks } from "@/app/data";
+ interface SocialsProps {
+  hiddenOnMobile?: boolean;
+  size?: number;
+ }
 
-const Socials: React.FC = () => {
+const Socials: FC<SocialsProps> = ({hiddenOnMobile, size}) => {
   return (
-    <div className="hidden md:flex items-center gap-4">
+    <div className={`${hiddenOnMobile ? 'hidden md:flex' : 'flex'} items-center gap-4 `}>
       {socialsLinks.map((social) => (
-        <SocialButton key={social.id} social={social} />
+        <SocialButton key={social.id} social={social} size={size} />
       ))}
     </div>
   );

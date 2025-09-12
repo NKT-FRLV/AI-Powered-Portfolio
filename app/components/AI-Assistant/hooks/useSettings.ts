@@ -4,7 +4,7 @@ import { ChatSettings } from '../types';
 const DEFAULT_SETTINGS: ChatSettings = {
   notificationSound: '/sounds/notification.mp3',
   soundEnabled: true,
-  saveChatHistory: false
+  saveChatHistory: true
 };
 
 /**

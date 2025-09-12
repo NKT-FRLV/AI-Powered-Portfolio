@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import AnimatedLetters from "@/app/components/hero/animated-letters";
 import { useAnimatedLetters } from "@/app/hooks/useAnimatedLetters";
 import HeroImageModal from "@/app/components/hero/hero-image-modal";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 
 const Hero = () => {

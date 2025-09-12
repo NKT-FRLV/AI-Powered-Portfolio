@@ -4,7 +4,7 @@ import { Suspense, lazy, useEffect, useState, useCallback, useRef } from "react"
 // import Header from "../header";
 import Hero from "../hero";
 import dynamic from "next/dynamic";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import Header from "../header";
 import About from "../about/about";
 import Footer from "../footer";

@@ -17,27 +17,26 @@ export function useNotificationSound({ soundEnabled, soundUrl }: UseNotification
   
   // Initialize audio element
   useEffect(() => {
-    if (typeof window !== 'undefined' && soundEnabled) {
-      try {
-        // Проверяем кэш
-        if (!audioCache.has(soundUrl)) {
-          const audio = new Audio(soundUrl);
-          audio.addEventListener('error', (e) => {
-            console.error('Error loading notification sound:', e);
-          });
-          audioCache.set(soundUrl, audio);
+    if (typeof window !== 'undefined') {
+      if (soundEnabled) {
+        try {
+          // Проверяем кэш
+          if (!audioCache.has(soundUrl)) {
+            const audio = new Audio(soundUrl);
+            audio.addEventListener('error', (e) => {
+              console.error('Error loading notification sound:', e);
+            });
+            audioCache.set(soundUrl, audio);
+          }
+          
+          audioRef.current = audioCache.get(soundUrl) || null;
+        } catch (error) {
+          console.error('Could not initialize audio:', error);
         }
-        
-        audioRef.current = audioCache.get(soundUrl) || null;
-      } catch (error) {
-        console.error('Could not initialize audio:', error);
+      } else {
+        // Если звук отключен, очищаем ref
+        audioRef.current = null;
       }
-      
-      return () => {
-        if (audioRef.current) {
-          // Не обнуляем audioRef.current здесь
-        }
-      };
     }
   }, [soundUrl, soundEnabled]);
 

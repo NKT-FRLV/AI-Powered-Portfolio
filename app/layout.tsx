@@ -7,7 +7,7 @@ import { ThemeProvider } from "./components/theme-provider";
 const orbitron = localFont({
   src: [
     {
-      path: "./fonts/Orbitron-VariableFont_wght.ttf",
+      path: "../public/fonts/Orbitron-VariableFont_wght.ttf",
       weight: "100 900",
       style: "normal",
     }
@@ -28,7 +28,7 @@ const roboto = Roboto({
 const rubikMonoOne = localFont({
   src: [
     {
-      path: "./fonts/RubikMonoOne-Regular.ttf",
+      path: "../public/fonts/RubikMonoOne-Regular.ttf",
       weight: "400",
       style: "normal",
     }

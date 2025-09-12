@@ -4,10 +4,12 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { socialsLinks } from "../data";
 import { FaGithub, FaInstagram, FaTelegram, FaLinkedin } from 'react-icons/fa';
+import { FaXTwitter } from "react-icons/fa6";
 
-// Mapping string identifiers to icon components
+// Маппинг строковых идентификаторов на компоненты иконок
 const iconMap: Record<string, React.ElementType> = {
   'github': FaGithub,
+  'x': FaXTwitter ,
   'instagram': FaInstagram,
   'telegram': FaTelegram,
   'linkedin': FaLinkedin,

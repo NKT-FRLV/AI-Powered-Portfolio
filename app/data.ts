@@ -147,6 +147,7 @@ export const projects: {
 
 export const socialsLinks = [
   { id: 'github', link: gitHubRepoUrl, icon: 'github' },
+  { id: 'X', link: "https://x.com/nkt_frlv", icon: 'x' },
   { id: 'instagram', link: "https://www.instagram.com/nkt.frlv/", icon: 'instagram' },
   { id: 'telegram', link: 'https://web.telegram.org/k/#-955617383', icon: 'telegram' },
   { id: 'linkedin', link: 'https://www.linkedin.com/in/nikita-frolov-22a008342/', icon: 'linkedin' },
