@@ -13,7 +13,7 @@ const ThemeToggle = () => {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="flex h-9 w-9 items-center justify-center rounded-full glass hover:bg-secondary/20 transition-colors duration-200 relative"
+      className="flex p-2 [&_svg]:size-6 md:[&_svg]:size-8 items-center justify-center rounded-full glass hover:bg-transparent"
       aria-label="Toggle theme"
     >
       <AnimatePresence mode="popLayout" initial={false}>

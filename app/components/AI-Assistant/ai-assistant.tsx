@@ -12,7 +12,7 @@ import SimpleChat from "./SimpleChat";
 
 
 // Types & utils
-import { translations } from "./translations";
+import { translations } from "./plain-content/translations";
 
 const AiAssistant = () => {
   // State for onHover PreLoad SimpleChat
@@ -151,14 +151,15 @@ const AiAssistant = () => {
           />
         )}
       </AnimatePresence>
-
+	  <AnimatePresence mode="wait">
       {/* Chat Container */}
-      {isLoadedSimpleChat && (
+      {isLoadedSimpleChat && isOpen && (
         <SimpleChat 
           isOpen={isOpen} 
           setIsOpen={setIsOpen} 
         />
       )}
+	  </AnimatePresence>
     </>
   );
 }

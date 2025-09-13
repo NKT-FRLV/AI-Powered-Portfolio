@@ -38,7 +38,7 @@ const ChatMessages = memo(({ messages, isThinking, isOpen }: ChatMessagesProps) 
                   : "bg-muted text-foreground rounded-tl-none"
               }`}
             >
-              <div className="text-sm whitespace-pre-wrap break-words font-medium leading-relaxed font-sans">
+              <div className="text-sm font-medium md:text-base whitespace-pre-wrap break-words leading-relaxed font-sans">
                 {message.role === "user" ? (
                   message.parts?.find((part) => part.type === "text")?.text || ""
                 ) : (

@@ -133,10 +133,10 @@ const Header = ({ activeSection, sectionsLoaded = true, onSectionClick }: Header
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center gap-4"
+            className="flex items-center gap-8 md:gap-12 lg:gap-20"
           >
             {/* Социальные ссылки */}
-            <Socials hiddenOnMobile={true} size={25} />
+            <Socials hiddenOnMobile={true} size={20} />
             
             {/* Переключатель темы */}
             <ThemeToggle />

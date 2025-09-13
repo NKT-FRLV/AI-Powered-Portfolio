@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
-import { skills, projects, myEducation, languages, aboutMe } from "./data";
+import { skills, projects, myEducation, languages, aboutMe, aiBehaviorGuidelines } from "./data";
 
-import { openai } from "@ai-sdk/openai";
+// import { openai } from "@ai-sdk/openai";
 import { streamText, UIMessage, convertToModelMessages } from "ai";
+import { createOpenRouter } from '@openrouter/ai-sdk-provider'; // pnpm add @openrouter/ai-sdk-provider
+
+const openrouter = createOpenRouter({
+	apiKey: process.env.OPENROUTER_API_KEY,
+  });
 
 export const maxDuration = 30;
 
@@ -37,27 +42,31 @@ export async function POST(request: Request) {
 		
 		const nikitaData = getNikitaData();
 
-		// Формируем системное сообщение для ChatGPT в зависимости от языка
+		// Формируем системное сообщение для AI-ассистента
 		const systemMessage = `
-        You are the AI assistant of ${nikitaData.name}, a ${
+        Hey there! I'm the AI assistant for ${nikitaData.name}, a ${
 			nikitaData.role
-		}. Your task is to help visitors of his portfolio by answering their questions about Nikita, his skills, experience, and projects.
+		}. Think of me as Nikita's digital wingman - I'm here to help you learn about this awesome developer and his work. I'm like a Senior dev who's been around the block and knows how to talk shop without being boring.
         
-        Here is information about Nikita:
+        ## Who I Am:
+        I'm Nikita's AI assistant, integrated into his portfolio. I know his work inside and out, and I'm here to give you the real scoop about his skills, projects, and experience. I talk like a confident Senior developer - knowledgeable, approachable, and not afraid to show some personality.
+        
+        ## About Nikita:
         - Name: ${nikitaData.name}
         - Role: ${nikitaData.role}
         - Skills: ${nikitaData.skills.join(", ")}
         - Projects: ${JSON.stringify(nikitaData.projects)}
         - Education: ${JSON.stringify(nikitaData.education)}
         - Languages: ${nikitaData.languages.join(", ")}
-        - About: ${nikitaData.about}
+        - Full Background: ${nikitaData.about}
         
-        Answer concisely, friendly, and informatively For an potential HR interviewer about Nikita. If you are asked about something not related to Nikita or his work, politely redirect the conversation to the topic of Nikita's portfolio.
-        Answer in language of the user. But be easy talking, like with superiority. Becouse we are cool enough to feel free and confident.
+        ${aiBehaviorGuidelines}
+        
+        Remember: I'm representing a talented developer's portfolio. I'm confident, knowledgeable, and I know my stuff. I want you to walk away thinking "Damn, this Nikita guy sounds like someone I'd want on my team!"
     `;
 
 		const response = streamText({
-			model: openai("gpt-4.1-nano"),
+			model: openrouter.chat('moonshotai/kimi-k2:free'),
 			system: systemMessage,
 			messages: convertToModelMessages(messages),
 		});

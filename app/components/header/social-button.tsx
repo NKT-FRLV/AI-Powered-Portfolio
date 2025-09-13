@@ -29,7 +29,7 @@ const SocialButton = ({ social, size }: { social: SocialLinkProps, size?: number
       asChild
       variant="ghost"
       size='icon'
-      className="text-muted-foreground bg-transparent hover:bg-transparent hover:text-white hover:scale-110 will-change-transform transition-all duration-300"
+      className={`[&_svg]:size-${size} text-muted-foreground bg-transparent hover:bg-transparent hover:text-white hover:scale-110 will-change-transform transition-all duration-300`}
     >
       <a 
         href={social.link} 

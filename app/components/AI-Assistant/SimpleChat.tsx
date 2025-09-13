@@ -1,16 +1,24 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Settings, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSettings } from "./hooks/useSettings";
 import { useNotificationSound } from "./hooks/useNotificationSound";
 import { Suggestions, Suggestion } from "./Suggestions";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import ChatSettingsPanel from "./ChatSettingsPanel";
+
+const starterSuggestions = [
+	"Tell me about Nikita's skills",
+	"What projects has he worked on?",
+	"Show me his experience",
+	"What technologies does he use?",
+];
 
 interface SimpleChatProps {
 	isOpen: boolean;
@@ -35,14 +43,6 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 
 	const isLoading = status === "streaming" || status === "submitted";
 	const isThinking = status === "submitted";
-
-	// Мемоизированные константы
-	const starterSuggestions = useMemo(() => [
-		"Tell me about Nikita's skills",
-		"What projects has he worked on?",
-		"Show me his experience",
-		"What technologies does he use?",
-	], []);
 
 	// Стабильные колбеки для предотвращения ререндеров
 	const handleSuggestionClick = useCallback((suggestion: string) => {
@@ -78,10 +78,15 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 		}
 	}, [settings.saveChatHistory, setMessages]);
 
-	if (!isOpen) return null;
+	// if (!isOpen) return null;
 
 	return (
-		<div className="fixed bottom-0 right-0 z-50 w-full h-full bg-background/95 backdrop-blur-sm border rounded-none md:rounded-lg shadow-xl flex flex-col">
+		<motion.div 
+			initial={{ opacity: 0, y: 100 }}
+			animate={{ opacity: 1, y: 0 }}
+			exit={{ opacity: 0, y: 500 }}
+			className="fixed bottom-0 right-0 z-50 w-full h-full bg-background/95 backdrop-blur-sm border rounded-none md:rounded-lg shadow-xl flex flex-col"
+		>
 			{/* Header */}
 			<div className="flex items-center justify-between p-4 border-b bg-muted/50">
 				<h3 className="font-semibold">AI Assistant</h3>
@@ -155,7 +160,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 			
 			{/* Input */}
 			<ChatInput onSubmit={handleMessageSubmit} isLoading={isLoading} />
-		</div>
+		</motion.div>
 	);
 };
 
