@@ -4,15 +4,40 @@ import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useThemeTransitionWithAnimation } from "@/components/ui/shadcn-io/theme-toggle-button";
+import { useEffect, useState, useCallback } from "react";
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
+  const { startTransition } = useThemeTransitionWithAnimation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleThemeToggle = useCallback(() => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    
+    // Используем эффект переключения темы с circle-blur анимацией
+    startTransition(
+      () => setTheme(newTheme),
+      'circle-blur',
+      'top-right',
+      undefined,
+      theme as 'light' | 'dark'
+    );
+  }, [theme, setTheme, startTransition]);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={handleThemeToggle}
       className="flex p-2 [&_svg]:size-6 md:[&_svg]:size-8 items-center justify-center rounded-full glass hover:bg-transparent"
       aria-label="Toggle theme"
     >
