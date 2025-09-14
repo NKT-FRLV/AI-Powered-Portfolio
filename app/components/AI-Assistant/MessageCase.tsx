@@ -17,6 +17,7 @@ interface MessageCaseProps {
 }
 
 const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseProps) => {
+
 	switch (part.type) {
 		case "text":
 			return (
@@ -26,22 +27,43 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 			);
 
 		case "tool-askForConfirmation": {
-			// part.args — то, что модель передала в tool (to, subject, text, html?)
+			// part.args — то, что модель передала в tool (fromEmail, fromName, subject, text, html?)
 			// part.state: 'call-arguments' | 'calling' | 'output-available'
-			const awaiting = part.state !== "output-available";
-
+			const awaiting = part.state === "input-streaming" || part.state === "input-available";
+			const input = (part as any).input ?? {};
 			
 			return (
 				<div
 					key={part.toolCallId}
-					className="my-3 rounded-lg border p-4 w-fit shadow-sm  border-foreground-200/50"
+					className="my-3 rounded-lg border p-4 w-fit shadow-sm border-foreground-200/50"
 				>
 					<div className="flex items-center gap-2 text-sm font-medium mb-3 w-fit">
 						<span>📧</span>
 						<span>Confirm Email Sending</span>
 					</div>
-
-					
+					<div className="space-y-2 text-sm">
+						<div className="flex items-start gap-2">
+							<span className="font-medium text-foreground-700 min-w-[60px]">From:</span>
+							<span className="text-foreground-900">
+								{input.fromName || "Anonymous"} 
+								{input.fromEmail && ` <${input.fromEmail}>`}
+							</span>
+						</div>
+						<div className="flex items-start gap-2">
+							<span className="font-medium text-foreground-700 min-w-[60px]">To:</span>
+							<span className="text-foreground-900">marbella.frolov@gmail.com</span>
+						</div>
+						<div className="flex items-start gap-2">
+							<span className="font-medium text-foreground-700 min-w-[60px]">Subject:</span>
+							<span className="text-foreground-900">{input.subject}</span>
+						</div>
+						<div className="mt-3">
+							<span className="font-medium text-foreground-700 block mb-1">Message:</span>
+							<div className="whitespace-pre-wrap text-xs bg-background p-3 rounded border text-foreground-800">
+								{input.text}
+							</div>
+						</div>
+					</div>
 
 					{awaiting ? (
 						<div className="mt-4 flex gap-3">
