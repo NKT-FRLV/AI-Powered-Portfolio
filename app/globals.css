@@ -6,6 +6,8 @@
 /* tailwindcss/utilities */
 @tailwind utilities;
 
+@source "../node_modules/streamdown/dist/index.js";
+
 
 @layer base {
   :root {
@@ -98,10 +100,9 @@ body {
 }
 
 /* Текстовые блоки и поля ввода используют Orbitron для лучшей читаемости */
-p:not(.chat-message p), 
-span:not(.chat-message span, h1 span), 
-
-li, 
+p:not(.chat-message p):not(.is-user p):not(.is-assistant p), 
+span:not(.chat-message span, h1 span):not(.is-user span):not(.is-assistant span), 
+li:not(.is-user li):not(.is-assistant li), 
 label {
   font-family: var(--font-orbitron), sans-serif;
   font-weight: 600;
@@ -117,15 +118,16 @@ input, textarea {
   line-height: 1.5;
 }
 
-a, button {
+a:not(.chat-message a):not(.is-user a):not(.is-assistant a), button {
   font-family: var(--font-orbitron), sans-serif;
   font-weight: 900;
 }
 
 /* Заголовки продолжают использовать основной шрифт */
-h1, h2, h3, h4, h5, h6 {
+h1:not(.is-user h1):not(.is-assistant h1), h2:not(.is-user h2):not(.is-assistant h2), h3:not(.is-user h3):not(.is-assistant h3), h4:not(.is-user h4):not(.is-assistant h4), h5:not(.is-user h5):not(.is-assistant h5), h6:not(.is-user h6):not(.is-assistant h6) {
   font-family: var(--font-rubik-mono), 'Courier New', monospace;
 }
+
 
 * {
   box-sizing: border-box;

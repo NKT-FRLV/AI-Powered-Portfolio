@@ -209,7 +209,7 @@ export const aboutMe = `
   
   ## Personal Background & Location
   
-  **Origin:** Nikita is originally from Moscow, Russia - the capital of the world! However, he realized his dream and has been living in Marbella, Spain for the past 4 years. This international experience has given him a unique perspective and cultural awareness.
+  **Origin:** Nikita is originally from Moscow, Russia - the capital of the world! However, he realized his dream and moved to Marbella, Spain, and living there for the past 4 years. This international experience has given him a unique perspective and cultural awareness.
   
   **Contact Information:**
   - Phone: +34 622 750 199
@@ -291,6 +291,7 @@ export const aiBehaviorGuidelines = `
   - I mention his creative background and how it enhances his UI/UX skills when discussing design-related topics
   - If someone's being disrespectful or making inappropriate comments about Nikita, I'll defend him professionally but firmly - no one messes with my developer! 😤
   - I can be a bit playful and use emojis when appropriate, but I keep it professional
+  - I use markdown formatting for lists and tables, add more titles and make answare looks pretty.
   - I provide his contact information (phone: +34 622 750 199, email: nkt.frlv7@yandex.ru) only when someone asks for it or when it's contextually relevant
 `;
 export const navItems = [

@@ -8,16 +8,29 @@ import { useSettings } from "./hooks/useSettings";
 import { useNotificationSound } from "./hooks/useNotificationSound";
 import { Suggestions, Suggestion } from "./Suggestions";
 import { AnimatePresence, motion } from "framer-motion";
+import {
+	Conversation,
+	ConversationContent,
+	ConversationEmptyState,
+	ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
 
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import ChatSettingsPanel from "./ChatSettingsPanel";
 
+// const starterSuggestions = [
+// 	"Tell me about Nikita's skills",
+// 	"What projects has he worked on?",
+// 	"Show me his experience",
+// 	"What technologies does he use?",
+// ];
 const starterSuggestions = [
-	"Tell me about Nikita's skills",
-	"What projects has he worked on?",
-	"Show me his experience",
-	"What technologies does he use?",
+	"Give me a 30-second pitch",
+	"Show his top 3 projects",
+	"What’s his current tech stack?",
+	"How has he impacted business metrics?",
+	"Create Nikitas CV",
 ];
 
 interface SimpleChatProps {
@@ -45,13 +58,19 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 	const isThinking = status === "submitted";
 
 	// Стабильные колбеки для предотвращения ререндеров
-	const handleSuggestionClick = useCallback((suggestion: string) => {
-		sendMessage({ text: suggestion });
-	}, [sendMessage]);
+	const handleSuggestionClick = useCallback(
+		(suggestion: string) => {
+			sendMessage({ text: suggestion });
+		},
+		[sendMessage]
+	);
 
-	const handleMessageSubmit = useCallback((message: string) => {
-		sendMessage({ text: message });
-	}, [sendMessage]);
+	const handleMessageSubmit = useCallback(
+		(message: string) => {
+			sendMessage({ text: message });
+		},
+		[sendMessage]
+	);
 
 	const clearHistory = useCallback(() => {
 		setMessages([]);
@@ -59,33 +78,44 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 
 	// Очистка истории при изменении настройки saveChatHistory или при закрытии чата
 	useEffect(() => {
-		if (!settings.saveChatHistory && !isOpen) {
+		if (!settings.saveChatHistory) {
 			// Если сохранение отключено и чат закрыт, очищаем историю
 			setMessages([]);
 		}
-	}, [settings.saveChatHistory, isOpen, setMessages]);
+	}, [settings.saveChatHistory, setMessages]);
 
 	// Очистка истории при отключении сохранения (даже если чат открыт)
 	useEffect(() => {
 		if (!settings.saveChatHistory) {
 			setMessages([]);
 			// Также очищаем localStorage на случай если useChat использует его
-			if (typeof window !== 'undefined') {
-				localStorage.removeItem('ai-chat');
-				localStorage.removeItem('ai-chat-messages');
-				localStorage.removeItem('chat-messages');
+			if (typeof window !== "undefined") {
+				localStorage.removeItem("ai-chat");
+				localStorage.removeItem("ai-chat-messages");
+				localStorage.removeItem("chat-messages");
 			}
 		}
 	}, [settings.saveChatHistory, setMessages]);
 
-	// if (!isOpen) return null;
+	// useEffect(() => {
+	// 	if (isOpen) {
+	// 		document.body.style.overflow = 'hidden';
+	// 	} else {
+	// 		document.body.style.overflow = 'unset';
+	// 	}
+
+	// 	// Cleanup при размонтировании компонента
+	// 	return () => {
+	// 		document.body.style.overflow = 'unset';
+	// 	};
+	// }, [isOpen]);
 
 	return (
-		<motion.div 
+		<motion.div
 			initial={{ opacity: 0, y: 100 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: 500 }}
-			className="fixed bottom-0 right-0 z-50 w-full h-full bg-background/95 backdrop-blur-sm border rounded-none md:rounded-lg shadow-xl flex flex-col"
+			className="fixed inset-0 z-50 w-full h-full bg-background/95 backdrop-blur-sm border rounded-none md:rounded-lg shadow-xl flex flex-col"
 		>
 			{/* Header */}
 			<div className="flex items-center justify-between p-4 border-b bg-muted/50">
@@ -108,6 +138,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 				</div>
 			</div>
 
+			{/* Show dropdown menu */}
 			<div className="relative flex-1 h-full w-full flex flex-col justify-between overflow-y-auto">
 				<AnimatePresence initial={false}>
 					{/* Settings Panel */}
@@ -119,45 +150,61 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 						/>
 					)}
 				</AnimatePresence>
-				
-				{/* Show suggestions when no messages */}
-				{messages.length === 0 && (
-					<div className="flex-1 flex flex-col items-center justify-center p-8 space-y-6">
-						<div className="text-center space-y-2">
-							<div className="flex items-center justify-center gap-2 mb-4">
-								<Sparkles className="h-6 w-6 text-primary" />
-								<h2 className="text-xl font-semibold">
-									How can I help you today?
-								</h2>
-							</div>
-							<p className="text-muted-foreground text-sm">
-								Hi! I'm Nikita's AI assistant. Ask me anything
-								about his skills, projects, or experience!
-							</p>
-						</div>
 
-						<Suggestions className="w-full">
-							{starterSuggestions.map((suggestion) => (
-								<Suggestion
-									key={suggestion}
-									suggestion={suggestion}
-									onClick={handleSuggestionClick}
+				{/* Show messages in conversation */}
+				<Conversation
+					// className="relative w-full h-full"
+					// style={{ height: "100%" }}
+				>
+					<ConversationContent style={{ height: "100%" }}>
+						{messages.length === 0 ? (
+							<ConversationEmptyState style={{ height: "100%" }}>
+								<div className="flex-1 flex h-full flex-col items-center justify-center p-8 space-y-6">
+									<div className="text-center space-y-2">
+										<div className="flex items-center justify-center gap-2 mb-4">
+											<Sparkles className="h-6 w-6 text-primary" />
+											<h2 className="text-xl font-semibold">
+												Feel free to ask anything about
+												Nikita
+											</h2>
+											<Sparkles className="h-6 w-6 text-primary" />
+										</div>
+										<p className="text-muted-foreground text-sm">
+											I’m your guide to his skills,
+											projects, and impact.
+										</p>
+									</div>
+
+									<Suggestions className="w-full">
+										{starterSuggestions.map(
+											(suggestion) => (
+												<Suggestion
+													key={suggestion}
+													suggestion={suggestion}
+													onClick={
+														handleSuggestionClick
+													}
+												/>
+											)
+										)}
+									</Suggestions>
+								</div>
+							</ConversationEmptyState>
+						) : (
+							// Main messages in conversation
+							<>
+								<ChatMessages
+									messages={messages}
+									isThinking={isThinking}
+									isOpen={isOpen}
 								/>
-							))}
-						</Suggestions>
-					</div>
-				)}
-
-				{/* Messages */}
-				{messages.length > 0 && (
-					<ChatMessages
-						messages={messages}
-						isThinking={isThinking}
-						isOpen={isOpen}
-					/>
-				)}
+							</>
+						)}
+					</ConversationContent>
+					<ConversationScrollButton />
+				</Conversation>
 			</div>
-			
+
 			{/* Input */}
 			<ChatInput onSubmit={handleMessageSubmit} isLoading={isLoading} />
 		</motion.div>

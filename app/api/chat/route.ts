@@ -63,6 +63,7 @@ export async function POST(request: Request) {
         ${aiBehaviorGuidelines}
         
         Remember: I'm representing a talented developer's portfolio. I'm confident, knowledgeable, and I know my stuff. I want you to walk away thinking "Damn, this Nikita guy sounds like someone I'd want on my team!"
+		
     `;
 
 		const response = streamText({

@@ -1,60 +1,56 @@
-"use client";
-
-import React, { memo, useRef, useEffect } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Response } from "./Response";
+"use client"
+// import { ScrollArea } from "@/components/ui/scroll-area";
+import { Message, MessageAvatar, MessageContent } from "@/components/ai-elements/message";
+import { Response } from "@/components/ai-elements/response";
 import { UIMessage } from "ai";
 
 interface ChatMessagesProps {
   messages: UIMessage[];
-  isThinking: boolean;
-  isOpen: boolean;
+  isThinking?: boolean;
+  isOpen?: boolean;
 }
 
-const ChatMessages = memo(({ messages, isThinking, isOpen }: ChatMessagesProps) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+const ChatMessages = ({ messages }: ChatMessagesProps) => {
+//   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Оптимизированный скролл - только при изменении количества сообщений
-  useEffect(() => {
-    if (isOpen && messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages.length, isOpen]);
+//   // Оптимизированный скролл - только при изменении количества сообщений
+//   useEffect(() => {
+//     if (isOpen && messages.length > 0) {
+//       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+//     }
+//   }, [messages.length, isOpen]);
 
   return (
-    <ScrollArea className="flex-1 p-4">
-      <div className="space-y-4">
+    // <ScrollArea className="flex-1 p-4">
+    //   <div className="space-y-4">
+	<>
         {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${
-              message.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2 chat-message ${
-                message.role === "user"
-                  ? "bg-primary text-primary-foreground rounded-tr-none"
-                  : "bg-muted text-foreground rounded-tl-none"
-              }`}
-            >
-              <div className="text-sm font-medium md:text-base whitespace-pre-wrap break-words leading-relaxed font-sans">
-                {message.role === "user" ? (
-                  message.parts?.find((part) => part.type === "text")?.text || ""
-                ) : (
-                  <Response className="font-sans">
-                    {message.parts?.find((part) => part.type === "text")?.text || ""}
-                  </Response>
-                )}
-              </div>
-            </div>
-          </div>
+			
+          <Message from={message.role} key={message.id} className="flex items-start">
+			
+            <MessageContent variant="flat" className="font-geist-sans text-sm font-medium md:font-bold md:text-lg">
+			
+			{message.parts.map((part, i) => {
+                    switch (part.type) {
+                      case 'text': // we don't use any reasoning or tool calls in this example
+                        return (
+                          <Response key={`${message.id}-${i}`}>
+                            {part.text}
+                          </Response>
+                        );
+                      default:
+                        return null;
+                    }
+                  })}
+            </MessageContent>
+			{message.role === "assistant" && <MessageAvatar  src={"/nf-logo.svg"} />}
+          </Message>
         ))}
 
         {/* Loading indicator */}
-        {isThinking && (
-          <div className="flex justify-start">
-            <div className="bg-muted text-foreground rounded-2xl rounded-tl-none px-4 py-2">
+        {/* {isThinking && (
+          <Message from="assistant">
+            <MessageContent>
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-medium font-sans">AI responding</span>
                 <div className="flex space-x-1">
@@ -63,15 +59,16 @@ const ChatMessages = memo(({ messages, isThinking, isOpen }: ChatMessagesProps) 
                   <div className="w-1 h-1 bg-current rounded-full animate-pulse [animation-delay:0.4s]" />
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            </MessageContent>
+          </Message>
+        )} */}
 
-        <div ref={messagesEndRef} />
-      </div>
-    </ScrollArea>
+        {/* <div ref={messagesEndRef} />
+      </div> */}
+	</>
+    // </ScrollArea>
   );
-});
+};
 
 ChatMessages.displayName = "ChatMessages";
 
