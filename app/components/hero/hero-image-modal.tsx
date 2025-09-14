@@ -51,9 +51,9 @@ const HeroImageModal = () => {
               Swipe down or drag to close
             </SheetDescription>
           </SheetHeader>
-          <div className="relative w-full max-w-2xl aspect-[3/4] max-h-[60vh] overflow-hidden">
+          <div className="relative w-full aspect-[3/4] max-h-[60vh] overflow-hidden">
             <Image
-              src="/hero-nik.webp"
+              src="/gen-hero.webp"
               alt="Nikita Frolov"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, 100vw"
