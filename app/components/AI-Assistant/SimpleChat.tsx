@@ -1,6 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { useState, useCallback, useEffect } from "react";
 import { Settings, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,9 +30,10 @@ import ChatSettingsPanel from "./ChatSettingsPanel";
 const starterSuggestions = [
 	"Give me a 30-second pitch",
 	"Show his top 3 projects",
-	"What’s his current tech stack?",
+	"What's his current tech stack?",
 	"How has he impacted business metrics?",
 	"Create Nikitas CV",
+	"Send Nikita a message",
 ];
 
 interface SimpleChatProps {
@@ -49,7 +51,9 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 		soundUrl: settings.notificationSound,
 	});
 
-	const { messages, sendMessage, status, setMessages } = useChat({
+	const { messages, sendMessage, status, setMessages, addToolResult } = useChat({
+		transport: new DefaultChatTransport({ api: "/api/chat" }),
+		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
 		onFinish: () => {
 			if (settings.soundEnabled) playSound();
 		},
@@ -201,6 +205,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 									isReady={status === "ready"}
 									isThinking={isThinking}
 									isOpen={isOpen}
+									addToolResult={addToolResult}
 								/>
 							</>
 						)}

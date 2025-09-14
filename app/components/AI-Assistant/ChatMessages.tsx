@@ -6,6 +6,7 @@ import {
 	MessageContent,
 } from "@/components/ai-elements/message";
 import { Response } from "@/components/ai-elements/response";
+import { Button } from "@/components/ui/button";
 import { UIMessage } from "ai";
 
 interface ChatMessagesProps {
@@ -14,9 +15,14 @@ interface ChatMessagesProps {
 	isOpen?: boolean;
 	isReady?: boolean;
 	sendMessage?: (message: string) => void;
+	addToolResult?: (args: {
+		tool: string;
+		toolCallId: string;
+		output: unknown;
+	}) => void;
 }
 
-const ChatMessages = ({ messages }: ChatMessagesProps) => {
+const ChatMessages = ({ messages, addToolResult }: ChatMessagesProps) => {
 	return (
 		<>
 			{messages.map((message) => (
@@ -30,20 +36,114 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
 						className="font-geist-sans text-sm font-medium md:font-bold md:text-lg"
 					>
 						{message.parts.map((part, i) => {
-							// console.log(part.type);
 							switch (part.type) {
-								case "text": // we don't use any reasoning or tool calls in this example
+								case "text":
 									return (
 										<Response key={`${message.id}-${i}`}>
 											{part.text}
 										</Response>
 									);
-								case "tool-sendEmail":
+
+								case "tool-askForConfirmation": {
+									// part.args — то, что модель передала в tool (to, subject, text, html?)
+									// part.state: 'call-arguments' | 'calling' | 'output-available'
+									const awaiting =
+										part.state !== "output-available";
+									
 									return (
-										<div key={`${message.id}-sendEmail`}>
-											{JSON.stringify(part, null, 2)}
+										<div
+											key={part.toolCallId}
+											className="my-3 rounded-lg border p-4 w-fit"
+										>
+											<div className="flex items-center gap-2 text-sm font-medium mb-3 w-fit">
+												<span>📧</span>
+												<span>Confirm Email Sending</span>
+											</div>
+											<div className="space-y-2 text-sm">
+											
+											</div>
+
+											{awaiting ? (
+												<div className="mt-4 flex gap-3">
+													<Button
+														size="sm"
+														className="cursor-pointer bg-green-600 hover:bg-green-700 text-white"
+														onClick={() =>
+															addToolResult?.({
+																tool: "askForConfirmation",
+																toolCallId:
+																	part.toolCallId,
+																output: {
+																	confirmed:
+																		true,
+																},
+															})
+														}
+													>
+														<span className="mr-1">✅</span>
+														Send Email
+													</Button>
+													<Button
+														size="sm"
+														className="cursor-pointer"
+														variant="outline"
+														onClick={() =>
+															addToolResult?.({
+																tool: "askForConfirmation",
+																toolCallId:
+																	part.toolCallId,
+																output: {
+																	confirmed:
+																		false,
+																	reason: "User cancelled",
+																},
+															})
+														}
+													>
+														<span className="mr-1">❌</span>
+														Cancel
+													</Button>
+												</div>
+											) : (
+												<div className="mt-3 p-2 bg-gray-100 rounded text-xs text-gray-600">
+													<span className="font-medium">Status:</span>{" "}
+													{(part as any).output?.confirmed ? (
+														<span className="text-green-600">✅ Confirmed - Email will be sent</span>
+													) : (
+														<span className="text-red-600">❌ Cancelled by user</span>
+													)}
+												</div>
+											)}
 										</div>
 									);
+								}
+
+								case "tool-sendEmail": {
+									const output = (part as any).output;
+									const isSuccess = typeof output === 'string' && output.includes('successfully');
+									return (
+										<div
+											key={`${message.id}-sendEmail`}
+											className={`my-3 rounded-lg border p-3 w-fit ${
+												isSuccess 
+													? 'border-green-200/50 text-green-800' 
+													: 'border-red-200/50 text-red-800'
+											}`}
+										>
+											<div className="text-xs uppercase text-muted-foreground mb-1">
+												Email Status
+											</div>
+											<div className="text-sm">
+												{isSuccess ? '✅ Email sent successfully!' : '❌ Failed to send email'}
+											</div>
+											{output && (
+												<div className="text-xs mt-1 opacity-75">
+													{output}
+												</div>
+											)}
+										</div>
+									);
+								}
 
 								default:
 									return null;
@@ -56,21 +156,6 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
 				</Message>
 			))}
 
-			{/* Loading indicator */}
-			{/* {isThinking && (
-          <Message from="assistant">
-            <MessageContent>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium font-sans">AI responding</span>
-                <div className="flex space-x-1">
-                  <div className="w-1 h-1 bg-current rounded-full animate-pulse" />
-                  <div className="w-1 h-1 bg-current rounded-full animate-pulse [animation-delay:0.2s]" />
-                  <div className="w-1 h-1 bg-current rounded-full animate-pulse [animation-delay:0.4s]" />
-                </div>
-              </div>
-            </MessageContent>
-          </Message>
-        )} */}
 		</>
 	);
 };

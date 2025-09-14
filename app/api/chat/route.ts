@@ -21,12 +21,7 @@ import {
 //   } from 'ai';
 import type { InferUITools, ToolSet, UIDataTypes, UIMessage } from "ai";
 // import { openai } from "@ai-sdk/openai";
-import {
-	streamText,
-	convertToModelMessages,
-	stepCountIs,
-	tool,
-} from "ai";
+import { streamText, convertToModelMessages, stepCountIs, tool } from "ai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider"; // pnpm add @openrouter/ai-sdk-provider
 
 const openrouter = createOpenRouter({
@@ -41,28 +36,30 @@ const SendEmailToolInput = ContactInput.extend({
 });
 
 const tools = {
+	askForConfirmation: tool({
+		description:
+			"Ask the user to confirm the email before sending. Always include a preview.",
+		inputSchema: z.object({
+			to: z.string().email(),
+			subject: z.string(),
+			text: z.string(),
+			html: z.string().optional(),
+		}),
+		// нет execute => client-side tool
+	}),
+
 	sendEmail: tool({
 		description:
-			"Send a message to Nikita via email. Use this when someone wants to contact Nikita. Always show a preview first, then ask for confirmation before sending.",
+			"Send a message to Nikita via email. Must be called only AFTER confirmation.",
 		inputSchema: SendEmailToolInput,
-
-		execute: async (args: unknown) => {
-			const parsed = SendEmailToolInput.safeParse(args);
-			if (!parsed.success) {
-				return `I had trouble understanding the email details. Please try again with proper information.`;
+		execute: async (args) => {
+			if (!args.confirmed) {
+				return `Not sending. Missing confirmation.`;
 			}
-
-			// Двухшаговое подтверждение (без него письмо не уйдёт)
-			if (!parsed.data.confirmed) {
-				console.log("⏳ Email needs confirmation");
-				return `I need your confirmation to send this email. Please review the details and confirm with "yes" to send or "no" to cancel.`;
-			}
-
-			const result = await sendContactEmail(parsed.data);
-			if (!result.ok) {
-				return `Sorry, I couldn't send the email right now. There was a technical issue. Please try again later.`;
-			}
-			return `Great! I've successfully sent your message to Nikita. He should receive it shortly and will get back to you as soon as possible.`;
+			const ok = (await sendContactEmail(args)).ok;
+			return ok
+				? `Email sent successfully.`
+				: `Sorry, sending failed. Try later.`;
 		},
 	}),
 } satisfies ToolSet;
@@ -122,16 +119,28 @@ export async function POST(request: Request) {
         - Full Background: ${nikitaData.about}
         
         ## Email Tool Behavior:
-        When someone wants to send an email to Nikita, I should:
-        1. First, show them a preview of what will be sent (like a real person would)
-        2. Ask for confirmation in a natural, conversational way
-        3. Only send the email after they confirm
+        When a user wants to contact Nikita or send him a message, follow this EXACT process:
         
-        I should NEVER just call the tool without showing the preview first. Always be human-like and show what you're about to send.
+        1. ALWAYS call askForConfirmation first with these parameters:
+           - to: "nikita.frolov.dev@gmail.com" (Nikita's email)
+           - subject: A clear, professional subject line
+           - text: The message content in plain text
+           - html: (optional) HTML version of the message
         
-        ${aiBehaviorGuidelines}
+        2. Wait for user confirmation through the UI buttons
         
-        Remember: I'm representing a talented developer's portfolio. I'm confident, knowledgeable, and I know my stuff. I want you to walk away thinking "Damn, this Nikita guy sounds like someone I'd want on my team!"
+        3. If user confirms (confirmed: true), then call sendEmail with:
+           - Same to, subject, text, html parameters
+           - confirmed: true
+        
+        4. If user denies, apologize and do NOT call sendEmail
+        
+        IMPORTANT: Never call sendEmail without first calling askForConfirmation and getting user approval!
+
+        
+        	${aiBehaviorGuidelines}
+        
+        	Remember: I'm representing a talented developer's portfolio. I'm confident, knowledgeable, and I know my stuff. I want you to walk away thinking "Damn, this Nikita guy sounds like someone I'd want on my team!"
 		
     `;
 
