@@ -1,54 +1,63 @@
-"use client"
+"use client";
 // import { ScrollArea } from "@/components/ui/scroll-area";
-import { Message, MessageAvatar, MessageContent } from "@/components/ai-elements/message";
+import {
+	Message,
+	MessageAvatar,
+	MessageContent,
+} from "@/components/ai-elements/message";
 import { Response } from "@/components/ai-elements/response";
 import { UIMessage } from "ai";
 
 interface ChatMessagesProps {
-  messages: UIMessage[];
-  isThinking?: boolean;
-  isOpen?: boolean;
+	messages: UIMessage[];
+	isThinking?: boolean;
+	isOpen?: boolean;
+	isReady?: boolean;
+	sendMessage?: (message: string) => void;
 }
 
 const ChatMessages = ({ messages }: ChatMessagesProps) => {
-//   const messagesEndRef = useRef<HTMLDivElement>(null);
+	return (
+		<>
+			{messages.map((message) => (
+				<Message
+					from={message.role}
+					key={message.id}
+					className="flex items-start"
+				>
+					<MessageContent
+						variant="flat"
+						className="font-geist-sans text-sm font-medium md:font-bold md:text-lg"
+					>
+						{message.parts.map((part, i) => {
+							// console.log(part.type);
+							switch (part.type) {
+								case "text": // we don't use any reasoning or tool calls in this example
+									return (
+										<Response key={`${message.id}-${i}`}>
+											{part.text}
+										</Response>
+									);
+								case "tool-sendEmail":
+									return (
+										<div key={`${message.id}-sendEmail`}>
+											{JSON.stringify(part, null, 2)}
+										</div>
+									);
 
-//   // Оптимизированный скролл - только при изменении количества сообщений
-//   useEffect(() => {
-//     if (isOpen && messages.length > 0) {
-//       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//     }
-//   }, [messages.length, isOpen]);
+								default:
+									return null;
+							}
+						})}
+					</MessageContent>
+					{message.role === "assistant" && (
+						<MessageAvatar src={"/nf-logo.svg"} />
+					)}
+				</Message>
+			))}
 
-  return (
-    // <ScrollArea className="flex-1 p-4">
-    //   <div className="space-y-4">
-	<>
-        {messages.map((message) => (
-			
-          <Message from={message.role} key={message.id} className="flex items-start">
-			
-            <MessageContent variant="flat" className="font-geist-sans text-sm font-medium md:font-bold md:text-lg">
-			
-			{message.parts.map((part, i) => {
-                    switch (part.type) {
-                      case 'text': // we don't use any reasoning or tool calls in this example
-                        return (
-                          <Response key={`${message.id}-${i}`}>
-                            {part.text}
-                          </Response>
-                        );
-                      default:
-                        return null;
-                    }
-                  })}
-            </MessageContent>
-			{message.role === "assistant" && <MessageAvatar  src={"/nf-logo.svg"} />}
-          </Message>
-        ))}
-
-        {/* Loading indicator */}
-        {/* {isThinking && (
+			{/* Loading indicator */}
+			{/* {isThinking && (
           <Message from="assistant">
             <MessageContent>
               <div className="flex items-center space-x-2">
@@ -62,12 +71,8 @@ const ChatMessages = ({ messages }: ChatMessagesProps) => {
             </MessageContent>
           </Message>
         )} */}
-
-        {/* <div ref={messagesEndRef} />
-      </div> */}
-	</>
-    // </ScrollArea>
-  );
+		</>
+	);
 };
 
 ChatMessages.displayName = "ChatMessages";

@@ -17,7 +17,7 @@ const ChatSettingsPanel = memo(({ settings, onUpdateSettings, onClearHistory }: 
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: -10 }}
       exit={{ opacity: 0, y: -100 }}
-      className="absolute top-0 right-0 left-0 p-4 border-b bg-black/95 space-y-3 z-10"
+      className="absolute top-0 right-0 left-0 p-4 border-b bg-background/95 space-y-3 z-10"
     >
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium">Sound notifications</label>
@@ -38,6 +38,7 @@ const ChatSettingsPanel = memo(({ settings, onUpdateSettings, onClearHistory }: 
         <Button
           variant="outline"
           size="sm"
+		  
           onClick={() =>
             onUpdateSettings({
               saveChatHistory: !settings.saveChatHistory,

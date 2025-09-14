@@ -8,6 +8,7 @@ import { useSettings } from "./hooks/useSettings";
 import { useNotificationSound } from "./hooks/useNotificationSound";
 import { Suggestions, Suggestion } from "./Suggestions";
 import { AnimatePresence, motion } from "framer-motion";
+import { Loader } from "@/components/ai-elements/loader";
 import {
 	Conversation,
 	ConversationContent,
@@ -123,14 +124,14 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 				<div className="flex items-center gap-2">
 					<Button
 						variant="ghost"
-						size="sm"
+						size="lg"
 						onClick={() => setShowSettings(!showSettings)}
 					>
 						<Settings className="h-4 w-4" />
 					</Button>
 					<Button
 						variant="ghost"
-						size="sm"
+						size="lg"
 						onClick={() => setIsOpen(false)}
 					>
 						<X className="h-4 w-4" />
@@ -153,12 +154,12 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 
 				{/* Show messages in conversation */}
 				<Conversation
-					// className="relative w-full h-full"
-					// style={{ height: "100%" }}
+					className="relative w-full h-full"
+					style={{ height: "500px" }}
 				>
-					<ConversationContent style={{ height: "100%" }}>
+					<ConversationContent>
 						{messages.length === 0 ? (
-							<ConversationEmptyState style={{ height: "100%" }}>
+							<ConversationEmptyState className="absolute inset-0">
 								<div className="flex-1 flex h-full flex-col items-center justify-center p-8 space-y-6">
 									<div className="text-center space-y-2">
 										<div className="flex items-center justify-center gap-2 mb-4">
@@ -181,6 +182,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 												<Suggestion
 													key={suggestion}
 													suggestion={suggestion}
+													className="font-geist-sans"
 													onClick={
 														handleSuggestionClick
 													}
@@ -195,18 +197,21 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 							<>
 								<ChatMessages
 									messages={messages}
+									// sendMessage={handleSuggestionClick}
+									isReady={status === "ready"}
 									isThinking={isThinking}
 									isOpen={isOpen}
 								/>
 							</>
 						)}
+						{status === "submitted" && <Loader size={32} />}
 					</ConversationContent>
 					<ConversationScrollButton />
 				</Conversation>
 			</div>
 
 			{/* Input */}
-			<ChatInput onSubmit={handleMessageSubmit} isLoading={isLoading} />
+			<ChatInput onSubmit={handleMessageSubmit} isLoading={isLoading} status={status} />
 		</motion.div>
 	);
 };
