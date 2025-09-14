@@ -29,11 +29,11 @@ import ChatSettingsPanel from "./ChatSettingsPanel";
 // ];
 const starterSuggestions = [
 	"Give me a 30-second pitch",
+	"Send Email to Nikita",
 	"Show his top 3 projects",
 	"What's his current tech stack?",
 	"How has he impacted business metrics?",
 	"Create Nikitas CV",
-	"Send Nikita a message",
 ];
 
 interface SimpleChatProps {
@@ -186,7 +186,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 												<Suggestion
 													key={suggestion}
 													suggestion={suggestion}
-													className="font-geist-sans"
+													className={`font-geist-sans ${suggestion === "Send Email to Nikita" ? "border-blue-900/50 bg-blue-900/10" : ""}`}
 													onClick={
 														handleSuggestionClick
 													}

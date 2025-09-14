@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { sendContactEmail, ContactInput } from "@/lib/resend";
+import { sendContactEmail } from "@/lib/resend";
 import {
 	skills,
 	projects,
@@ -31,7 +31,11 @@ const openrouter = createOpenRouter({
 export const maxDuration = 30;
 
 // базовая схема для tool
-const SendEmailToolInput = ContactInput.extend({
+const SendEmailToolInput = z.object({
+	to: z.string().email(),
+	subject: z.string(),
+	text: z.string(),
+	html: z.string().optional(),
 	confirmed: z.boolean().default(false),
 });
 
@@ -56,8 +60,17 @@ const tools = {
 			if (!args.confirmed) {
 				return `Not sending. Missing confirmation.`;
 			}
-			const ok = (await sendContactEmail(args)).ok;
-			return ok
+			
+			// Преобразуем SendEmailToolInput в ContactInput
+			const contactInput = {
+				message: args.text,
+				email: args.to,
+				name: "AI Assistant User",
+				company: "Portfolio Chat"
+			};
+			
+			const result = await sendContactEmail(contactInput);
+			return result.ok
 				? `Email sent successfully.`
 				: `Sorry, sending failed. Try later.`;
 		},
@@ -119,23 +132,22 @@ export async function POST(request: Request) {
         - Full Background: ${nikitaData.about}
         
         ## Email Tool Behavior:
+
+		IMPORTANT: after confirmation of sending email, DONT FORGET TO SEND EMAIL! SEND IT BY CALLING "sendEmail" Tool!
+		
         When a user wants to contact Nikita or send him a message, follow this EXACT process:
         
-        1. ALWAYS call askForConfirmation first with these parameters:
-           - to: "nikita.frolov.dev@gmail.com" (Nikita's email)
-           - subject: A clear, professional subject line
-           - text: The message content in plain text
-           - html: (optional) HTML version of the message
+        1. ALWAYS show the preview of the message with given parameters responding in Markdown and then immediately call "askForConfirmation" Tool!
         
-        2. Wait for user confirmation through the UI buttons
-        
-        3. If user confirms (confirmed: true), then call sendEmail with:
-           - Same to, subject, text, html parameters
+        2. Wait for user confirmation through responding Confirm or Cancel, if user confirms, dont forget to call "sendEmail" Tool in the next step.
+		 
+        3. If user confirms (confirmed: true), then call "sendEmail" Tool with:
+           - Same to, subject, text parameters
            - confirmed: true
         
-        4. If user denies, apologize and do NOT call sendEmail
+        4. If user denies, apologize and do NOT call "sendEmail"
         
-        IMPORTANT: Never call sendEmail without first calling askForConfirmation and getting user approval!
+        IMPORTANT: Never call "sendEmail" without first calling "askForConfirmation" and getting user approval!
 
         
         	${aiBehaviorGuidelines}
@@ -145,12 +157,12 @@ export async function POST(request: Request) {
     `;
 
 		const response = streamText({
-			model: openrouter.chat("moonshotai/kimi-k2:free"),
+			model: openrouter.chat("deepseek/deepseek-chat-v3.1:free"),
 			system: systemMessage,
 			messages: convertToModelMessages(messages),
 			tools,
 			toolChoice: "auto",
-			stopWhen: stepCountIs(5), // Позволяем до 3 шагов для подтверждения email
+			stopWhen: stepCountIs(5), // Позволяем до 5 шагов для подтверждения email
 		});
 
 		console.log("Response:", response);
