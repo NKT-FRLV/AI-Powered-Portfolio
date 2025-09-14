@@ -106,7 +106,7 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 						<div className="mt-3 p-2 rounded text-xs text-foreground-600">
 							<span className="font-medium">Status:</span>{" "}
 							{(part as any).output?.confirmed ? (
-								<span className="text-green-600">✅ Confirmed - Email will be sent</span>
+								<span className="text-green-600">✅ Confirmed - AI will now send the email automatically</span>
 							) : (
 								<span className="text-red-600">❌ Cancelled by user</span>
 							)}

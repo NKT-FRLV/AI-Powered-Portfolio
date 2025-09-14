@@ -36,39 +36,25 @@ const ChatInput = ({ onSubmit, isLoading, status }: ChatInputProps) => {
 		const hasText = Boolean(message.text);
     	// const hasAttachments = Boolean(message.files?.length);
 
-		if (!hasText) return;
+		if (!hasText || isLoading) return;
 		onSubmit(message.text as string);
 		setText("");
 	};
 
 	return (
 		<div className="p-4 border-t">
-			{/* <div className="flex items-center gap-2">
-			<Button onClick={() => setShowSuggestions(!showSuggestions)} variant="outline">
-				{showSuggestions ? "Hide suggestions" : "Show suggestions"}
-			</Button>
-			{showSuggestions && <Suggestions className="w-full">
-				{[
-					"Give me a 30-second pitch",
-					"Show top 3 projects",
-					"What’s his current tech stack?"
-				].map((suggestion) => (
-					<Suggestion
-						key={suggestion}
-						className="font-geist-sans"
-						suggestion={suggestion}
-						disabled={isLoading}
-						onClick={onSubmit}
-					/>
-				))}
-			</Suggestions>}
-			</div> */}
+
 			<PromptInput
 				onSubmit={handleSubmit}
 				className="relative w-full flex items-center gap-2 px-4"
 			>
 				<PromptInputBody className="w-full flex-1 flex items-center">
-					<PromptInputTextarea value={text} onChange={(e) => setText(e.target.value)} />
+					<PromptInputTextarea 
+						value={text} 
+						onChange={(e) => setText(e.target.value)}
+						disabled={isLoading}
+						placeholder={isLoading ? "AI is responding..." : "What would you like to know?"}
+					/>
 				</PromptInputBody>
 				{/* <PromptInputToolbar> */}
 				{/* <PromptInputTools> */}
@@ -79,7 +65,11 @@ const ChatInput = ({ onSubmit, isLoading, status }: ChatInputProps) => {
 			  </PromptInputActionMenuContent>
 			</PromptInputActionMenu> */}
 				{/* </PromptInputTools> */}
-				<PromptInputSubmit disabled={isLoading || text.length === 0} status={status} />
+				<PromptInputSubmit 
+					disabled={isLoading || text.length === 0} 
+					status={status}
+					title={isLoading ? "AI is responding, please wait..." : "Send message"}
+				/>
 				{/* </PromptInputToolbar> */}
 			</PromptInput>
 		</div>

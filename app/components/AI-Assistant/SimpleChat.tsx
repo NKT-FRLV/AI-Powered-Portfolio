@@ -70,8 +70,8 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 		[sendMessage]
 	);
 
-	const handleMessageSubmit = useCallback(
-		(message: string) => {
+	const handleMessageSubmit = useCallback((message: string) => {
+			if (isLoading) return;
 			sendMessage({ text: message });
 		},
 		[sendMessage]

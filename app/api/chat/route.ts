@@ -146,18 +146,24 @@ export async function POST(request: Request) {
            - subject: A clear, professional subject line
            - text: The message content in plain text
         
-        2. Wait for user confirmation through responding Confirm or Cancel, if user confirms, dont forget to call "sendEmail" Tool in the next step.
+        2. Wait for user confirmation through the UI buttons.
 		 
-        3. If user confirms (confirmed: true), then call "sendEmail" Tool with:
+        3. CRITICAL: If user confirms (confirmed: true), you MUST IMMEDIATELY call "sendEmail" Tool in the SAME response with:
+           - to: "marbella.frolov@gmail.com" (Nikita's email)
            - subject: Same subject from askForConfirmation
            - text: Same text from askForConfirmation
            - fromEmail: Same fromEmail from askForConfirmation
            - fromName: Same fromName from askForConfirmation
            - confirmed: true
+           
+           DO NOT FORGET TO CALL sendEmail! The email will NOT be sent without this step!
         
         4. If user denies, apologize and do NOT call "sendEmail"
         
         IMPORTANT: Never call "sendEmail" without first calling "askForConfirmation" and getting user approval!
+        
+        REMINDER: After user confirms askForConfirmation, you MUST call sendEmail in the SAME response. 
+        The system will automatically continue the conversation after tool calls complete.
 
         
         	${aiBehaviorGuidelines}
@@ -172,7 +178,7 @@ export async function POST(request: Request) {
 			messages: convertToModelMessages(messages),
 			tools,
 			toolChoice: "auto",
-			stopWhen: stepCountIs(5), // Позволяем до 5 шагов для подтверждения email
+			stopWhen: stepCountIs(8), // Позволяем до 8 шагов для цепочки askForConfirmation -> sendEmail
 		});
 
 		console.log("Response:", response);
