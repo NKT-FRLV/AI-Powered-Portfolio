@@ -17,25 +17,25 @@ const orbitron = localFont({
   preload: true,
 });
 
+const rubikMonoOne = localFont({
+	src: [
+	  {
+		path: "../public/fonts/RubikMonoOne-Regular.ttf",
+		weight: "400",
+		style: "normal",
+	  }
+	],
+	variable: "--font-rubik-mono",
+	display: "block",
+	preload: true,
+  });
+
 
 const roboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
   display: "swap",
   weight: "400",
-});
-
-const rubikMonoOne = localFont({
-  src: [
-    {
-      path: "../public/fonts/RubikMonoOne-Regular.ttf",
-      weight: "400",
-      style: "normal",
-    }
-  ],
-  variable: "--font-rubik-mono",
-  display: "block",
-  preload: true,
 });
 
 const geistSans = Geist({
@@ -121,7 +121,7 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-        <link
+        {/* <link
           rel="preload"
           href="/fonts/RubikMonoOne-Regular.ttf"
           as="font"
@@ -134,7 +134,7 @@ export default function RootLayout({
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
-        />
+        /> */}
         <link
           rel="icon"
           href="/nf-logo.svg"

@@ -32,8 +32,15 @@ const ChatMessages = ({ messages, addToolResult }: ChatMessagesProps) => {
 				>
 					<MessageContent
 						variant="flat"
-						className="font-geist-sans text-sm font-medium md:font-bold md:text-lg"
+						className="relative font-geist-sans text-sm font-medium md:font-bold md:text-lg"
 					>
+						{message.role === "assistant" && (
+							// Avatar for mobile
+							<MessageAvatar
+								className="md:hidden"
+								src={"/nf-logo.svg"}
+							/>
+						)}
 						{message.parts.map((part, i) => (
 							<MessageCase
 								key={`${message.id}-${i}`}
@@ -45,11 +52,14 @@ const ChatMessages = ({ messages, addToolResult }: ChatMessagesProps) => {
 						))}
 					</MessageContent>
 					{message.role === "assistant" && (
-						<MessageAvatar src={"/nf-logo.svg"} />
+						// Avatar for desktop
+						<MessageAvatar
+							className="hidden md:block"
+							src={"/nf-logo.svg"}
+						/>
 					)}
 				</Message>
 			))}
-
 		</>
 	);
 };

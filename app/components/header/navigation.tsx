@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import NavLink from "./nav-link";
 import { navItems } from "@/app/data";
 
@@ -18,11 +18,12 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ activeSection, handleLinkClick, sectionsLoaded = true }) => {
   return (
-    <motion.nav 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-      className="hidden md:flex items-center gap-6 text-sm"
+    // <motion.nav 
+    //   initial={{ opacity: 0, y: -10 }}
+    //   animate={{ opacity: 1, y: 0 }}
+    //   transition={{ duration: 0.5, delay: 0.1 }}
+	<nav
+      className="hidden md:flex items-center gap-6 text-sm animate-fade-in-down"
     >
       {navItems.map(item => (
         <NavLink
@@ -34,7 +35,8 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, handleLinkClick,
           disabled={!sectionsLoaded}
         />
       ))}
-    </motion.nav>
+    {/* </motion.nav> */}
+	</nav>
   );
 };
 

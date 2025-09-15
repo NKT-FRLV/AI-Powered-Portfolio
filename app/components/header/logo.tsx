@@ -6,23 +6,19 @@ import { motion } from "framer-motion";
 
 const Logo: React.FC = () => {
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mr-4 flex"
-    >
+	// Уникальное появление логотипа .animate-logo-in
+    <div className="flex animate-logo-in" >
       <NextLink href="/" className="flex items-center space-x-2">
         <motion.div
           whileTap={{ scale: 0.9 }}
           variants={{
-            initial: { opacity: 0, scale: 0.8, rotate: -10 },
-            animate: { 
-              opacity: 1, 
-              scale: 1, 
-              rotate: 0,
-              transition: { duration: 0.5 }
-            },
+            initial: { scale: 1, rotate: 0 },
+            // animate: { 
+            //   opacity: 1, 
+            //   scale: 1, 
+            //   rotate: 0,
+            //   transition: { duration: 0.5 }
+            // },
             hover: {
               scale: [1, 1.1, 1],
               rotate: [0, -10, 10, -5, 5, 0],
@@ -30,17 +26,16 @@ const Logo: React.FC = () => {
             }
           }}
           initial="initial"
-          animate="animate"
+        //   animate="animate"
           whileHover="hover"
         >
-           {/* Встроенный SVG, автоматически меняющий цвета в темной теме */}
-           <motion.svg
+           {/* Встроенный SVG, автоматически меняющий цвета при переключении темы */}
+           <svg
             width="40"
             height="40"
             viewBox="0 0 40 40"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            // Для плавного переключения цветов можно добавить transition-colors
             className="transition-colors duration-300"
           >
             {/* 
@@ -84,10 +79,10 @@ const Logo: React.FC = () => {
               r="1.5"
               className="fill-white dark:fill-black"
             />
-          </motion.svg>
+          </svg>
         </motion.div>
       </NextLink>
-    </motion.div>
+    </div>
   );
 };
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import AnimatedLetters from "@/app/components/hero/animated-letters";
 import { useAnimatedLetters } from "@/app/hooks/useAnimatedLetters";
 import HeroImageModal from "@/app/components/hero/hero-image-modal";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 
 const Hero = () => {
+
   const { letterClass } = useAnimatedLetters({
     triggerOnLoad: true,
     animationDuration: 2500,
@@ -80,11 +81,11 @@ const Hero = () => {
 
       {/* Фоновое изображение для больших экранов */}
       <div className="absolute right-0 top-0 h-full hidden lg:flex items-center justify-end">
-        <motion.div 
-          className="relative h-full"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+        <div 
+          className="relative h-full animate-fade-enter"
+        //   initial={{ opacity: 0 }}
+        //   animate={{ opacity: 1 }}
+        //   transition={{ duration: 0.8, delay: 0.5 }}
         >
           <Image
             src="/gen-hero.webp"
@@ -96,7 +97,7 @@ const Hero = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/20 to-transparent"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
-        </motion.div>
+        </div>
       </div>
 
       <div className="container px-4 md:px-6 relative z-10">
@@ -141,22 +142,22 @@ const Hero = () => {
                   />
                 </div>
               </h1>
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.25 }}
-                className="h-[60px] sm:h-[80px] flex items-center"
+              <div 
+                // initial={{ opacity: 0, y: 20 }}
+                // animate={{ opacity: 1, y: 0 }}
+                // transition={{ duration: 0.5, delay: 0.25 }}
+                className="h-[60px] sm:h-[80px] flex items-center animate-fade-in-up"
               >
                 <span className="max-w-[600px] text-xs text-muted-foreground xs:text-sm sm:text-base md:text-lg lg:text-xl"	>
                   Creating modern, responsive and accessible web applications using cutting-edge technologies.
                 </span> 
-              </motion.div>
+              </div>
             </div>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col gap-3 mt-8 xs:mt-10 sm:mt-4 min-[400px]:flex-row"
+            <div 
+            //   initial={{ opacity: 0, y: 20 }}
+            //   animate={{ opacity: 1, y: 0 }}
+            //   transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-col gap-3 mt-8 xs:mt-10 sm:mt-4 min-[400px]:flex-row animate-fade-in-up"
             >
               <Button 
                 className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-300 ease-in-out" 
@@ -169,7 +170,7 @@ const Hero = () => {
               <div className="block lg:hidden w-fit">
                 <HeroImageModal />
               </div>
-            </motion.div>
+            </div>
           </div>
           {/* Пустой div для сохранения сетки на больших экранах */}
           <div className="hidden lg:block"></div>

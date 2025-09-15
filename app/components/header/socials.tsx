@@ -8,7 +8,7 @@ import { socialsLinks } from "@/app/data";
 
 const Socials: FC<SocialsProps> = ({hiddenOnMobile, size}) => {
   return (
-    <div className={`${hiddenOnMobile ? 'hidden md:flex' : 'flex'} items-center gap-2 `}>
+    <div className={`${hiddenOnMobile ? 'hidden md:flex' : 'flex'} items-center gap-2`}>
       {socialsLinks.map((social) => (
         <SocialButton key={social.id} social={social} size={size} />
       ))}

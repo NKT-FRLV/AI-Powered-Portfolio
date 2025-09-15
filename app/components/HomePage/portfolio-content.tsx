@@ -9,6 +9,7 @@ import Header from "../header";
 import About from "../about/about";
 import Footer from "../footer";
 import ScrollShivronButton from "../scroll-shivron/scroll-shivron-button";
+
 // Используем приоритеты загрузки для компонентов
 // Компоненты, которые видны сразу при загрузке страницы, импортируем напрямую
 // Компоненты, которые видны при первом скролле, загружаем с высоким приоритетом
