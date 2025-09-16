@@ -76,10 +76,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/nf-logo.svg",
-        width: 40,
-        height: 40,
-        alt: "Nikita Frolov Logo",
+        url: "https://nikitafrolov.dev/og/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Nikita Frolov — Frontend Developer Portfolio",
       },
     ],
   },
@@ -104,10 +104,10 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Nikita Frolov — Frontend Developer",
     description: "Portfolio of Nikita Frolov — frontend developer specializing in React, UI, UX and AI integration",
-    images: ["/nf-logo.svg"],
+    images: ["https://nikitafrolov.dev/og/og-image.png"],
   },
 };
 
