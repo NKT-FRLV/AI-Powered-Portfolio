@@ -66,17 +66,17 @@ export const metadata: Metadata = {
   title: "Nikita Frolov — Frontend Developer",
   description: "Portfolio of Nikita Frolov — frontend developer specializing in React, UI, UX and AI integration",
   keywords: "frontend, developer, React, UI, UX, AI, portfolio, Nikita Frolov",
-  metadataBase: new URL("https://nikitafrolov.dev"),
+  metadataBase: new URL("https://nkt-frlv.dev"),
   openGraph: {
     title: "Nikita Frolov — Frontend Developer",
     description: "Portfolio of Nikita Frolov — frontend developer specializing in React, UI, UX and AI integration",
-    url: "https://nikitafrolov.dev",
+    url: "https://nkt-frlv.dev",
     siteName: "Nikita Frolov Portfolio",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://nikitafrolov.dev/og/og-image.png",
+        url: "https://nkt-frlv.dev/og/og-image.png",
         width: 1200,
         height: 630,
         alt: "Nikita Frolov — Frontend Developer Portfolio",
@@ -107,7 +107,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Nikita Frolov — Frontend Developer",
     description: "Portfolio of Nikita Frolov — frontend developer specializing in React, UI, UX and AI integration",
-    images: ["https://nikitafrolov.dev/og/og-image.png"],
+    images: ["https://nkt-frlv.dev/og/og-image.png"],
   },
 };
 
