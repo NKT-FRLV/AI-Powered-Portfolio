@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { Resend } from "resend";
-// import { EmailTemplate } from "@/app/components/EmailTemplate/EmailTemplate";
 
 export const ContactInput = z.object({
   name: z.string().min(2).max(120).optional(),
-  email: z.string().email().max(200).optional(),
+  email: z.string().email().max(200),
   company: z.string().max(160).optional(),
   message: z.string().min(5).max(4000),
+  subject: z.string().max(200).optional(),
 });
 
 export type ContactInput = z.infer<typeof ContactInput>;
@@ -16,11 +16,12 @@ const FROM = process.env.CONTACT_FROM_EMAIL!;
 const TO = process.env.CONTACT_TO_EMAIL!;
 const APP_NAME = process.env.APP_NAME ?? "Portfolio";
 
-const sanitize = (s?: string) => (s ?? "").replace(/[<>]/g, "").slice(0, 4000);
+const sanitize = (s?: string) => (s ?? "").slice(0, 4000);
 
 function asPlainText(input: ContactInput) {
   return [
     `Source: portfolio-chat/contact`,
+    `Subject: ${sanitize(input.subject) || "No subject"}`,
     `Name: ${sanitize(input.name) || "Anonymous"}`,
     `Email: ${sanitize(input.email) || "Not provided"}`,
     `Company: ${sanitize(input.company) || "Not provided"}`,

@@ -1,29 +1,35 @@
 // Core types for AI Assistant components
-import { UIMessage } from 'ai';
+import { tools } from '@/app/api/chat/tools';
+import { InferUITools, UIDataTypes, UIMessage, UIMessagePart } from 'ai';
 
+
+export type ChatTools = InferUITools<typeof tools>;
+
+export type MyUIMessage = UIMessage<unknown, UIDataTypes, ChatTools>;
+export type MyUIMessagePart = UIMessagePart<UIDataTypes, ChatTools>;
 // Types for Chat Messages
-export type MessageRole = "user" | "assistant";
+// export type MessageRole = "user" | "assistant";
 
 export interface Message {
   id: string;
   content: string;
-  role: MessageRole;
+  role: MyUIMessage["role"];
   timestamp: Date;
   isTyping?: boolean;
   reactions?: string[];
 }
 
 // Adapter functions between our Message type and AI SDK UIMessage
-export const messageToUIMessage = (message: Message): UIMessage => ({
+export const messageToUIMessage = (message: Message): MyUIMessage => ({
   id: message.id,
   role: message.role,
   parts: [{ type: 'text', text: message.content }]
 });
 
-export const uiMessageToMessage = (uiMessage: UIMessage): Message => ({
+export const uiMessageToMessage = (uiMessage: MyUIMessage): Message => ({
   id: uiMessage.id,
   content: uiMessage.parts.find(part => part.type === 'text')?.text || '',
-  role: uiMessage.role as MessageRole,
+  role: uiMessage.role,
   timestamp: new Date(),
   isTyping: false,
   reactions: []

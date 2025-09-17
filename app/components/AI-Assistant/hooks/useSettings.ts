@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChatSettings } from '../types/types';
+import { ChatSettings } from '../ai-types/types';
 
 const DEFAULT_SETTINGS: ChatSettings = {
   notificationSound: '/sounds/notification.mp3',

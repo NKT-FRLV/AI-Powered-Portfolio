@@ -3,10 +3,10 @@
 import { Response } from "@/components/ai-elements/response";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ai-elements/loader";
-import { UIMessage } from "ai";
+import { MyUIMessage } from "./ai-types/types";
 
 interface MessageCaseProps {
-	part: UIMessage["parts"][0];
+	part:  MyUIMessage["parts"][0];
 	messageId: string;
 	partIndex: number;
 	addToolResult?: (args: {
@@ -30,7 +30,7 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 			// part.args — то, что модель передала в tool (fromEmail, fromName, subject, text, html?)
 			// part.state: 'call-arguments' | 'calling' | 'output-available'
 			const awaiting = part.state === "input-streaming" || part.state === "input-available";
-			const input = (part as any).input ?? {};
+			const input = part.input ?? {};
 			
 			return (
 				<div
@@ -49,18 +49,23 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 								{input.fromEmail && ` <${input.fromEmail}>`}
 							</span>
 						</div>
-						<div className="flex items-start gap-2">
+						{/* <div className="flex items-start gap-2">
 							<span className="font-medium text-foreground-700 min-w-[60px]">To:</span>
 							<span className="text-foreground-900">marbella.frolov@gmail.com</span>
-						</div>
+						</div> */}
+
 						<div className="flex items-start gap-2">
 							<span className="font-medium text-foreground-700 min-w-[60px]">Subject:</span>
-							<span className="text-foreground-900">{input.subject}</span>
+							<span className="text-foreground-900">{input.subject || "No subject"}</span>
+						</div>
+						<div className="flex items-start gap-2">
+							<span className="font-medium text-foreground-700 min-w-[60px]">Company:</span>
+							<span className="text-foreground-900">{input.companyName || "Not specified"}</span>
 						</div>
 						<div className="mt-3">
 							<span className="font-medium text-foreground-700 block mb-1">Message:</span>
 							<div className="whitespace-pre-wrap text-xs bg-background p-3 rounded border text-foreground-800">
-								{input.text}
+								{input.text || "No message"}
 							</div>
 						</div>
 					</div>
@@ -75,6 +80,7 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 										tool: "askForConfirmation",
 										toolCallId: part.toolCallId,
 										output: {
+											message: "Yes, user confirms, now call 'sendEmail' tool with this data",
 											confirmed: true,
 										},
 									})
@@ -92,8 +98,8 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 										tool: "askForConfirmation",
 										toolCallId: part.toolCallId,
 										output: {
+											message: "Don't send this message, user does not confirm, ask user if wants to change some data",
 											confirmed: false,
-											reason: "User cancelled",
 										},
 									})
 								}
@@ -105,7 +111,7 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 					) : (
 						<div className="mt-3 p-2 rounded text-xs text-foreground-600">
 							<span className="font-medium">Status:</span>{" "}
-							{(part as any).output?.confirmed ? (
+							{part.output?.confirmed ? (
 								<span className="text-green-600">✅ Confirmed - AI will now send the email automatically</span>
 							) : (
 								<span className="text-red-600">❌ Cancelled by user</span>
@@ -117,7 +123,7 @@ const MessageCase = ({ part, messageId, partIndex, addToolResult }: MessageCaseP
 		}
 
 		case "tool-sendEmail": {
-			const output = (part as any).output;
+			const output = part.output;
 			const isPending = part.state === "input-streaming" || part.state === "input-available";
 			const isSuccess = typeof output === 'string' && output.includes('successfully');
 			

@@ -1,7 +1,7 @@
 import { useCallback, memo, useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { SiOpenai } from "react-icons/si";
-import { ChatButtonProps } from './types/types';
+import { ChatButtonProps } from './ai-types/types';
 import { useNotificationSound } from './hooks/useNotificationSound';
 
 const ChatButton = ({ 

@@ -3,7 +3,7 @@
 import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChatSettings } from "./types/types";
+import { ChatSettings } from "./ai-types/types";
 
 interface ChatSettingsPanelProps {
   settings: ChatSettings;

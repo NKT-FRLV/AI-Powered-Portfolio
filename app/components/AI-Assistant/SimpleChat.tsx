@@ -20,6 +20,7 @@ import {
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import ChatSettingsPanel from "./ChatSettingsPanel";
+import { MyUIMessage } from "./ai-types/types";
 
 // const starterSuggestions = [
 // 	"Tell me about Nikita's skills",
@@ -51,7 +52,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 		soundUrl: settings.notificationSound,
 	});
 
-	const { messages, sendMessage, status, setMessages, addToolResult } = useChat({
+	const { messages, sendMessage, status, setMessages, addToolResult } = useChat<MyUIMessage>({
 		transport: new DefaultChatTransport({ api: "/api/chat" }),
 		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
 		onFinish: () => {
@@ -74,7 +75,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 			if (isLoading) return;
 			sendMessage({ text: message });
 		},
-		[sendMessage]
+		[sendMessage, isLoading]
 	);
 
 	const clearHistory = useCallback(() => {

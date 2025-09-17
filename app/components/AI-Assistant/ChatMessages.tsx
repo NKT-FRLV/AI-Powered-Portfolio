@@ -5,11 +5,11 @@ import {
 	MessageAvatar,
 	MessageContent,
 } from "@/components/ai-elements/message";
-import { UIMessage } from "ai";
+import { MyUIMessage } from "./ai-types/types";
 import MessageCase from "./MessageCase";
 
 interface ChatMessagesProps {
-	messages: UIMessage[];
+	messages: MyUIMessage[];
 	isThinking?: boolean;
 	isOpen?: boolean;
 	isReady?: boolean;
