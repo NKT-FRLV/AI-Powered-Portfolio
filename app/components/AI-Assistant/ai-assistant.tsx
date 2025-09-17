@@ -144,6 +144,7 @@ const AiAssistant = () => {
             size="md"
             label="Chat with AI Assistant"
             pulseEffect={true}
+			glowEffect={true}
             notificationCount={unreadCount}
             showNotificationBadge={unreadCount > 0}
             playSoundOnNotification={settings.soundEnabled}

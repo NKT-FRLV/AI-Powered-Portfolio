@@ -12,6 +12,7 @@ const ChatButton = ({
   size = 'md',
   label = 'Open AI-assistant',
   pulseEffect = true,
+  glowEffect = true,
   notificationCount = 0,
   showNotificationBadge = false,
   playSoundOnNotification = false,
@@ -187,7 +188,7 @@ const ChatButton = ({
   };
 
   // Simplified effects and pulse animations
-  const pulseAnimations = !prefersReducedMotion && pulseEffect ? {
+  const pulseAnimations = !prefersReducedMotion && pulseEffect || glowEffect ? {
     glow: {
       initial: { opacity: 0, scale: 0.6 },
       animate: {
@@ -372,7 +373,7 @@ const ChatButton = ({
             </AnimatePresence>
 
             {/* Visual effects - only when pulse effect is enabled */}
-            {pulseEffect && (
+            {glowEffect && (
               <>
                 <motion.div
                   className={themeClasses.glow}

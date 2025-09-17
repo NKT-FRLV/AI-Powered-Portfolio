@@ -187,7 +187,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 												<Suggestion
 													key={suggestion}
 													suggestion={suggestion}
-													className={`font-geist-sans ${suggestion === "Send Email to Nikita" ? "border-blue-900/50 bg-blue-900/10" : ""}`}
+													className={`font-geist-mono ${suggestion === "Send Email to Nikita" ? "border-blue-900/50 bg-blue-900/10" : ""}`}
 													onClick={
 														handleSuggestionClick
 													}

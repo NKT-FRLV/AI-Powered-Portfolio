@@ -32,7 +32,7 @@ const ChatMessages = ({ messages, addToolResult }: ChatMessagesProps) => {
 				>
 					<MessageContent
 						variant="flat"
-						className="relative font-geist-sans text-sm font-medium md:font-bold md:text-lg"
+						className="relative font-geist-mono text-sm font-medium md:font-bold md:text-lg"
 					>
 						{message.role === "assistant" && (
 							// Avatar for mobile

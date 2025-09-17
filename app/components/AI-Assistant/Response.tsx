@@ -57,7 +57,7 @@ export const Response = ({
   const processedContent = processStreamingMarkdown(children)
 
   return (
-    <div className={cn('max-w-none', className)} style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif !important' }} {...props}>
+    <div className={cn('max-w-none', className)} style={{ fontFamily: 'var(--font-geist-mono), system-ui, sans-serif !important' }} {...props}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeKatex]}

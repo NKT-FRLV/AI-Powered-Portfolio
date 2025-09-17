@@ -97,6 +97,19 @@
 		font-family: var(--font-orbitron), sans-serif !important;
 		font-weight: 400;
 	}
+
+	.font-rubik {
+		font-family: var(--font-rubik-mono), "Courier New", monospace !important;
+	}
+
+	/* .font-electrolize {
+		font-family: var(--font-electrolize), sans-serif !important;
+	} */
+
+	.font-geist-mono {
+		font-family: var(--font-geist-mono), monospace !important;
+	}
+
 }
 
 * {
@@ -148,7 +161,7 @@ textarea {
 
 a:not(.chat-message a):not(.is-user a):not(.is-assistant a),
 button {
-	font-family: var(--font-geist-sans), sans-serif;
+	font-family: var(--font-geist-mono), monospace;
 	font-weight: 900;
 }
 
@@ -245,22 +258,6 @@ h6:not(.is-user h6):not(.is-assistant h6) {
 }
 
 @layer components {
-	/* Утилитарные классы для шрифтов */
-	.font-rubik {
-		font-family: var(--font-rubik-mono), "Courier New", monospace !important;
-	}
-
-	/* .font-electrolize {
-		font-family: var(--font-electrolize), sans-serif !important;
-	} */
-
-	.font-geist-sans {
-		font-family: var(--font-geist-sans), system-ui, sans-serif !important;
-	}
-
-	.font-geist-mono {
-		font-family: var(--font-geist-mono), monospace !important;
-	}
 
 	/* Классы для анимированного текста */
 	.text-animate {

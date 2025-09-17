@@ -51,6 +51,7 @@ export interface ChatButtonProps {
   size?: 'sm' | 'md' | 'lg';
   label?: string;
   pulseEffect?: boolean;
+  glowEffect?: boolean;
   notificationCount?: number;
   showNotificationBadge?: boolean;
   playSoundOnNotification?: boolean;

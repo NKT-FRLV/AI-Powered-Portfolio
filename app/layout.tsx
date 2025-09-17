@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Roboto, Major_Mono_Display } from "next/font/google";
+import { Geist_Mono, Roboto, Major_Mono_Display } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
@@ -44,13 +44,6 @@ const roboto = Roboto({
   variable: "--font-roboto",
   display: "swap",
   weight: "600",
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
 });
 
 const geistMono = Geist_Mono({
@@ -157,7 +150,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${rubikMonoOne.variable} ${roboto.variable} ${majorMonoDisplay.variable} ${orbitron.variable}`}
+        className={`${geistMono.variable} ${rubikMonoOne.variable} ${roboto.variable} ${majorMonoDisplay.variable} ${orbitron.variable}`}
       >
         
         <ThemeProvider

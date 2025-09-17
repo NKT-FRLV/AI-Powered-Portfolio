@@ -18,11 +18,6 @@ module.exports = {
   		'2xl': '1400px'
   	},
   	fontFamily: {
-  		sans: [
-  			'var(--font-geist-sans)',
-  			'system-ui',
-  			'sans-serif'
-  		],
   		mono: [
   			'var(--font-geist-mono)',
   			'monospace'
@@ -34,11 +29,6 @@ module.exports = {
   		],
   		orbitron: [
   			'var(--font-orbitron)',
-  			'sans-serif'
-  		],
-  		'geist-sans': [
-  			'var(--font-geist-sans)',
-  			'system-ui',
   			'sans-serif'
   		],
   		'geist-mono': [
