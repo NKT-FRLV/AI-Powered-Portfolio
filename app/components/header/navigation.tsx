@@ -23,7 +23,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, handleLinkClick,
     //   animate={{ opacity: 1, y: 0 }}
     //   transition={{ duration: 0.5, delay: 0.1 }}
 	<nav
-      className="hidden md:flex items-center gap-6 text-sm animate-fade-in-down"
+      className="hidden font-major-mono-display md:flex items-center gap-6 text-sm animate-fade-in-down"
     >
       {navItems.map(item => (
         <NavLink

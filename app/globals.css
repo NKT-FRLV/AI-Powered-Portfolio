@@ -87,14 +87,34 @@
 	.font-roboto {
 		font-family: var(--font-roboto), sans-serif !important;
 	}
+
+	.font-major-mono-display {
+		font-family: var(--font-major-mono-display), sans-serif !important;
+		font-weight: 400;
+	}
+
+	.font-orbitron {
+		font-family: var(--font-orbitron), sans-serif !important;
+		font-weight: 400;
+	}
+}
+
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
 }
 
 html,
 body {
 	max-width: 100vw;
 	overflow-x: hidden;
-	font-family: var(--font-geist-sans), var(--font-rubik-mono), "Courier New",
-		monospace;
+	font-family: var(--font-geist-mono), monospace;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -106,8 +126,13 @@ span:not(.chat-message span, h1 span):not(.is-user span):not(
 	),
 li:not(.is-user li):not(.is-assistant li),
 label {
-	font-family: var(--font-orbitron), sans-serif;
-	font-weight: 600;
+	font-family: var(--font-geist-mono), sans-serif;
+	font-weight: 800;
+}
+
+section a {
+	font-family: var(--font-major-mono-display), sans-serif !important;
+	font-weight: 400;
 }
 
 input,
@@ -123,7 +148,7 @@ textarea {
 
 a:not(.chat-message a):not(.is-user a):not(.is-assistant a),
 button {
-	font-family: var(--font-orbitron), sans-serif;
+	font-family: var(--font-geist-sans), sans-serif;
 	font-weight: 900;
 }
 
@@ -135,17 +160,6 @@ h4:not(.is-user h4):not(.is-assistant h4),
 h5:not(.is-user h5):not(.is-assistant h5),
 h6:not(.is-user h6):not(.is-assistant h6) {
 	font-family: var(--font-rubik-mono), "Courier New", monospace;
-}
-
-* {
-	box-sizing: border-box;
-	padding: 0;
-	margin: 0;
-}
-
-a {
-	color: inherit;
-	text-decoration: none;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -236,9 +250,9 @@ a {
 		font-family: var(--font-rubik-mono), "Courier New", monospace !important;
 	}
 
-	.font-orbitron {
-		font-family: var(--font-orbitron), sans-serif !important;
-	}
+	/* .font-electrolize {
+		font-family: var(--font-electrolize), sans-serif !important;
+	} */
 
 	.font-geist-sans {
 		font-family: var(--font-geist-sans), system-ui, sans-serif !important;
@@ -301,37 +315,37 @@ a {
 
 @keyframes logo-entrance {
 	0% {
-	  opacity: 0;
-	  transform: translateX(-120px) translateZ(0) scale(0.8) rotate(-50deg);
+		opacity: 0;
+		transform: translateX(-120px) translateZ(0) scale(0.8) rotate(-50deg);
 	}
-  
+
 	/* подъезд: почти на место, немного перебор */
 	40% {
-	  opacity: 1;
-	  transform: translateX(45px) translateZ(0) scale(1.1) rotate(20deg);
+		opacity: 1;
+		transform: translateX(45px) translateZ(0) scale(1.1) rotate(20deg);
 	}
-  
+
 	/* возврат за цель — сильный откат */
 	55% {
-	  transform: translateX(-8px) translateZ(0) scale(0.98) rotate(4deg);
+		transform: translateX(-8px) translateZ(0) scale(0.98) rotate(4deg);
 	}
-  
+
 	/* небольшая подпружина — вторая волна */
 	70% {
-	  transform: translateX(3px) translateZ(0) scale(1.02) rotate(-1.5deg);
+		transform: translateX(3px) translateZ(0) scale(1.02) rotate(-1.5deg);
 	}
-  
+
 	/* почти на месте — микроколебание */
 	85% {
-	  transform: translateX(-1px) translateZ(0) scale(1.005) rotate(0.6deg);
+		transform: translateX(-1px) translateZ(0) scale(1.005) rotate(0.6deg);
 	}
-  
+
 	/* финальная позиция — ровно */
 	100% {
-	  opacity: 1;
-	  transform: translateX(0) translateZ(0) scale(1) rotate(0);
+		opacity: 1;
+		transform: translateX(0) translateZ(0) scale(1) rotate(0);
 	}
-  }
+}
 
 @keyframes fade-in-up {
 	from {

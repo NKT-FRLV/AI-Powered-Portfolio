@@ -148,7 +148,7 @@ const Hero = () => {
                 // transition={{ duration: 0.5, delay: 0.25 }}
                 className="h-[60px] sm:h-[80px] flex items-center animate-fade-in-up"
               >
-                <span className="max-w-[600px] text-xs text-muted-foreground xs:text-sm sm:text-base md:text-lg lg:text-xl"	>
+                <span className="font-orbitron tracking-widest max-w-[600px] text-xs text-muted-foreground xs:text-sm sm:text-base md:text-lg lg:text-xl"	>
                   Creating modern, responsive and accessible web applications using cutting-edge technologies.
                 </span> 
               </div>
