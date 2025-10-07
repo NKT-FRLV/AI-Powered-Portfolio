@@ -23,7 +23,7 @@ const HeroImageModal = () => {
       <SheetTrigger asChild>
         <Button 
           size="sm" 
-          className="font-major-mono-display text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-300 ease-in-out"
+          className="font-major-mono-display text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-2000 ease-in-out"
         >
           <Camera className='w-4 h-4 mr-2 opacity-70' />
             Photo

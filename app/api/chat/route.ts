@@ -5,11 +5,13 @@ import { MyUIMessage } from "@/app/components/AI-Assistant/ai-types/types";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { tools } from "./tools";
 
+const model = process.env.CHAT_MODEL || "deepseek/deepseek-chat-v3.1:free";
+
 const openrouter = createOpenRouter({
 	apiKey: process.env.OPENROUTER_API_KEY,
 });
 
-export const maxDuration = 30;
+export const maxDuration = 10;
 
 export async function POST(request: Request) {
 	try {
@@ -30,7 +32,7 @@ export async function POST(request: Request) {
 		
 		// Гвоздь программы streamText =)
 		const response = streamText({
-			model: openrouter.chat("deepseek/deepseek-chat-v3.1:free"),
+			model: openrouter.chat(model),
 			system: systemMessageWithNikitaData,
 			messages: convertToModelMessages(messages),
 			tools,
@@ -38,7 +40,7 @@ export async function POST(request: Request) {
 			stopWhen: stepCountIs(8), // Позволяем до 8 шагов для цепочки askForConfirmation -> sendEmail
 		});
 
-		console.log("response ai", response);
+		// console.log("response ai", response);
 
 		return response.toUIMessageStreamResponse();
 	} catch (error) {

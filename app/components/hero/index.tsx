@@ -160,7 +160,7 @@ const Hero = () => {
               className="flex flex-col gap-3 mt-8 xs:mt-10 sm:mt-4 min-[400px]:flex-row animate-fade-in-up"
             >
               <Button 
-                className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-300 ease-in-out" 
+                className="text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-2000 ease-in-out" 
                 asChild
               >
                 <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>

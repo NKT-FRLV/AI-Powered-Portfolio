@@ -141,7 +141,7 @@ const AiAssistant = () => {
             onClick={handleChatButtonClick} 
             theme={currentTheme}
             position="bottom-right"
-            size="lg"
+            size="md"
             label="Chat with AI Assistant"
             pulseEffect={false}
 			glowEffect={false}
