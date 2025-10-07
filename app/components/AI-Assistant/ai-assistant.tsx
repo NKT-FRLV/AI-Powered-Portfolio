@@ -141,10 +141,10 @@ const AiAssistant = () => {
             onClick={handleChatButtonClick} 
             theme={currentTheme}
             position="bottom-right"
-            size="md"
+            size="lg"
             label="Chat with AI Assistant"
-            pulseEffect={true}
-			glowEffect={true}
+            pulseEffect={false}
+			glowEffect={false}
             notificationCount={unreadCount}
             showNotificationBadge={unreadCount > 0}
             playSoundOnNotification={settings.soundEnabled}

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 				{ status: 400 }
 			);
 		}
-		// console.log("Last message", JSON.stringify(messages[messages.length - 1], null, 2));
+		console.log("Last message", JSON.stringify(messages[messages.length - 1], null, 2));
 		
 		// Гвоздь программы streamText =)
 		const response = streamText({
@@ -37,6 +37,8 @@ export async function POST(request: Request) {
 			toolChoice: "auto",
 			stopWhen: stepCountIs(8), // Позволяем до 8 шагов для цепочки askForConfirmation -> sendEmail
 		});
+
+		console.log("response ai", response);
 
 		return response.toUIMessageStreamResponse();
 	} catch (error) {

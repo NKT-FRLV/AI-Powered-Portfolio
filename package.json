@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rm -rf node_modules && yarn install",
-    "update": "yarn upgrade-interactive --latest"
+    "clean": "rm -rf node_modules && yarn install"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.28",

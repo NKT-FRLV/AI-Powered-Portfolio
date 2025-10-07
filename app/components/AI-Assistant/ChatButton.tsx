@@ -1,5 +1,5 @@
-import { useCallback, memo, useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SiOpenai } from "react-icons/si";
 import { ChatButtonProps } from './ai-types/types';
 import { useNotificationSound } from './hooks/useNotificationSound';
@@ -18,8 +18,7 @@ const ChatButton = ({
   playSoundOnNotification = false,
   soundUrl = '/sounds/notification.mp3',
 }: ChatButtonProps) => {
-  // Respect user's reduced motion preferences
-  const prefersReducedMotion = useReducedMotion();
+
   
   // Component state
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
@@ -86,12 +85,8 @@ const ChatButton = ({
   // Animation variants with simplified logic
   const animations = {
     button: {
-      initial: prefersReducedMotion 
-        ? {} 
-        : { scale: 0, rotate: -180, opacity: 0, boxShadow: 'none' },
-      animate: prefersReducedMotion
-        ? { opacity: 1, transition: { duration: 1 } }
-        : { 
+      initial: { scale: 0, rotate: -180, opacity: 0, boxShadow: 'none' },
+      animate: { 
             scale: 1,  
             rotate: 0,
             opacity: 1,
@@ -109,9 +104,7 @@ const ChatButton = ({
               }
             }
           },
-      exit: prefersReducedMotion
-        ? { }
-        : { 
+      exit: { 
             scale: 0.6,
             opacity: 0,
             boxShadow: 'none',
@@ -120,9 +113,7 @@ const ChatButton = ({
               ease: "easeOut"
             }
           },
-      hover: prefersReducedMotion
-        ? {}
-        : { 
+      hover: { 
             scale: 1.05,
             boxShadow: theme === 'dark' 
               ? "0 0 15px 6px rgba(255,255,255,0.25)" 
@@ -138,9 +129,7 @@ const ChatButton = ({
               }
             }
           },
-      tap: prefersReducedMotion
-        ? { opacity: 0.8 }
-        : { 
+      tap: { 
             scale: 0.95,
             boxShadow: theme === 'dark' 
               ? "0 0 15px 4px rgba(255,255,255,0.2)" 
@@ -188,7 +177,7 @@ const ChatButton = ({
   };
 
   // Simplified effects and pulse animations
-  const pulseAnimations = !prefersReducedMotion && pulseEffect || glowEffect ? {
+  const pulseAnimations = pulseEffect || glowEffect ? {
     glow: {
       initial: { opacity: 0, scale: 0.6 },
       animate: {
@@ -312,7 +301,7 @@ const ChatButton = ({
           transition={{ duration: 0.5 }}
         >
           {/* Radio waves (3 layers) - only shown if animation is enabled */}
-          {pulseEffect && !prefersReducedMotion && [0, 1, 2].map((i) => (
+          {pulseEffect && [0, 1, 2].map((i) => (
             <motion.div
               key={`radio-wave-${i}`}
               className={`${themeClasses.radioWave(i)} ${sizeConfig.sizes[size]}`}
@@ -405,4 +394,4 @@ const ChatButton = ({
 };
 
 // Export memoized component to prevent unnecessary re-renders
-export default memo(ChatButton);
+export default ChatButton;
