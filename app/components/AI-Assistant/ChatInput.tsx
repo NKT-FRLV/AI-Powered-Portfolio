@@ -18,7 +18,7 @@ import {
 	// PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
 // import { Suggestion, Suggestions } from "./Suggestions";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { Button } from "@/components/ui/button";
 
 interface ChatInputProps {
@@ -30,6 +30,13 @@ interface ChatInputProps {
 const ChatInput = ({ onSubmit, isLoading, status }: ChatInputProps) => {
 	const [ text, setText ] = useState<string>("");
 	// const [showSuggestions, setShowSuggestions] = useState(false);
+	
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	useEffect(() => {
+		if (textareaRef.current && status === "ready") {
+			textareaRef.current.focus();
+		}
+	}, [textareaRef, status]);
 
 	const handleSubmit = (message: PromptInputMessage) => {
 		// Пока не обрабатываем файлы
@@ -50,6 +57,7 @@ const ChatInput = ({ onSubmit, isLoading, status }: ChatInputProps) => {
 			>
 				<PromptInputBody className="w-full flex-1 flex items-center">
 					<PromptInputTextarea 
+						ref={textareaRef}
 						value={text} 
 						onChange={(e) => setText(e.target.value)}
 						disabled={isLoading}
@@ -67,6 +75,7 @@ const ChatInput = ({ onSubmit, isLoading, status }: ChatInputProps) => {
 				{/* </PromptInputTools> */}
 				<PromptInputSubmit 
 					disabled={isLoading || text.length === 0} 
+
 					status={status}
 					title={isLoading ? "AI is responding, please wait..." : "Send message"}
 				/>

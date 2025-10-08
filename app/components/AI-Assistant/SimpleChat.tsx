@@ -1,8 +1,11 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai";
-import { useState, useCallback, useEffect } from "react";
+import {
+	DefaultChatTransport,
+	lastAssistantMessageIsCompleteWithToolCalls,
+} from "ai";
+import { useState, useCallback } from "react";
 import { Settings, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSettings } from "./hooks/useSettings";
@@ -22,12 +25,6 @@ import ChatInput from "./ChatInput";
 import ChatSettingsPanel from "./ChatSettingsPanel";
 import { MyUIMessage } from "./ai-types/types";
 
-// const starterSuggestions = [
-// 	"Tell me about Nikita's skills",
-// 	"What projects has he worked on?",
-// 	"Show me his experience",
-// 	"What technologies does he use?",
-// ];
 const starterSuggestions = [
 	"Give me a 30-second pitch",
 	"Send Email to Nikita",
@@ -52,13 +49,21 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 		soundUrl: settings.notificationSound,
 	});
 
-	const { messages, sendMessage, status, setMessages, addToolResult } = useChat<MyUIMessage>({
-		transport: new DefaultChatTransport({ api: "/api/chat" }),
-		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
-		onFinish: () => {
-			if (settings.soundEnabled) playSound();
-		},
-	});
+	const initialChatMessages = settings.saveChatHistory
+		? (JSON.parse(
+				localStorage.getItem("ai-chat-history") || "[]"
+		  ) as MyUIMessage[])
+		: [];
+
+	const { messages, sendMessage, status, setMessages, addToolResult } =
+		useChat<MyUIMessage>({
+			messages: initialChatMessages,
+			transport: new DefaultChatTransport({ api: "/api/chat" }),
+			sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+			onFinish: () => {
+				if (settings.soundEnabled) playSound();
+			},
+		});
 
 	const isLoading = status === "streaming" || status === "submitted";
 	const isThinking = status === "submitted";
@@ -71,7 +76,8 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 		[sendMessage]
 	);
 
-	const handleMessageSubmit = useCallback((message: string) => {
+	const handleMessageSubmit = useCallback(
+		(message: string) => {
 			if (isLoading) return;
 			sendMessage({ text: message });
 		},
@@ -80,41 +86,21 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 
 	const clearHistory = useCallback(() => {
 		setMessages([]);
+		localStorage.removeItem("ai-chat-history");
 	}, [setMessages]);
 
-	// Очистка истории при изменении настройки saveChatHistory или при закрытии чата
-	useEffect(() => {
+	const handleCloseChat = () => {
+		setIsOpen(false);
 		if (!settings.saveChatHistory) {
-			// Если сохранение отключено и чат закрыт, очищаем историю
-			setMessages([]);
+			localStorage.removeItem("ai-chat-history");
+		} else {
+			localStorage.setItem(
+				"ai-chat-history",
+				JSON.stringify(messages)
+			);
 		}
-	}, [settings.saveChatHistory, setMessages]);
+	}
 
-	// Очистка истории при отключении сохранения (даже если чат открыт)
-	useEffect(() => {
-		if (!settings.saveChatHistory) {
-			setMessages([]);
-			// Также очищаем localStorage на случай если useChat использует его
-			if (typeof window !== "undefined") {
-				localStorage.removeItem("ai-chat");
-				localStorage.removeItem("ai-chat-messages");
-				localStorage.removeItem("chat-messages");
-			}
-		}
-	}, [settings.saveChatHistory, setMessages]);
-
-	// useEffect(() => {
-	// 	if (isOpen) {
-	// 		document.body.style.overflow = 'hidden';
-	// 	} else {
-	// 		document.body.style.overflow = 'unset';
-	// 	}
-
-	// 	// Cleanup при размонтировании компонента
-	// 	return () => {
-	// 		document.body.style.overflow = 'unset';
-	// 	};
-	// }, [isOpen]);
 
 	return (
 		<motion.div
@@ -127,9 +113,10 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 			<div className="flex items-center justify-between p-4 border-b bg-muted/50">
 				<h3 className="font-semibold">AI Assistant</h3>
 				<div className="flex items-center gap-2">
-					<Button
+					<Button 
 						variant="ghost"
 						size="lg"
+						disabled={showSettings}
 						onClick={() => setShowSettings(!showSettings)}
 					>
 						<Settings className="h-4 w-4" />
@@ -137,7 +124,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 					<Button
 						variant="ghost"
 						size="lg"
-						onClick={() => setIsOpen(false)}
+						onClick={handleCloseChat}
 					>
 						<X className="h-4 w-4" />
 					</Button>
@@ -153,6 +140,7 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 							settings={settings}
 							onUpdateSettings={updateSettings}
 							onClearHistory={clearHistory}
+							onClose={() => setShowSettings(false)}
 						/>
 					)}
 				</AnimatePresence>
@@ -187,7 +175,12 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 												<Suggestion
 													key={suggestion}
 													suggestion={suggestion}
-													className={`font-geist-mono ${suggestion === "Send Email to Nikita" ? "border-blue-900/50 bg-blue-900/10" : ""}`}
+													className={`font-geist-mono ${
+														suggestion ===
+														"Send Email to Nikita"
+															? "border-blue-900/50 bg-blue-900/10"
+															: ""
+													}`}
 													onClick={
 														handleSuggestionClick
 													}
@@ -217,7 +210,11 @@ const SimpleChat = ({ isOpen, setIsOpen }: SimpleChatProps) => {
 			</div>
 
 			{/* Input */}
-			<ChatInput onSubmit={handleMessageSubmit} isLoading={isLoading} status={status} />
+			<ChatInput
+				onSubmit={handleMessageSubmit}
+				isLoading={isLoading}
+				status={status}
+			/>
 		</motion.div>
 	);
 };

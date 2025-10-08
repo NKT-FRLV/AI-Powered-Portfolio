@@ -4,16 +4,21 @@ import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChatSettings } from "./ai-types/types";
+import { useClickOutside } from "@/app/hooks/useClickOutside";
 
 interface ChatSettingsPanelProps {
   settings: ChatSettings;
   onUpdateSettings: (newSettings: Partial<ChatSettings>) => void;
   onClearHistory: () => void;
+  onClose: () => void;
 }
 
-const ChatSettingsPanel = memo(({ settings, onUpdateSettings, onClearHistory }: ChatSettingsPanelProps) => {
+const ChatSettingsPanel = memo(({ settings, onUpdateSettings, onClearHistory, onClose }: ChatSettingsPanelProps) => {
+  const panelRef = useClickOutside<HTMLDivElement>(onClose);
+
   return (
     <motion.div
+      ref={panelRef}
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: 1, y: -10 }}
       exit={{ opacity: 0, y: -100 }}
