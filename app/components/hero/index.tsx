@@ -171,7 +171,7 @@ const Hero = () => {
 				asChild
                 className="font-major-mono-display text-xs h-8 px-4 w-fit sm:text-sm md:text-base md:h-10 md:px-4 lg:h-11 lg:px-6 font-bold relative overflow-hidden group animate-glow hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-2000 ease-in-out" 
               >
-                <a href="/cv_nikita_swe.pdf" download="Nikita_SWE_CV.pdf">Download CV</a>
+                <a href="\documents\Nikita_SWE_CV.pdf" download="Nikita_SWE_CV.pdf">Download CV</a>
                 
               </Button>
               <div className="block lg:hidden w-fit">
